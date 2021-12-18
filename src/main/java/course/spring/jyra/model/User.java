@@ -3,6 +3,7 @@ package course.spring.jyra.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,12 +28,12 @@ public abstract class User implements UserDetails {
 
     @NonNull
     @NotNull
-    @Size(min = 2, max = 15, message = "First name must e between 2 and 15 characters")
+    @Size(min = 2, max = 15, message = "First name must be between 2 and 15 characters")
     private String firstName;
 
     @NonNull
     @NotNull
-    @Size(min = 2, max = 15, message = "Last name must e between 2 and 15 characters")
+    @Size(min = 2, max = 15, message = "Last name must be between 2 and 15 characters")
     private String lastName;
 
     @NonNull
@@ -59,7 +60,11 @@ public abstract class User implements UserDetails {
     private UserStatus status = UserStatus.CHANGE_PASSWORD;
 
     private boolean active = true;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
     @Override

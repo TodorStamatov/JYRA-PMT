@@ -31,8 +31,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Task {
     @Id
-    @NotNull
-    @NonNull
     private long id;
 
     @NotNull
@@ -41,7 +39,7 @@ public class Task {
 
     @NotNull
     @NonNull
-    @Size(min = 2, max = 120, message = "string must be between 2 and 120 characters long")
+    @Size(min = 2, max = 120, message = "String must be between 2 and 120 characters long")
     private String title;
 
     @NotNull
@@ -62,7 +60,7 @@ public class Task {
     @NonNull
     private List<Developer> developersAssigned;
 
-    @Size(min = 150, max = 2500, message = "string must be between 150 and 2500 characters long, supporting Markdown syntax")
+    @Size(min = 150, max = 2500, message = "String must be between 150 and 2500 characters long, supporting Markdown syntax")
     private String description;
 
     @NotNull
