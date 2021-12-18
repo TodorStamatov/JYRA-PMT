@@ -10,8 +10,9 @@ created (generated automatically) - time stamp of the moment the entity was crea
 modified (generated automatically) - time stamp of the moment the entity was last modified;
  */
 
-import lombok.NonNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,11 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Document(collection = "sprintResults")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class SprintResult {
     @Id
     @NonNull

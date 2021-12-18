@@ -1,7 +1,8 @@
 package course.spring.jyra.model;
 
-import lombok.NonNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,11 @@ sprintResults - list of SprintResult for the Sprints completed;
 created (generated automatically) - time stamp of the moment the entity was created;
 modified (generated automatically) - time stamp of the moment the entity was last modified;
  */
+@Document(collection = "projectResults")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProjectResult {
     @Id
     @NonNull
