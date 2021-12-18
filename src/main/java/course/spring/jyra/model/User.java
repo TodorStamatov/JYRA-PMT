@@ -52,6 +52,8 @@ public abstract class User implements UserDetails {
     @NotNull
     private String password;
 
+    @NonNull
+    @NotNull
     @NotEmpty
     private List<Role> roles = List.of(Role.DEVELOPER);
 
