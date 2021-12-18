@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class User implements UserDetails {
+public abstract class User implements UserDetails {
     @Id
     private long id;
 
@@ -56,7 +56,7 @@ public class User implements UserDetails {
     @Size(min = 10, max = 250, message = "Contacts must be between 10 and 250 characters long.")
     private String contacts;
 
-    private Status status = Status.CHANGE_PASSWORD;
+    private UserStatus status = UserStatus.CHANGE_PASSWORD;
 
     private boolean active = true;
     private LocalDateTime created = LocalDateTime.now();
