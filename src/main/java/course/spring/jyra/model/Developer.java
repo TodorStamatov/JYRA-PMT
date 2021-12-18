@@ -1,14 +1,12 @@
 package course.spring.jyra.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Document(collection = "users")
 @Data
 @NoArgsConstructor
