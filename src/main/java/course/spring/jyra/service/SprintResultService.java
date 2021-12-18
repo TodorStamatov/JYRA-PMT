@@ -9,8 +9,6 @@ public interface SprintResultService {
 
     SprintResult findById(long id);
 
-    SprintResult findByProjectTitle(String sprintTitle);
-
     SprintResult create(SprintResult sprintResult);
 
     SprintResult update(SprintResult sprintResult);
