@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @SuperBuilder
 public abstract class User implements UserDetails {
     @Id
-    private long id;
+    private Long id;
 
     @NonNull
     @NotNull

@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Project {
     @Id
-    private long id;
+    private Long id;
 
     @NonNull
     @NotNull

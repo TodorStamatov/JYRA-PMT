@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SprintResult {
     @Id
-    private long id;
+    private Long id;
 
     @NotNull
     @NonNull
