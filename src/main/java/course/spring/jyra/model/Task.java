@@ -52,7 +52,7 @@ public class Task {
 
     @NotNull
     @NonNull
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.TO_DO;
 
     private Sprint sprint;
 
@@ -72,6 +72,4 @@ public class Task {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
-
-
 }

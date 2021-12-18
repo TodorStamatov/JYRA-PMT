@@ -50,11 +50,7 @@ public class SprintResult {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
-    private int calcTeamVelocity(){
-        int result=0;
-        for(int i=0;i<taskResults.size();i++){
-            result+=taskResults.get(i).getActualEffort();
-        }
-        return result;
+    public int calculateTeamVelocity() {
+        return this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
     }
 }
