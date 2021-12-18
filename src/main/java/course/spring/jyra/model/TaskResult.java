@@ -26,8 +26,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class TaskResult {
     @Id
-    @NonNull
-    @NotNull
     private long id;
 
     @NotNull
@@ -42,7 +40,7 @@ public class TaskResult {
     @NonNull
     private User verifiedBy;
 
-    @Size(min = 10, max = 2500, message = "string must be 10 - 2500 characters long, supporting Markdown syntax")
+    @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters long, supporting Markdown syntax.")
     private String resultsDescription;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

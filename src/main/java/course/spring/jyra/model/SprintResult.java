@@ -27,8 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SprintResult {
     @Id
-    @NonNull
-    @NotNull
     private long id;
 
     @NotNull
@@ -39,7 +37,7 @@ public class SprintResult {
     @NotNull
     private int teamVelocity;
 
-    @Size(min = 10, max = 2500, message = "string must be 10 - 2500 characters long, supporting Markdown syntax")
+    @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters long, supporting Markdown syntax.")
     private String resultsDescription;
 
     @NonNull
@@ -51,4 +49,12 @@ public class SprintResult {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
+
+    private int CalcTeamVelocity(){
+        int result=0;
+        for(int i=0;i<taskResults.size();i++){
+            result+=taskResults.get(i).getActualEffort();
+        }
+        return result;
+    }
 }
