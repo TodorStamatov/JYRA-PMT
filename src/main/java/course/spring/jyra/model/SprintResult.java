@@ -33,9 +33,7 @@ public class SprintResult {
     @NonNull
     private Sprint sprint;
 
-    @NonNull
-    @NotNull
-    private int teamVelocity;
+    private int teamVelocity=calculateTeamVelocity();
 
     @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters long, supporting Markdown syntax.")
     private String resultsDescription;
