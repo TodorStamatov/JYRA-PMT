@@ -1,10 +1,10 @@
 package course.spring.jyra.model;
 
 /*
-id (generated automatically) - long number;
+id (generated automatically) - String number;
 sprint - the Sprint this result is reported for;
 teamVelocity - integer number in effort units (sum of effort units for all tasks completed during the sprint);
-resultsDescription (optional) - string 10 - 2500 characters long, supporting Markdown syntax;
+resultsDescription (optional) - string 10 - 2500 characters String, supporting Markdown syntax;
 tasksResults - list of TaskResult for the Tasks completed in the Sprint;
 created (generated automatically) - time stamp of the moment the entity was created;
 modified (generated automatically) - time stamp of the moment the entity was last modified;
@@ -29,7 +29,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SprintResult {
     @Id
-    private Long id;
+    private String id;
 
     @NotNull
     @NonNull
@@ -37,7 +37,7 @@ public class SprintResult {
 
     private int teamVelocity = 0;
 
-    @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters long, supporting Markdown syntax.")
+    @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters String, supporting Markdown syntax.")
     private String resultsDescription;
 
     @NonNull

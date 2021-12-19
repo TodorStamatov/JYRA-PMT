@@ -8,11 +8,11 @@ import java.util.List;
 public interface SprintService {
     List<Sprint> findAll();
 
-    Sprint findById(long id);
+    Sprint findById(String id);
 
     Sprint create(Sprint sprint);
 
-    Sprint deleteById(long id);
+    Sprint deleteById(String id);
 
     Sprint update(Sprint sprint);
 

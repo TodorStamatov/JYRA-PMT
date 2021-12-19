@@ -7,13 +7,13 @@ import java.util.List;
 public interface ProjectResultService {
     List<ProjectResult> findAll();
 
-    ProjectResult findById(long id);
+    ProjectResult findById(String id);
 
     ProjectResult create(ProjectResult projectResult);
 
     ProjectResult update(ProjectResult projectResult);
 
-    ProjectResult deleteById(long id);
+    ProjectResult deleteById(String id);
 
     long count();
 }

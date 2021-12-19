@@ -7,13 +7,13 @@ import java.util.List;
 public interface SprintResultService {
     List<SprintResult> findAll();
 
-    SprintResult findById(long id);
+    SprintResult findById(String id);
 
     SprintResult create(SprintResult sprintResult);
 
     SprintResult update(SprintResult sprintResult);
 
-    SprintResult deleteById(long id);
+    SprintResult deleteById(String id);
 
     long count();
 }

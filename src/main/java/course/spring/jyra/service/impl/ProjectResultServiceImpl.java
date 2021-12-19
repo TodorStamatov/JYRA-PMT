@@ -26,7 +26,7 @@ public class ProjectResultServiceImpl implements ProjectResultService {
     }
 
     @Override
-    public ProjectResult findById(long id) {
+    public ProjectResult findById(String id) {
         return projectResultRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Project result with ID=%s not found.", id)));
     }
 
@@ -47,7 +47,7 @@ public class ProjectResultServiceImpl implements ProjectResultService {
     }
 
     @Override
-    public ProjectResult deleteById(long id) {
+    public ProjectResult deleteById(String id) {
         ProjectResult oldProjectResult = findById(id);
         projectResultRepository.deleteById(id);
         return oldProjectResult;
