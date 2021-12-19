@@ -27,7 +27,7 @@ public class SprintResultServiceImpl implements SprintResultService {
     }
 
     @Override
-    public SprintResult findById(long id) {
+    public SprintResult findById(String id) {
         return sprintResultRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint result with ID=%s not found.", id)));
     }
 
@@ -48,7 +48,7 @@ public class SprintResultServiceImpl implements SprintResultService {
     }
 
     @Override
-    public SprintResult deleteById(long id) {
+    public SprintResult deleteById(String id) {
         SprintResult oldSprintResult = findById(id);
         sprintResultRepository.deleteById(id);
         return oldSprintResult;

@@ -7,13 +7,13 @@ import java.util.List;
 public interface TaskResultService {
     List<TaskResult> findAll();
 
-    TaskResult findById(long id);
+    TaskResult findById(String id);
 
     TaskResult create(TaskResult taskResult);
 
     TaskResult update(TaskResult taskResult);
 
-    TaskResult deleteById(long id);
+    TaskResult deleteById(String id);
 
     long count();
 }

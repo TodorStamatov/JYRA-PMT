@@ -7,7 +7,7 @@ import java.util.List;
 public interface TaskService {
     List<Task> findAll();
 
-    Task findById(long id);
+    Task findById(String id);
 
     Task findByTitle(String title);
 
@@ -15,7 +15,7 @@ public interface TaskService {
 
     Task update(Task task);
 
-    Task deleteById(long id);
+    Task deleteById(String id);
 
     long count();
 }

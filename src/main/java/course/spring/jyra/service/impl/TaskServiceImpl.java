@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task findById(long id) {
+    public Task findById(String id) {
         return taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found.", id)));
     }
 
@@ -74,7 +74,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task deleteById(long id) {
+    public Task deleteById(String id) {
         Task oldTask = findById(id);
         taskRepository.deleteById(id);
         return oldTask;

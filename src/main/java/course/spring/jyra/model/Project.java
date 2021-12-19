@@ -17,18 +17,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Project {
     @Id
-    private Long id;
+    private String id;
 
     @NonNull
     @NotNull
-    @Size(min = 2, max = 120, message = "Project title must be between 2 and 120 characters long.")
+    @Size(min = 2, max = 120, message = "Project title must be between 2 and 120 characters String.")
     private String title;
 
     @NonNull
     @NotNull
     private LocalDateTime startDate = LocalDateTime.now();
 
-    @Size(min = 10, max = 2500, message = "Description must be between 10 and 2500 characters long.")
+    @Size(min = 10, max = 2500, message = "Description must be between 10 and 2500 characters String.")
     private String description;
 
     @NonNull

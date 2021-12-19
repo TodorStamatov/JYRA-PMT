@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(long id) {
+    public User findById(String id) {
         User found = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", id)));
         found.setPassword("");
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteById(long id) {
+    public User deleteById(String id) {
         User oldUser = findById(id);
         userRepository.deleteById(id);
         oldUser.setPassword("");

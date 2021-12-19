@@ -18,7 +18,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @RequiredArgsConstructor
 public class Sprint {
     @Id
-    private Long id;
+    private String id;
 
     @NonNull
     @NotNull
