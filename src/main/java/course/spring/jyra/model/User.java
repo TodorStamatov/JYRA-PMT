@@ -25,16 +25,16 @@ import java.util.stream.Collectors;
 @SuperBuilder
 public abstract class User implements UserDetails {
     @Id
-    private long id;
+    private String id;
 
     @NonNull
     @NotNull
-    @Size(min = 2, max = 15, message = "First name must be between 2 and 15 characters")
+    @Size(min = 2, max = 15, message = "First name must be between 2 and 15 characters long.")
     private String firstName;
 
     @NonNull
     @NotNull
-    @Size(min = 2, max = 15, message = "Last name must be between 2 and 15 characters")
+    @Size(min = 2, max = 15, message = "Last name must be between 2 and 15 characters long.")
     private String lastName;
 
     @NonNull
@@ -44,7 +44,7 @@ public abstract class User implements UserDetails {
 
     @NonNull
     @NotNull
-    @Size(min = 2, max = 15, message = "Username must e between 2 and 15 characters")
+    @Size(min = 2, max = 15, message = "Username must e between 2 and 15 characters long.")
     private String username;
 
     @NonNull
@@ -52,6 +52,8 @@ public abstract class User implements UserDetails {
     @NotNull
     private String password;
 
+    @NonNull
+    @NotNull
     @NotEmpty
     private List<Role> roles = List.of(Role.DEVELOPER);
 

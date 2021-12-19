@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /*
-id (generated automatically) - long number;
+id (generated automatically) - String number;
 project - the Project this result is reported for;
 endDate - end date for the project;
 duration - integer, number of working days for the project;
-resultsDescription (optional) - string 10 - 2500 characters long, supporting Markdown syntax;
+resultsDescription (optional) - string 10 - 2500 characters String, supporting Markdown syntax;
 sprintResults - list of SprintResult for the Sprints completed;
 created (generated automatically) - time stamp of the moment the entity was created;
 modified (generated automatically) - time stamp of the moment the entity was last modified;
@@ -28,7 +28,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
 @RequiredArgsConstructor
 public class ProjectResult {
     @Id
-    private long id;
+    private String id;
 
     @NonNull
     @NotNull
@@ -42,7 +42,7 @@ public class ProjectResult {
     @NotNull
     private int duration;
 
-    @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters long, supporting Markdown syntax.")
+    @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters String, supporting Markdown syntax.")
     private String resultsDescription;
 
     @NonNull
