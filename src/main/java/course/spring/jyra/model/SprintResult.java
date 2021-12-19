@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Document(collection = "sprintResults")
 @Data
@@ -49,6 +50,6 @@ public class SprintResult {
     private LocalDateTime modified = LocalDateTime.now();
 
     public int calculateTeamVelocity() {
-        return this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
+        return Objects.requireNonNull(this.sprint).getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
     }
 }
