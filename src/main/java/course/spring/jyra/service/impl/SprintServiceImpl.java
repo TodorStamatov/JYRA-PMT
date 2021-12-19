@@ -4,12 +4,15 @@ import course.spring.jyra.dao.SprintRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.Project;
 import course.spring.jyra.model.Sprint;
+import course.spring.jyra.model.Sprint;
 import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class SprintServiceImpl implements SprintService {
     private final SprintRepository sprintRepository;
 
@@ -45,7 +48,10 @@ public class SprintServiceImpl implements SprintService {
 
     @Override
     public Sprint update(Sprint sprint) {
-        return null;
+        Sprint oldSprint = findById(sprint.getId());
+        sprint.setCreated(oldSprint.getCreated());
+        sprint.setModified(LocalDateTime.now());
+        return sprintRepository.save(sprint);
     }
 
     @Override

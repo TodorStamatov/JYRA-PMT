@@ -3,12 +3,15 @@ package course.spring.jyra.service.impl;
 import course.spring.jyra.dao.ProjectRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.Project;
+import course.spring.jyra.model.Project;
 import course.spring.jyra.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
 
@@ -49,7 +52,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project update(Project project) {
-        return null;
+        Project oldProject = findById(project.getId());
+        project.setCreated(oldProject.getCreated());
+        project.setModified(LocalDateTime.now());
+        return projectRepository.save(project);
     }
 
     @Override

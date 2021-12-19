@@ -6,10 +6,12 @@ import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.model.Sprint;
 import course.spring.jyra.service.ProjectResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ProjectResultServiceImpl implements ProjectResultService {
     private final ProjectResultRepository projectResultRepository;
 
@@ -38,7 +40,10 @@ public class ProjectResultServiceImpl implements ProjectResultService {
 
     @Override
     public ProjectResult update(ProjectResult projectResult) {
-        return null;
+        ProjectResult oldProjectResult = findById(projectResult.getId());
+        projectResult.setCreated(oldProjectResult.getCreated());
+        projectResult.setModified(LocalDateTime.now());
+        return projectResultRepository.save(projectResult);
     }
 
     @Override

@@ -55,21 +55,21 @@ public class TaskServiceImpl implements TaskService {
         Task oldTask = findById(task.getId());
         task.setModified(LocalDateTime.now());
         task.setAddedBy(oldTask.getAddedBy());
-        task.setSprint(sprintRepository.findById(oldTask.getSprint().getId()).orElseThrow(() -> new InvalidEntityException("Sprint of task could not ne changed")));
-        task.setAddedBy(userRepository.findById(oldTask.getAddedBy().getId()).orElseThrow(() -> new InvalidEntityException("Author of task could not ne changed")));
-        task.getDevelopersAssigned().clear();
-
-        oldTask.getDevelopersAssigned()
-                .forEach(developer -> task.getDevelopersAssigned()
-                        .add((Developer) userRepository.findById(
-                                        developer.getId())
-                                .orElseThrow(
-                                        () -> new EntityNotFoundException(
-                                                String.format("Developer with ID=%d could not be found", developer.getId())
-                                        )
-                                )
-                        )
-                );
+//        task.setSprint(sprintRepository.findById(oldTask.getSprint().getId()).orElseThrow(() -> new InvalidEntityException("Sprint of task could not ne changed")));
+//        task.setAddedBy(userRepository.findById(oldTask.getAddedBy().getId()).orElseThrow(() -> new InvalidEntityException("Author of task could not ne changed")));
+//        task.getDevelopersAssigned().clear();
+//
+//        oldTask.getDevelopersAssigned()
+//                .forEach(developer -> task.getDevelopersAssigned()
+//                        .add((Developer) userRepository.findById(
+//                                        developer.getId())
+//                                .orElseThrow(
+//                                        () -> new EntityNotFoundException(
+//                                                String.format("Developer with ID=%d could not be found", developer.getId())
+//                                        )
+//                                )
+//                        )
+//                );
         return taskRepository.save(task);
     }
 

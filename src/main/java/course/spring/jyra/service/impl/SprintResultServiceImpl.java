@@ -3,14 +3,17 @@ package course.spring.jyra.service.impl;
 import course.spring.jyra.dao.SprintResultRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.ProjectResult;
+import course.spring.jyra.model.Sprint;
 import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.service.SprintResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class SprintResultServiceImpl implements SprintResultService { 
+@Service
+public class SprintResultServiceImpl implements SprintResultService {
     private final SprintResultRepository sprintResultRepository;
 
     @Autowired
@@ -38,7 +41,10 @@ public class SprintResultServiceImpl implements SprintResultService {
 
     @Override
     public SprintResult update(SprintResult sprintResult) {
-        return null;
+        SprintResult oldSprintResult = findById(sprintResult.getId());
+        sprintResult.setCreated(oldSprintResult.getCreated());
+        sprintResult.setModified(LocalDateTime.now());
+        return sprintResultRepository.save(sprintResult);
     }
 
     @Override

@@ -6,10 +6,12 @@ import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.TaskResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class TaskResultServiceImpl implements TaskResultService {
     private final TaskResultRepository taskResultRepository;
 
@@ -38,7 +40,10 @@ public class TaskResultServiceImpl implements TaskResultService {
 
     @Override
     public TaskResult update(TaskResult taskResult) {
-        return null;
+        TaskResult oldTaskResult = findById(taskResult.getId());
+        taskResult.setCreated(oldTaskResult.getCreated());
+        taskResult.setModified(LocalDateTime.now());
+        return taskResultRepository.save(taskResult);
     }
 
     @Override
