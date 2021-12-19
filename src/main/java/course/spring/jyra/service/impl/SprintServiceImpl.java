@@ -41,9 +41,9 @@ public class SprintServiceImpl implements SprintService {
 
     @Override
     public Sprint deleteById(long id) {
-        Sprint oldSprint=findById(id);
+        Sprint oldSprint = findById(id);
         sprintRepository.deleteById(id);
-        return  oldSprint;
+        return oldSprint;
     }
 
     @Override

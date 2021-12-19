@@ -48,7 +48,7 @@ public class TaskResultServiceImpl implements TaskResultService {
 
     @Override
     public TaskResult deleteById(long id) {
-        TaskResult oldTaskResult=findById(id);
+        TaskResult oldTaskResult = findById(id);
         taskResultRepository.deleteById(id);
         return oldTaskResult;
     }

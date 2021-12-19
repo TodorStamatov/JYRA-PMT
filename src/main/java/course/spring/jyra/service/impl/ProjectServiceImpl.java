@@ -27,12 +27,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project findById(long id) {
-        return projectRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Project with ID=%s not found.", id)));
+        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", id)));
     }
 
     @Override
     public Project findByTitle(String title) {
-        return projectRepository.findByTitle(title).orElseThrow(()-> new EntityNotFoundException(String.format("Project with title=%s not found.", title)));
+        return projectRepository.findByTitle(title).orElseThrow(() -> new EntityNotFoundException(String.format("Project with title=%s not found.", title)));
     }
 
     @Override
@@ -45,9 +45,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project deleteById(long id) {
-        Project oldProject=findById(id);
+        Project oldProject = findById(id);
         projectRepository.deleteById(id);
-        return  oldProject;
+        return oldProject;
     }
 
     @Override

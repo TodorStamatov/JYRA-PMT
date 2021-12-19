@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setActive(true);
-        if(user.getRoles() == null || user.getRoles().size()==0){
+        if (user.getRoles() == null || user.getRoles().size() == 0) {
             user.setRoles(List.of(Role.DEVELOPER));
         }
 
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         User oldUser = findById(user.getId());
 
         // prevent username changing
-        if(user.getUsername() != null && !user.getUsername().equals(oldUser.getUsername())) {
+        if (user.getUsername() != null && !user.getUsername().equals(oldUser.getUsername())) {
             throw new InvalidEntityException("Username of a user could not ne changed.");
         }
 

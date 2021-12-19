@@ -49,7 +49,7 @@ public class SprintResultServiceImpl implements SprintResultService {
 
     @Override
     public SprintResult deleteById(long id) {
-        SprintResult oldSprintResult=findById(id);
+        SprintResult oldSprintResult = findById(id);
         sprintResultRepository.deleteById(id);
         return oldSprintResult;
     }
