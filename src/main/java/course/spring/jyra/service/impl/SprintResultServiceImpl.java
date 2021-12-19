@@ -1,0 +1,55 @@
+package course.spring.jyra.service.impl;
+
+import course.spring.jyra.dao.SprintResultRepository;
+import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.model.ProjectResult;
+import course.spring.jyra.model.SprintResult;
+import course.spring.jyra.service.SprintResultService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class SprintResultServiceImpl implements SprintResultService { 
+    private final SprintResultRepository sprintResultRepository;
+
+    @Autowired
+    public SprintResultServiceImpl(SprintResultRepository sprintResultRepository) {
+        this.sprintResultRepository = sprintResultRepository;
+    }
+
+    @Override
+    public List<SprintResult> findAll() {
+        return sprintResultRepository.findAll();
+    }
+
+    @Override
+    public SprintResult findById(long id) {
+        return sprintResultRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint result with ID=%s not found.", id)));
+    }
+
+    @Override
+    public SprintResult create(SprintResult sprintResult) {
+        sprintResult.setId(null);
+        sprintResult.setCreated(LocalDateTime.now());
+        sprintResult.setModified(LocalDateTime.now());
+        return sprintResultRepository.insert(sprintResult);
+    }
+
+    @Override
+    public SprintResult update(SprintResult sprintResult) {
+        return null;
+    }
+
+    @Override
+    public SprintResult deleteById(long id) {
+        SprintResult oldSprintResult=findById(id);
+        sprintResultRepository.deleteById(id);
+        return oldSprintResult;
+    }
+
+    @Override
+    public long count() {
+        return sprintResultRepository.count();
+    }
+}

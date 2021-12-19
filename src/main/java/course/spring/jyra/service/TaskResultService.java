@@ -9,8 +9,6 @@ public interface TaskResultService {
 
     TaskResult findById(long id);
 
-    TaskResult findByTaskTitle(String taskTitle);
-
     TaskResult create(TaskResult taskResult);
 
     TaskResult update(TaskResult taskResult);

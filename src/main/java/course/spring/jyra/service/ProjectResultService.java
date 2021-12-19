@@ -9,8 +9,6 @@ public interface ProjectResultService {
 
     ProjectResult findById(long id);
 
-    ProjectResult findByProjectTitle(String projectTitle);
-
     ProjectResult create(ProjectResult projectResult);
 
     ProjectResult update(ProjectResult projectResult);
