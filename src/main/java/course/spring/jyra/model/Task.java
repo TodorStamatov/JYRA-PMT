@@ -31,7 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Task {
     @Id
-    private long id;
+    private Long id;
 
     @NotNull
     @NonNull

@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class TaskResult {
     @Id
-    private long id;
+    private Long id;
 
     @NotNull
     @NonNull

@@ -28,7 +28,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
 @RequiredArgsConstructor
 public class ProjectResult {
     @Id
-    private long id;
+    private Long id;
 
     @NonNull
     @NotNull
