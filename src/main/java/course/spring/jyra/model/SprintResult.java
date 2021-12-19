@@ -15,6 +15,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -34,7 +35,7 @@ public class SprintResult {
     @NonNull
     private Sprint sprint;
 
-    private int teamVelocity=calculateTeamVelocity();
+    private int teamVelocity = 0;
 
     @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters long, supporting Markdown syntax.")
     private String resultsDescription;
@@ -49,7 +50,8 @@ public class SprintResult {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
-    public int calculateTeamVelocity() {
-        return Objects.requireNonNull(this.sprint).getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
+    @PostConstruct
+    public void calculateTeamVelocity() {
+        this.teamVelocity = this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
     }
 }
