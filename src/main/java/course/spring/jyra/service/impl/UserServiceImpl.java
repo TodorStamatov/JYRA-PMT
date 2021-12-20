@@ -40,10 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        User found = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("User '%s' not found.", username)));
-        found.setPassword("");
-        return found;
     }
 
     @Override
