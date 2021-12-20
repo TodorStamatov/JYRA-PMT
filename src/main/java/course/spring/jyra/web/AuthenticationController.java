@@ -15,12 +15,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
+@RequestMapping
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @Autowired
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+
+    @GetMapping("/")
+    public String indexRedirect(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        return "redirect:/index";
     }
 
     @GetMapping("/register")
@@ -64,10 +73,5 @@ public class AuthenticationController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
-    }
-
-    @GetMapping("/")
-    public String welcome() {
-        return "index";
     }
 }
