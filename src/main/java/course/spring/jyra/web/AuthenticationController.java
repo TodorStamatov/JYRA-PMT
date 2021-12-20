@@ -46,7 +46,7 @@ public class AuthenticationController {
     @GetMapping("/register")
     public String getRegisterForm(Model model) {
         if (!model.containsAttribute("user")) {
-            model.addAttribute("user", new Developer());
+            model.addAttribute("user", new User());
         }
         return "register";
     }
