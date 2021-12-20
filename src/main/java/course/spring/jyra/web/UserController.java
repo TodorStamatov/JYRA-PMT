@@ -38,7 +38,8 @@ public class UserController {
     public String getUserById(Model model, @PathVariable("userId") String id) {
         model.addAttribute("user", userService.findById(id));
         log.debug("GET: User with Id=%s : {}", id, userService.findAll());
-        return "redirect:/users"; //should redirect to other page
+        //TODO:should redirect to other page
+        return "redirect:/users";
     }
 
     @PutMapping

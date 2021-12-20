@@ -45,7 +45,8 @@ public class SprintController {
     public String getSprintById(Model model, @PathVariable("sprintId") String id) {
         model.addAttribute("sprint", sprintService.findById(id));
         log.debug("GET: Sprint with Id=%s : {}", id, sprintService.findById(id));
-        return "redirect:/sprints"; //should redirect to other page
+        //TODO:should redirect to other page
+        return "redirect:/sprints";
     }
 
     @PutMapping

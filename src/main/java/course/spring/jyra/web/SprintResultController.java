@@ -1,6 +1,7 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.ProjectResult;
+import course.spring.jyra.model.Sprint;
 import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.service.SprintResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,13 @@ public class SprintResultController {
         model.addAttribute("sprint results", sprintResultService.findAll());
         log.debug("GET: Sprint results: {}", sprintResultService.findAll());
         return "sprintresults";
+    }
+
+    @PostMapping
+    public String addSprintResult(@ModelAttribute("sprintResult") SprintResult sprintResult) {
+        sprintResultService.create(sprintResult);
+        log.debug("POST: Sprint result: {}", sprintResult);
+        return "redirect:/sprintsresults";
     }
 
     @DeleteMapping

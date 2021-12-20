@@ -45,7 +45,8 @@ public class ProjectController {
     public String getProjectById(Model model, @PathVariable("projectId") String id) {
         model.addAttribute("project", projectService.findById(id));
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
-        return "redirect:/projects"; //should redirect to other page
+        //TODO:should redirect to other page
+        return "redirect:/projects";
     }
 
     @PutMapping

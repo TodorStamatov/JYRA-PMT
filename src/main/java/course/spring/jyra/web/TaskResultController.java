@@ -1,6 +1,7 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.ProjectResult;
+import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.TaskResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,13 @@ public class TaskResultController {
         model.addAttribute("task results", taskResultService.findAll());
         log.debug("GET: Task results: {}", taskResultService.findAll());
         return "taskresults";
+    }
+
+    @PostMapping
+    public String addTaskResult(@ModelAttribute("taskResult") TaskResult taskResult) {
+        taskResultService.create(taskResult);
+        log.debug("POST: Task result: {}", taskResult);
+        return "redirect:/taskresults";
     }
 
     @DeleteMapping
