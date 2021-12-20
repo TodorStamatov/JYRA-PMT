@@ -1,5 +1,9 @@
 server:
   port: 8080
+  #  20m timeout
+  servlet:
+    session:
+      timeout: 20m
 spring:
   data:
     mongodb:

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class User implements UserDetails {
+public class User implements UserDetails {
     @Id
     private String id;
 
@@ -48,7 +48,7 @@ public abstract class User implements UserDetails {
     private String username;
 
     @NonNull
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,15}")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{2,15}")
     @NotNull
     private String password;
 
