@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.TaskResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,14 @@ public class TaskResultController {
         TaskResult taskResult = taskResultService.findById(id);
         log.debug("DELETE: Task result: {}", taskResult);
         taskResultService.deleteById(id);
+        return "redirect:/taskresults";
+    }
+
+    @PutMapping
+    public String updateTaskResult(@RequestParam("update") String id) {
+        TaskResult taskResult = taskResultService.findById(id);
+        log.debug("UPDATE: Task result: {}", taskResult);
+        taskResultService.update(taskResult);
         return "redirect:/taskresults";
     }
 }

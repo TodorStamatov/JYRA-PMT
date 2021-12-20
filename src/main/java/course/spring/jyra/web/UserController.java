@@ -1,6 +1,5 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.Project;
 import course.spring.jyra.model.User;
 import course.spring.jyra.service.UserService;
 import lombok.extern.slf4j.Slf4j;

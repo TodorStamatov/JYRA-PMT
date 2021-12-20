@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.service.SprintResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,14 @@ public class SprintResultController {
         SprintResult sprintResult = sprintResultService.findById(id);
         log.debug("DELETE: Sprint result: {}", sprintResult);
         sprintResultService.deleteById(id);
+        return "redirect:/sprintresults";
+    }
+
+    @PutMapping
+    public String updateSprintResult(@RequestParam("update") String id) {
+        SprintResult sprintResult = sprintResultService.findById(id);
+        log.debug("UPDATE: Sprint result: {}", sprintResult);
+        sprintResultService.update(sprintResult);
         return "redirect:/sprintresults";
     }
 }

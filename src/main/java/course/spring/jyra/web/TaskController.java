@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.model.Sprint;
 import course.spring.jyra.model.Task;
 import course.spring.jyra.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,21 @@ public class TaskController {
         Task task = taskService.findById(id);
         log.debug("DELETE: Task: {}", task);
         taskService.deleteById(id);
+        return "redirect:/tasks";
+    }
+
+    @GetMapping("/{taskId}")
+    public String getTaskById(Model model, @PathVariable("taskId") String id) {
+        model.addAttribute("task", taskService.findById(id));
+        log.debug("GET: Task with Id=%s : {}", id, taskService.findById(id));
+        return "redirect:/tasks"; //should redirect to other page
+    }
+
+    @PutMapping
+    public String updateSprint(@RequestParam("update") String id) {
+        Task task = taskService.findById(id);
+        log.debug("UPDATE: Task: {}", task);
+        taskService.update(task);
         return "redirect:/tasks";
     }
 }

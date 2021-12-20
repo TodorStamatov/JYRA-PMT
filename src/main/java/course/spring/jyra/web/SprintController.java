@@ -1,6 +1,5 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.Project;
 import course.spring.jyra.model.Sprint;
 import course.spring.jyra.service.SprintService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +38,21 @@ public class SprintController {
         Sprint sprint = sprintService.findById(id);
         log.debug("DELETE: Sprint: {}", sprint);
         sprintService.deleteById(id);
+        return "redirect:/sprints";
+    }
+
+    @GetMapping("/{sprintId}")
+    public String getSprintById(Model model, @PathVariable("sprintId") String id) {
+        model.addAttribute("sprint", sprintService.findById(id));
+        log.debug("GET: Sprint with Id=%s : {}", id, sprintService.findById(id));
+        return "redirect:/sprints"; //should redirect to other page
+    }
+
+    @PutMapping
+    public String updateSprint(@RequestParam("update") String id) {
+        Sprint sprint = sprintService.findById(id);
+        log.debug("UPDATE: Sprint: {}", sprint);
+        sprintService.update(sprint);
         return "redirect:/sprints";
     }
 

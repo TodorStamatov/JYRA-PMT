@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.model.Project;
 import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.service.ProjectResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,14 @@ public class ProjectResultController {
         ProjectResult projectResult = projectResultService.findById(id);
         log.debug("DELETE: Project result: {}", projectResult);
         projectResultService.deleteById(id);
+        return "redirect:/projectresults";
+    }
+
+    @PutMapping
+    public String updateProjectResult(@RequestParam("update") String id) {
+        ProjectResult projectResult = projectResultService.findById(id);
+        log.debug("UPDATE: Project result: {}", projectResult);
+        projectResultService.update(projectResult);
         return "redirect:/projectresults";
     }
 }
