@@ -31,11 +31,16 @@ public class AuthenticationController {
     }
 
     @GetMapping("/")
-    public String indexRedirect(Model model, HttpSession session) {
+    public String rootRedirect(Model model, HttpSession session) {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }
         return "redirect:/index";
+    }
+
+    @GetMapping("/index")
+    public String getIndex() {
+        return "index";
     }
 
     @GetMapping("/register")
