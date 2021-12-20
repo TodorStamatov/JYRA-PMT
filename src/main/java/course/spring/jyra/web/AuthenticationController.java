@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-@RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
@@ -35,7 +34,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
         authenticationService.register(user);
-        return "redirect:/auth/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
