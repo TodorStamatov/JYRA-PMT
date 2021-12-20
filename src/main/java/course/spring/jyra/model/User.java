@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class User implements UserDetails {
+public class User implements UserDetails {
     @Id
     private String id;
 
@@ -69,6 +69,8 @@ public abstract class User implements UserDetails {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
+
+    private String userType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

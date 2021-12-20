@@ -2,16 +2,22 @@ package course.spring.jyra.web;
 
 import javax.servlet.http.HttpSession;
 
+import course.spring.jyra.exception.InvalidEntityException;
 import course.spring.jyra.model.Developer;
+import course.spring.jyra.model.ProductOwner;
+import course.spring.jyra.model.Role;
 import course.spring.jyra.model.User;
 import course.spring.jyra.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -42,6 +48,29 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
+//        // TODO:
+//        if (user.getRoles().contains(Role.PRODUCT_OWNER)) {
+//            ProductOwner productOwner = ProductOwner.builder()
+//                    .firstName(user.getFirstName())
+//                    .lastName(user.getLastName())
+//                    .username(user.getUsername())
+//                    .password(user.getPassword())
+//                    .email(user.getEmail())
+//                    .roles(List.of(Role.PRODUCT_OWNER))
+//                    .build();
+//            authenticationService.register(productOwner);
+//            return "redirect:/login";
+//        } else if (user.getRoles().contains(Role.DEVELOPER)) {
+//            Developer developer = Developer.builder()
+//                    .firstName(user.getFirstName())
+//                    .lastName(user.getLastName())
+//                    .username(user.getUsername())
+//                    .password(user.getPassword())
+//                    .email(user.getEmail())
+//                    .roles(List.of(Role.DEVELOPER))
+//                    .build();
+//            authenticationService.register(developer);
+//    }
         authenticationService.register(user);
         return "redirect:/login";
     }
