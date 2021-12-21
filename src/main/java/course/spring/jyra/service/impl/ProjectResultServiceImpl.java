@@ -2,6 +2,7 @@ package course.spring.jyra.service.impl;
 
 import course.spring.jyra.dao.ProjectResultRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.model.Project;
 import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.model.Sprint;
 import course.spring.jyra.service.ProjectResultService;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectResultServiceImpl implements ProjectResultService {
@@ -32,6 +35,11 @@ public class ProjectResultServiceImpl implements ProjectResultService {
 
     @Override
     public ProjectResult create(ProjectResult projectResult) {
+        String projectId = projectResult.getProject().getId();
+        Optional<ProjectResult> projectMatch = projectResultRepository.findAll().stream().filter(projectResult1 -> projectResult1.getProject().getId().equals(projectId)).findAny();
+        if (!projectMatch.isEmpty()) {
+            throw new EntityNotFoundException(String.format("There is a result created for project with ID=%s", projectId));
+        }
         projectResult.setId(null);
         projectResult.setCreated(LocalDateTime.now());
         projectResult.setModified(LocalDateTime.now());
@@ -51,6 +59,11 @@ public class ProjectResultServiceImpl implements ProjectResultService {
         ProjectResult oldProjectResult = findById(id);
         projectResultRepository.deleteById(id);
         return oldProjectResult;
+    }
+
+    @Override
+    public ProjectResult findByProject(String id) {
+        return projectResultRepository.findAll().stream().filter(projectResult -> projectResult.getProject().getId().equals(id)).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found or is not finished.", id)));
     }
 
     @Override
