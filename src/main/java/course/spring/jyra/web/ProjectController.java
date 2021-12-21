@@ -23,7 +23,7 @@ public class ProjectController {
     public String getProjects(Model model) {
         model.addAttribute("projects", projectService.findAll());
         log.debug("GET: Projects: {}", projectService.findAll());
-        return "projects";
+        return "all-projects";
     }
 
     @PostMapping
