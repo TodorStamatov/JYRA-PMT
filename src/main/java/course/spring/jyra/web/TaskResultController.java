@@ -1,7 +1,5 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.ProjectResult;
-import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.TaskResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,14 @@ public class TaskResultController {
     public String getTaskResult(Model model) {
         model.addAttribute("task results", taskResultService.findAll());
         log.debug("GET: Task results: {}", taskResultService.findAll());
+        return "taskresults";
+    }
+
+    @GetMapping("/{taskId}/task-result")
+    public String getTaskResultByTaskId(Model model, @PathVariable("taskId") String id) {
+        model.addAttribute("task result", taskResultService.findByTaskId(id));
+        log.debug("GET: Result of task with Id:%s {}", id, taskResultService.findAll());
+        //TODO: change view
         return "taskresults";
     }
 

@@ -54,6 +54,12 @@ public class TaskResultServiceImpl implements TaskResultService {
     }
 
     @Override
+    public TaskResult findByTaskId(String id) {
+        return taskResultRepository.findAll().stream().filter(taskResult -> taskResult.getTask().getId().equals(id)).findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found or is not finished.", id)));
+    }
+
+    @Override
     public long count() {
         return taskResultRepository.count();
     }

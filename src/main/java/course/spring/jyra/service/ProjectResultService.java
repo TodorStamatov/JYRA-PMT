@@ -15,5 +15,7 @@ public interface ProjectResultService {
 
     ProjectResult deleteById(String id);
 
+    ProjectResult findByProject(String id);
+
     long count();
 }

@@ -15,5 +15,7 @@ public interface SprintResultService {
 
     SprintResult deleteById(String id);
 
+    SprintResult findBySprintId(String id);
+
     long count();
 }

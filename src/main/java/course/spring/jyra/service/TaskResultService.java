@@ -15,5 +15,7 @@ public interface TaskResultService {
 
     TaskResult deleteById(String id);
 
+    TaskResult findByTaskId(String id);
+
     long count();
 }
