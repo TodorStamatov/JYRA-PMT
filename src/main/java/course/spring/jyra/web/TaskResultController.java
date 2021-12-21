@@ -30,6 +30,7 @@ public class TaskResultController {
     public String getTaskResultByTaskId(Model model, @PathVariable("taskId") String id) {
         model.addAttribute("task result", taskResultService.findByTaskId(id));
         log.debug("GET: Result of task with Id:%s {}", id, taskResultService.findAll());
+        //TODO: change view
         return "taskresults";
     }
 

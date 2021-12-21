@@ -63,7 +63,7 @@ public class ProjectResultServiceImpl implements ProjectResultService {
 
     @Override
     public ProjectResult findByProject(String id) {
-        return projectResultRepository.findAll().stream().filter(p -> p.getProject().getId().equals(id)).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found or is not finished.", id)));
+        return projectResultRepository.findAll().stream().filter(projectResult -> projectResult.getProject().getId().equals(id)).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found or is not finished.", id)));
     }
 
     @Override
