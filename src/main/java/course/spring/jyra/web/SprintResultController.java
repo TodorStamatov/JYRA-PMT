@@ -28,6 +28,14 @@ public class SprintResultController {
         return "sprintresults";
     }
 
+    //TODO: getSprintResultByProjectId
+    @GetMapping("/{projectId}/sprint-result")
+    public String getSprintResultByProjectId(Model model, @PathVariable("projectId") String id) {
+        model.addAttribute("sprint result", sprintResultService.findBySprintId(id));
+        log.debug("GET: Sprint result: {}", sprintResultService.findBySprintId(id));
+        return "sprintresults";
+    }
+
     @PostMapping
     public String addSprintResult(@ModelAttribute("sprintResult") SprintResult sprintResult) {
         sprintResultService.create(sprintResult);

@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class ProjectResultController {
     private final ProjectResultService projectResultService;
-    private final ProjectService projectService;
 
     @Autowired
     public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService) {
         this.projectResultService = projectResultService;
-        this.projectService = projectService;
     }
 
     @GetMapping
@@ -29,10 +27,10 @@ public class ProjectResultController {
         return "projectresults";
     }
 
-    @GetMapping
-    public String getResultsByProjectId(Model model) {
-        //model.addAttribute("project results", pr);
-        log.debug("GET: Project results: {}", projectResultService.findAll());
+    @GetMapping("/{projectId}/project-result")
+    public String getResultsByProjectId(Model model, @PathVariable("projectId") String projectId) {
+        model.addAttribute("project result", projectResultService.findByProject(projectId));
+        log.debug("GET: Result of Project with ID=%s: {}", projectId, projectResultService.findByProject(projectId));
         return "projectresults";
     }
 

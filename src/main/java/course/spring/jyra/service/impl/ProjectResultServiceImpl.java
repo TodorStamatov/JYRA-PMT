@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectResultServiceImpl implements ProjectResultService {
@@ -51,6 +52,11 @@ public class ProjectResultServiceImpl implements ProjectResultService {
         ProjectResult oldProjectResult = findById(id);
         projectResultRepository.deleteById(id);
         return oldProjectResult;
+    }
+
+    @Override
+    public ProjectResult findByProject(String id) {
+        return projectResultRepository.findAll().stream().filter(p -> p.getProject().getId().equals(id)).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found or is not finished.", id)));
     }
 
     @Override
