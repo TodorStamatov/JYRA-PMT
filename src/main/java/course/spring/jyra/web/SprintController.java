@@ -23,7 +23,7 @@ public class SprintController {
     public String getSprints(Model model) {
         model.addAttribute("sprints", sprintService.findAll());
         log.debug("GET: Sprints: {}", sprintService.findAll());
-        return "sprints";
+        return "all-sprints";
     }
 
     @PostMapping
