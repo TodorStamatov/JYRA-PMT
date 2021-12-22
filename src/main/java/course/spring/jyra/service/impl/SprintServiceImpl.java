@@ -32,6 +32,11 @@ public class SprintServiceImpl implements SprintService {
     }
 
     @Override
+    public Sprint findByTitle(String title) {
+        return sprintRepository.findByTitle(title).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with title=%s not found.", title)));
+    }
+
+    @Override
     public Sprint create(Sprint sprint) {
         sprint.setId(null);
         sprint.setCreated(LocalDateTime.now());

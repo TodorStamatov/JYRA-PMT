@@ -10,6 +10,8 @@ public interface SprintService {
 
     Sprint findById(String id);
 
+    Sprint findByTitle(String title);
+
     Sprint create(Sprint sprint);
 
     Sprint deleteById(String id);
