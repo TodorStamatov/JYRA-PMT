@@ -23,7 +23,7 @@ public class UserController {
     public String getUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         log.debug("GET: Users: {}", userService.findAll());
-        return "users";
+        return "all-users";
     }
 
     @DeleteMapping

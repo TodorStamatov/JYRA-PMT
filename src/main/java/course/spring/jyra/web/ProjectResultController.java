@@ -22,9 +22,9 @@ public class ProjectResultController {
 
     @GetMapping
     public String getProjectResults(Model model) {
-        model.addAttribute("project results", projectResultService.findAll());
+        model.addAttribute("projectResults", projectResultService.findAll());
         log.debug("GET: Project results: {}", projectResultService.findAll());
-        return "projectresults";
+        return "all-project-results";
     }
 
     @GetMapping("/{projectId}/project-result")

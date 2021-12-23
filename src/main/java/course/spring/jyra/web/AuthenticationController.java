@@ -106,6 +106,7 @@ public class AuthenticationController {
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
+        log.info("User logged out.");
         return "redirect:/";
     }
 }
