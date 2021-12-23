@@ -1,5 +1,9 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.exception.InvalidEntityException;
+import course.spring.jyra.model.Administrator;
+import course.spring.jyra.model.Developer;
+import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.User;
 import course.spring.jyra.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +40,23 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public String getUserById(Model model, @PathVariable("userId") String id) {
-        model.addAttribute("user", userService.findById(id));
-        log.debug("GET: User with Id=%s : {}", id, userService.findAll());
+        User user = userService.findById(id);
+        String userType = "";
+        if (user instanceof Developer) {
+            userType = "DEV";
+        } else if (user instanceof Administrator) {
+            userType = "ADMIN";
+        } else if (user instanceof ProductOwner) {
+            userType = "PO";
+        } else {
+            throw new InvalidEntityException(String.format("User with ID=%s is not one of the supported user types format.", id));
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("userType", userType);
+
+        log.debug("GET: User with Id=%s : {}", id, userService.findById(id));
         //TODO:should redirect to other page
-        return "redirect:/users";
+        return "single-user";
     }
 
     @PutMapping
