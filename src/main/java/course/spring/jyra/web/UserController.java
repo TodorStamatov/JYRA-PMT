@@ -44,14 +44,19 @@ public class UserController {
         String userType = "";
         if (user instanceof Developer) {
             userType = "DEV";
+            Developer dev = (Developer) user;
+            model.addAttribute("user", dev);
         } else if (user instanceof Administrator) {
             userType = "ADMIN";
+            Administrator admin = (Administrator) user;
+            model.addAttribute("user", admin);
         } else if (user instanceof ProductOwner) {
             userType = "PO";
+            ProductOwner po = (ProductOwner) user;
+            model.addAttribute("user", po);
         } else {
             throw new InvalidEntityException(String.format("User with ID=%s is not one of the supported user types format.", id));
         }
-        model.addAttribute("user", user);
         model.addAttribute("userType", userType);
 
         log.debug("GET: User with Id=%s : {}", id, userService.findById(id));

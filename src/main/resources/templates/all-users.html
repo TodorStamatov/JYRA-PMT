@@ -28,9 +28,9 @@
             <caption>List of all users</caption>
             <thead class="table-dark">
             <tr>
+                <th style="text-align: center" scope="col">Username</th>
                 <th style="text-align: center" scope="col">First name</th>
                 <th style="text-align: center" scope="col">Last name</th>
-                <th style="text-align: center" scope="col">Username</th>
                 <th style="text-align: center" scope="col">Email</th>
                 <th style="text-align: center" scope="col">Roles</th>
                 <th style="text-align: center" scope="col">Status</th>
@@ -39,9 +39,11 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
+                <td style="text-align: center">
+                    <a th:href="@{'/users/' + ${user.id}}" th:text="${user.username}"></a>
+                </td>
                 <td style="text-align: center" th:text="${user.firstName}">First name not found</td>
                 <td style="text-align: center" th:text="${user.lastName}">Last name not found</td>
-                <td style="text-align: center" th:text="${user.username}">Username not found</td>
                 <td style="text-align: center" th:text="${user.email}">Email not found</td>
                 <td style="text-align: center" th:text="${user.roles}">Roles not found</td>
                 <td style="text-align: center" th:text="${user.status}">Status not found</td>

@@ -5,6 +5,127 @@
 
 <div th:replace="fragments/navbar.html :: navbar"></div>
 
+<div class="container-fluid">
+    <div class="row m-5">
+        <div class="col-sm-4 d-flex justify-content-center">
+            <div class="text-center">
+                <img class="rounded-circle z-depth-5 border"
+                     th:if="${user.imageUrl}"
+                     th:src="@{${user.imageUrl}}"
+                     alt="User avatar"
+                     width="192"
+                     height="192"/>
+                <h3 class="mt-2" th:text="${user.firstName} + ' ' + ${user.lastName}"></h3>
+                <p th:text="'Roles: ' + ${user.roles}"></p>
+
+                <hr class="m-2"/>
+
+                <p th:text="'Status: ' + ${user.status}"></p>
+                <p th:text="${user.email}"></p>
+                <p th:text="${user.contacts}"></p>
+
+                <hr class="m-2"/>
+
+                <!--                TODO: Uncomment if necessary-->
+                <!--                <a class="btn btn-primary" href="#" role="button">Manage profile</a>-->
+            </div>
+        </div>
+        <div class="col-sm-8 d-flex justify-content-center">
+            <div id="dev-content" th:if="${userType == 'DEV'}">
+                <div class="m-2" th:if="${user.assignedTask}">
+                    <table class="table table-striped table-hover">
+                        <caption>List of all tasks the user is assigned to</caption>
+                        <thead class="table-dark">
+                        <tr>
+                            <th style="text-align: center" scope="col">Title</th>
+                            <th style="text-align: center" scope="col">Task type</th>
+                            <th style="text-align: center" scope="col">Added by</th>
+                            <th style="text-align: center" scope="col">Estimated effort</th>
+                            <th style="text-align: center" scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="task : ${user.assignedTask}">
+                            <td style="text-align: center" th:text="${task.title}">Title not found</td>
+                            <td style="text-align: center" th:text="${task.taskType}">Task type not found</td>
+                            <td style="text-align: center" th:text="${task.addedBy.username}">Reporter not found</td>
+                            <td style="text-align: center" th:text="${task.estimatedEffort}">Estimation not found</td>
+                            <td style="text-align: center" th:text="${task.status}">Status not found</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="m-2" th:if="${user.completedTaskResults}">
+                    <table class="table table-striped table-hover">
+                        <caption>List of all tasks the user is assigned to</caption>
+                        <thead class="table-dark">
+                        <tr>
+                            <th style="text-align: center" scope="col">Task</th>
+                            <th style="text-align: center" scope="col">Verified by</th>
+                            <th style="text-align: center" scope="col">Actual effort</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="taskResult : ${user.completedTaskResults}">
+                            <td style="text-align: center" th:text="${taskResult.task.title}">Task not found</td>
+                            <td style="text-align: center" th:text="${taskResult.verifiedBy.username}">Reporter not
+                                found
+                            </td>
+                            <td style="text-align: center" th:text="${taskResult.actualEffort}">Actual effort not
+                                found
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="po-content" th:if="${userType == 'PO'}">
+                <div class="m-2" th:if="${user.projects}">
+                    <table class="table table-striped table-hover">
+                        <caption>List of all projects the user is responsible for</caption>
+                        <thead class="table-dark">
+                        <tr>
+                            <th style="text-align: center" scope="col">Title</th>
+                            <th style="text-align: center" scope="col">Description</th>
+                            <th style="text-align: center" scope="col">Owner</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="project : ${user.projects}">
+                            <td style="text-align: center" th:text="${project.title}">Title not found</td>
+                            <td style="text-align: center" th:text="${project.description}">Description not found</td>
+                            <td style="text-align: center" th:text="${project.owner.username}">Owner not found</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="m-2" th:if="${user.completedProjectResults}">
+                    <table class="table table-striped table-hover">
+                        <caption>List of all tasks the user is assigned to</caption>
+                        <thead class="table-dark">
+                        <tr>
+                            <th style="text-align: center" scope="col">Project</th>
+                            <th style="text-align: center" scope="col">End date</th>
+                            <th style="text-align: center" scope="col">Duration</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="projectResult : ${user.completedProjectResults}">
+                            <td style="text-align: center" th:text="${projectResult.project.title}">Project not found
+                            </td>
+                            <td style="text-align: center" th:text="${projectResult.endDate}">End date not found</td>
+                            <td style="text-align: center" th:text="${projectResult.duration}">Duration not found</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script th:replace="fragments/foot.html :: scripts"></script>
 </body>
