@@ -1,7 +1,16 @@
 package course.spring.jyra.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum TaskType {
-    TASK, SUBTASK, BUG, STORY, UI, QA, DOCS, EPIC, FEATURE, IMPROVEMENT, SPIKE, OTHER
+    TASK("Task"), SUBTASK("Subtask"), BUG("Bug"), STORY("Story"),
+    UI("UI"), QA("QA"), DOCS("Documentation"), EPIC("Epic"),
+    FEATURE("Feature"), IMPROVEMENT("Improvement"), SPIKE("Spike"), OTHER("Other");
+
+    private final String readable;
 }
 //Mapping to old:
 //Research => Spike
