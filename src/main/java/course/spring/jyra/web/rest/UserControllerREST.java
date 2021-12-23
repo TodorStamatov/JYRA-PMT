@@ -3,8 +3,8 @@ package course.spring.jyra.web.rest;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
-import course.spring.jyra.model.Project;
-import course.spring.jyra.service.ProjectService;
+import course.spring.jyra.model.User;
+import course.spring.jyra.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,43 +14,43 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/projects")
-public class ProjectControllerREST {
-    private final ProjectService projectService;
+@RequestMapping("/api/users")
+public class UserControllerREST {
+    private final UserService userService;
 
     @Autowired
-    public ProjectControllerREST(ProjectService projectService) {
-        this.projectService = projectService;
+    public UserControllerREST(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
-    public List<Project> getProjects() {
-        return projectService.findAll();
+    public List<User> getUsers() {
+        return userService.findAll();
     }
 
-    @GetMapping("/{projectId}")
-    public Project getProjectById(@PathVariable("projectId") String id) {
-        return projectService.findById(id);
+    @GetMapping("/{userId}")
+    public User getUserById(@PathVariable("userId") String id) {
+        return userService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Project> addProject(@RequestBody Project project) {
-        Project created = projectService.create(project);
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        User created = userService.create(user);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                        .pathSegment("{projectId}").buildAndExpand(created.getId()).toUri()).body(created);
+                        .pathSegment("{userId}").buildAndExpand(created.getId()).toUri()).body(created);
     }
 
-    @PutMapping("/{projectId}")
-    public Project updateProject(@PathVariable("projectId") String id, @RequestBody Project project) {
-        if (!id.equals(project.getId()))
-            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", id, project.getId()));
-        return projectService.update(project);
+    @PutMapping("/{userId}")
+    public User updateUser(@PathVariable("userId") String id, @RequestBody User user) {
+        if (!id.equals(user.getId()))
+            throw new InvalidClientDataException(String.format("User ID %s from URL doesn't match ID %s in Request body", id, user.getId()));
+        return userService.update(user);
     }
 
-    @DeleteMapping("{projectId}")
-    public Project deleteProject(@PathVariable("projectId") String id) {
-        return projectService.deleteById(id);
+    @DeleteMapping("{userId}")
+    public User deleteUser(@PathVariable("userId") String id) {
+        return userService.deleteById(id);
     }
 
     @ExceptionHandler

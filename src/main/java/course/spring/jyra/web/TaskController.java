@@ -1,6 +1,5 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.Sprint;
 import course.spring.jyra.model.Task;
 import course.spring.jyra.service.TaskService;
 import lombok.extern.slf4j.Slf4j;

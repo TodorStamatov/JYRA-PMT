@@ -1,10 +1,12 @@
 package course.spring.jyra.web.rest;
 
+
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
 import course.spring.jyra.model.Project;
-import course.spring.jyra.service.ProjectService;
+import course.spring.jyra.model.Sprint;
+import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,43 +16,43 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/projects")
-public class ProjectControllerREST {
-    private final ProjectService projectService;
+@RequestMapping("/api/sprints")
+public class SprintControllerREST {
+    private final SprintService sprintService;
 
     @Autowired
-    public ProjectControllerREST(ProjectService projectService) {
-        this.projectService = projectService;
+    public SprintControllerREST(SprintService sprintService) {
+        this.sprintService = sprintService;
     }
 
     @GetMapping
-    public List<Project> getProjects() {
-        return projectService.findAll();
+    public List<Sprint> getSprints() {
+        return sprintService.findAll();
     }
 
-    @GetMapping("/{projectId}")
-    public Project getProjectById(@PathVariable("projectId") String id) {
-        return projectService.findById(id);
+    @GetMapping("/{sprintId}")
+    public Sprint getSprintById(@PathVariable("sprintId") String id) {
+        return sprintService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Project> addProject(@RequestBody Project project) {
-        Project created = projectService.create(project);
+    public ResponseEntity<Sprint> addSprint(@RequestBody Sprint sprint) {
+        Sprint created = sprintService.create(sprint);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                        .pathSegment("{projectId}").buildAndExpand(created.getId()).toUri()).body(created);
+                        .pathSegment("{sprintId}").buildAndExpand(created.getId()).toUri()).body(created);
     }
 
-    @PutMapping("/{projectId}")
-    public Project updateProject(@PathVariable("projectId") String id, @RequestBody Project project) {
-        if (!id.equals(project.getId()))
-            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", id, project.getId()));
-        return projectService.update(project);
+    @PutMapping("/{sprintId}")
+    public Sprint updateSprint(@PathVariable("sprintId") String id, @RequestBody Sprint sprint) {
+        if (!id.equals(sprint.getId()))
+            throw new InvalidClientDataException(String.format("Sprint ID %s from URL doesn't match ID %s in Request body", id, sprint.getId()));
+        return sprintService.update(sprint);
     }
 
-    @DeleteMapping("{projectId}")
-    public Project deleteProject(@PathVariable("projectId") String id) {
-        return projectService.deleteById(id);
+    @DeleteMapping("{sprintId}")
+    public Sprint deleteSprint(@PathVariable("sprintId") String id) {
+        return sprintService.deleteById(id);
     }
 
     @ExceptionHandler

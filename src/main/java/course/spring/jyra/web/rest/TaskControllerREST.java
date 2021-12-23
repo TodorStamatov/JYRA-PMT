@@ -3,8 +3,9 @@ package course.spring.jyra.web.rest;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
-import course.spring.jyra.model.Project;
-import course.spring.jyra.service.ProjectService;
+import course.spring.jyra.model.Task;
+import course.spring.jyra.model.Task;
+import course.spring.jyra.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,43 +15,43 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/projects")
-public class ProjectControllerREST {
-    private final ProjectService projectService;
+@RequestMapping("/api/tasks")
+public class TaskControllerREST {
+    private final TaskService taskService;
 
     @Autowired
-    public ProjectControllerREST(ProjectService projectService) {
-        this.projectService = projectService;
+    public TaskControllerREST(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @GetMapping
-    public List<Project> getProjects() {
-        return projectService.findAll();
+    public List<Task> getTask() {
+        return taskService.findAll();
     }
 
-    @GetMapping("/{projectId}")
-    public Project getProjectById(@PathVariable("projectId") String id) {
-        return projectService.findById(id);
+    @GetMapping("/{taskId}")
+    public Task getTaskById(@PathVariable("taskId") String id) {
+        return taskService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Project> addProject(@RequestBody Project project) {
-        Project created = projectService.create(project);
+    public ResponseEntity<Task> addTask(@RequestBody Task task) {
+        Task created = taskService.create(task);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                        .pathSegment("{projectId}").buildAndExpand(created.getId()).toUri()).body(created);
+                        .pathSegment("{taskId}").buildAndExpand(created.getId()).toUri()).body(created);
     }
 
-    @PutMapping("/{projectId}")
-    public Project updateProject(@PathVariable("projectId") String id, @RequestBody Project project) {
-        if (!id.equals(project.getId()))
-            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", id, project.getId()));
-        return projectService.update(project);
+    @PutMapping("/{taskId}")
+    public Task updateTask(@PathVariable("taskId") String id, @RequestBody Task task) {
+        if (!id.equals(task.getId()))
+            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", id, task.getId()));
+        return taskService.update(task);
     }
 
-    @DeleteMapping("{projectId}")
-    public Project deleteProject(@PathVariable("projectId") String id) {
-        return projectService.deleteById(id);
+    @DeleteMapping("{taskId}")
+    public Task deleteTask(@PathVariable("taskId") String id) {
+        return taskService.deleteById(id);
     }
 
     @ExceptionHandler
