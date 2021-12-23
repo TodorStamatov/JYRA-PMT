@@ -55,18 +55,26 @@ public class User implements UserDetails {
     @NonNull
     @NotNull
     @NotEmpty
+    @Builder.Default
     private List<Role> roles = List.of(Role.DEVELOPER);
 
     @Size(min = 10, max = 250, message = "Contacts must be between 10 and 250 characters long.")
     private String contacts;
 
+    @Builder.Default
     private UserStatus status = UserStatus.CHANGE_PASSWORD;
+
+    @Builder.Default
     private String imageUrl = "images/default.jpg";
+
+    @Builder.Default
     private boolean active = true;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
