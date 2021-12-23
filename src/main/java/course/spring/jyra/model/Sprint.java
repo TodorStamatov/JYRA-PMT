@@ -1,6 +1,7 @@
 package course.spring.jyra.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@SuperBuilder
 public class Sprint {
     @Id
     private String id;
