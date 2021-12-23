@@ -30,7 +30,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@SuperBuilder
+@Builder
 public class Task {
     @Id
     private String id;

@@ -28,7 +28,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@SuperBuilder
+@Builder
 public class SprintResult {
     @Id
     private String id;

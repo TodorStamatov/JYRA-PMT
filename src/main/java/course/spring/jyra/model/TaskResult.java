@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@SuperBuilder
+@Builder
 public class TaskResult {
     @Id
     private String id;

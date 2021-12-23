@@ -27,7 +27,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@SuperBuilder
+@Builder
 public class ProjectResult {
     @Id
     private String id;
