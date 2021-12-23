@@ -13,17 +13,19 @@
                     <h5 class="card-title text-center mb-5 fw-light fs-5">Sign Up</h5>
                     <form th:object="${user}" method="POST">
                         <div class="form-floating mb-3">
-                            <input th:value="${user.firstName}" id="fname" name="fname" type="text" min="2" max="15"
+                            <input th:value="${user.firstName}" id="fnameId" name="firstName" type="text" min="2"
+                                   max="15"
                                    class="form-control"
                                    placeholder="First name"/>
-                            <label for="fname">First name</label>
+                            <label for="fnameId">First name</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input th:value="${user.lastName}" id="lname" name="lname" type="text" min="2" max="15"
+                            <input th:value="${user.lastName}" id="lnameId" name="lastName" type="text" min="2"
+                                   max="15"
                                    class="form-control"
                                    placeholder="Last name"/>
-                            <label for="lname">Last name</label>
+                            <label for="lnameId">Last name</label>
                         </div>
 
                         <div class="form-floating mb-3">
