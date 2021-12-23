@@ -35,7 +35,7 @@ public class Task {
 
     @NotNull
     @NonNull
-    private Kind kind;
+    private TaskType taskType;
 
     @NotNull
     @NonNull

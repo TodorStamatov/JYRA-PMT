@@ -8,7 +8,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,8 +44,8 @@ public class DataInitializer implements ApplicationRunner {
     private final ProductOwner DEFAULT_OWNER = ProductOwner.builder().firstName("Ivailo").lastName("Panayotov").email("ivailo@example.com").password("Ivailo1!").username("ivaka").roles(List.of(Role.PRODUCT_OWNER)).build();
 
     private final List<Task> DEFAULT_TASKS = List.of(
-            new Task(Kind.RESEARCH, "Task1", DEFAULT_ADMINS.get(0), 5, DEFAULT_DEVS, "tag1,tag2"),
-            new Task(Kind.DESIGN, "Task2", DEFAULT_ADMINS.get(1), 7, DEFAULT_DEVS, "tag1,tag2")
+            new Task(TaskType.SPIKE, "Task1", DEFAULT_ADMINS.get(0), 5, DEFAULT_DEVS, "tag1,tag2"),
+            new Task(TaskType.UI, "Task2", DEFAULT_ADMINS.get(1), 7, DEFAULT_DEVS, "tag1,tag2")
     );
     private final Sprint DEFAULT_SPRINT = new Sprint(DEFAULT_OWNER);
 
