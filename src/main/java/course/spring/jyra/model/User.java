@@ -61,7 +61,7 @@ public class User implements UserDetails {
     private String contacts;
 
     private UserStatus status = UserStatus.CHANGE_PASSWORD;
-
+    private String imageUrl;
     private boolean active = true;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
