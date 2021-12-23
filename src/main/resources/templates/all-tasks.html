@@ -29,7 +29,7 @@
             <thead class="table-dark">
             <tr>
                 <th style="text-align: center" scope="col">Title</th>
-                <th style="text-align: center" scope="col">Kind</th>
+                <th style="text-align: center" scope="col">Task type</th>
                 <th style="text-align: center" scope="col">Added by</th>
                 <th style="text-align: center" scope="col">Estimated effort</th>
                 <th style="text-align: center" scope="col">Status</th>
@@ -39,7 +39,7 @@
             <tbody>
             <tr th:each="task : ${tasks}">
                 <td style="text-align: center" th:text="${task.title}">Title not found</td>
-                <td style="text-align: center" th:text="${task.kind}">Title not found</td>
+                <td style="text-align: center" th:text="${task.taskType}">Task type not found</td>
                 <td style="text-align: center" th:text="${task.addedBy.username}">Reporter not found</td>
                 <td style="text-align: center" th:text="${task.estimatedEffort}">Estimation not found</td>
                 <td style="text-align: center" th:text="${task.status}">Status not found</td>
