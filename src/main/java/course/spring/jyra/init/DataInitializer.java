@@ -110,23 +110,23 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created devs: {}", DEFAULT_DEVS.stream().map(userService::create).collect(Collectors.toList()));
             log.info("Successfully created product owner: {}", userService.create(DEFAULT_OWNER));
         }
-        if(taskService.count() == 0) {
+        if (taskService.count() == 0) {
             log.info("Successfully created tasks1: {}", DEFAULT_TASKS_1.stream().map(taskService::create).collect(Collectors.toList()));
             log.info("Successfully created tasks2: {}", DEFAULT_TASKS_2.stream().map(taskService::create).collect(Collectors.toList()));
         }
-        if(sprintService.count() == 0){
+        if (sprintService.count() == 0) {
             log.info("Successfully created sprints: {}", DEFAULT_SPRINTS.stream().map(sprintService::create).collect(Collectors.toList()));
         }
-        if(projectService.count() == 0){
-            log.info("Successfully created projects: {}",DEFAULT_PROJECTS.stream().map(projectService::create).collect(Collectors.toList()));
+        if (projectService.count() == 0) {
+            log.info("Successfully created projects: {}", DEFAULT_PROJECTS.stream().map(projectService::create).collect(Collectors.toList()));
         }
-        if(projectResultService.count() == 0){
-            log.info("Successfully created project results: {}",DEFAULT_PROJECT_RESULTS.stream().map(projectResultService::create).collect(Collectors.toList()));
+        if (projectResultService.count() == 0) {
+            log.info("Successfully created project results: {}", DEFAULT_PROJECT_RESULTS.stream().map(projectResultService::create).collect(Collectors.toList()));
         }
-        if(sprintResultService.count() == 0){
+        if (sprintResultService.count() == 0) {
             log.info("Successfully created sprint results: {}", DEFAULT_SPRINT_RESULTS.stream().map(sprintResultService::create).collect(Collectors.toList()));
         }
-        if(taskResultService.count() == 0) {
+        if (taskResultService.count() == 0) {
             log.info("Successfully created task results 1: {}", DEFAULT_TASK_RESULTS_1.stream().map(taskResultService::create).collect(Collectors.toList()));
             log.info("Successfully created task results 2: {}", DEFAULT_TASK_RESULTS_2.stream().map(taskResultService::create).collect(Collectors.toList()));
         }
