@@ -38,6 +38,8 @@ public class ProjectResult {
 
     @NonNull
     @NotNull
+    @Builder.Default
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endDate=LocalDateTime.now();
 
     @NonNull
@@ -51,9 +53,11 @@ public class ProjectResult {
     @NotNull
     private List<SprintResult> sprintResultList;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 

@@ -54,6 +54,7 @@ public class Task {
 
     @NotNull
     @NonNull
+    @Builder.Default
     private TaskStatus status = TaskStatus.TO_DO;
 
     private Sprint sprint;
@@ -69,9 +70,11 @@ public class Task {
     @NonNull
     private String tags;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 }

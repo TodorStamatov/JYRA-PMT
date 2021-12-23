@@ -41,6 +41,7 @@ public class SprintServiceImpl implements SprintService {
         sprint.setId(null);
         sprint.setCreated(LocalDateTime.now());
         sprint.setModified(LocalDateTime.now());
+        sprint.calculateDuration();
         return sprintRepository.insert(sprint);
     }
 

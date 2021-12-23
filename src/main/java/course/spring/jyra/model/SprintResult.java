@@ -37,6 +37,7 @@ public class SprintResult {
     @NonNull
     private Sprint sprint;
 
+    @Builder.Default
     private int teamVelocity = 0;
 
     @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters String, supporting Markdown syntax.")
@@ -46,9 +47,11 @@ public class SprintResult {
     @NotNull
     private List<TaskResult> taskResults;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
