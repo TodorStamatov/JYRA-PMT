@@ -47,7 +47,7 @@ public class DataInitializer implements ApplicationRunner {
             new Task(TaskType.SPIKE, "Task1", DEFAULT_ADMINS.get(0), 5, DEFAULT_DEVS, "tag1,tag2"),
             new Task(TaskType.UI, "Task2", DEFAULT_ADMINS.get(1), 7, DEFAULT_DEVS, "tag1,tag2")
     );
-    private final Sprint DEFAULT_SPRINT = new Sprint(DEFAULT_OWNER);
+    private final Sprint DEFAULT_SPRINT = new Sprint("Commando - Mission 1", DEFAULT_OWNER);
 
     private final List<Project> DEFAULT_PROJECTS = List.of(
             new Project("Project1", DEFAULT_OWNER, DEFAULT_DEVS, DEFAULT_SPRINT),

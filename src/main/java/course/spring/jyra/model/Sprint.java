@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +20,11 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class Sprint {
     @Id
     private String id;
+
+    @NonNull
+    @NotNull
+    @Size(min = 2, max = 120, message = "Sprint title must be between 2 and 120 characters String.")
+    private String title;
 
     @NonNull
     @NotNull
