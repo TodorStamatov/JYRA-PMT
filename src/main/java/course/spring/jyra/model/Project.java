@@ -1,6 +1,7 @@
 package course.spring.jyra.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class Project {
     @Id
     private String id;
@@ -26,6 +28,8 @@ public class Project {
 
     @NonNull
     @NotNull
+    @Builder.Default
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startDate = LocalDateTime.now();
 
     @Size(min = 10, max = 2500, message = "Description must be between 10 and 2500 characters String.")
@@ -47,9 +51,11 @@ public class Project {
     private List<Task> tasksBacklog;
     private String tags;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 }

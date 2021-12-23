@@ -15,6 +15,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
  */
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +30,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class Task {
     @Id
     private String id;
@@ -52,6 +54,7 @@ public class Task {
 
     @NotNull
     @NonNull
+    @Builder.Default
     private TaskStatus status = TaskStatus.TO_DO;
 
     private Sprint sprint;
@@ -67,9 +70,11 @@ public class Task {
     @NonNull
     private String tags;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 }
