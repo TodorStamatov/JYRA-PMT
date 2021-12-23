@@ -1,6 +1,7 @@
 package course.spring.jyra.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +27,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class ProjectResult {
     @Id
     private String id;

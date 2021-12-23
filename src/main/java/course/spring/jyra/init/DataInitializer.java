@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,30 +44,63 @@ public class DataInitializer implements ApplicationRunner {
     );
     private final ProductOwner DEFAULT_OWNER = ProductOwner.builder().firstName("Ivailo").lastName("Panayotov").email("ivailo@example.com").password("Ivailo1!").username("ivaka").roles(List.of(Role.PRODUCT_OWNER)).build();
 
-    private final List<Task> DEFAULT_TASKS = List.of(
-            new Task(TaskType.SPIKE, "Task1", DEFAULT_ADMINS.get(0), 5, DEFAULT_DEVS, "tag1,tag2"),
-            new Task(TaskType.UI, "Task2", DEFAULT_ADMINS.get(1), 7, DEFAULT_DEVS, "tag1,tag2")
+    private final List<Sprint> DEFAULT_SPRINTS = List.of(
+            Sprint.builder().title("Sprint1").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build(),
+            Sprint.builder().title("Sprint2").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build(),
+            Sprint.builder().title("Sprint3").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build()
     );
-    private final Sprint DEFAULT_SPRINT = new Sprint("Commando - Mission 1", DEFAULT_OWNER);
+
+    private final List<Task> DEFAULT_TASKS_1 = List.of(
+            Task.builder().taskType(TaskType.TASK).title("Task1").addedBy(DEFAULT_ADMINS.get(0)).estimatedEffort(5)
+                    .sprint(DEFAULT_SPRINTS.get(0)).developersAssigned(DEFAULT_DEVS).description("Task 1 desc")
+                    .tags("tag1,tag2").build(),
+            Task.builder().taskType(TaskType.STORY).title("Task2").addedBy(DEFAULT_ADMINS.get(1)).estimatedEffort(7)
+                    .sprint(DEFAULT_SPRINTS.get(0)).developersAssigned(DEFAULT_DEVS).description("Task 2 desc")
+                    .tags("tag1,tag2").build()
+    );
+
+    private final List<Task> DEFAULT_TASKS_2 = List.of(
+            Task.builder().taskType(TaskType.TASK).title("Task3").addedBy(DEFAULT_ADMINS.get(0)).estimatedEffort(1)
+                    .sprint(DEFAULT_SPRINTS.get(1)).developersAssigned(DEFAULT_DEVS).description("Task 3 desc")
+                    .tags("tag1,tag2").build(),
+            Task.builder().taskType(TaskType.STORY).title("Task4").addedBy(DEFAULT_ADMINS.get(1)).estimatedEffort(1)
+                    .sprint(DEFAULT_SPRINTS.get(1)).developersAssigned(DEFAULT_DEVS).description("Task 4 desc")
+                    .tags("tag1,tag2").build()
+    );
 
     private final List<Project> DEFAULT_PROJECTS = List.of(
-            new Project("Project1", DEFAULT_OWNER, DEFAULT_DEVS, DEFAULT_SPRINT),
-            new Project("Project2", DEFAULT_OWNER, DEFAULT_DEVS, DEFAULT_SPRINT)
+            Project.builder().title("Project1").description("Project1 desc").owner(DEFAULT_OWNER)
+                    .developers(DEFAULT_DEVS).currentSprint(DEFAULT_SPRINTS.get(0)).tasksBacklog(DEFAULT_TASKS_1)
+                    .tags("tag1,tag2").build(),
+            Project.builder().title("Project2").description("Project2 desc").owner(DEFAULT_OWNER)
+                    .developers(DEFAULT_DEVS).currentSprint(DEFAULT_SPRINTS.get(1)).tasksBacklog(DEFAULT_TASKS_2)
+                    .tags("tag1,tag2").build()
     );
 
-    private final List<TaskResult> DEFAULT_TASK_RESULTS = List.of(
-            new TaskResult(DEFAULT_TASKS.get(0), 3, DEFAULT_ADMINS.get(0)),
-            new TaskResult(DEFAULT_TASKS.get(1), 8, DEFAULT_ADMINS.get(1))
+    private final List<TaskResult> DEFAULT_TASK_RESULTS_1 = List.of(
+            TaskResult.builder().task(DEFAULT_TASKS_1.get(0)).actualEffort(3).verifiedBy(DEFAULT_ADMINS.get(0))
+                    .resultsDescription("Task Result 1 desc").build(),
+            TaskResult.builder().task(DEFAULT_TASKS_1.get(1)).actualEffort(5).verifiedBy(DEFAULT_ADMINS.get(0))
+                    .resultsDescription("Task Result 2 desc").build()
+    );
+
+    private final List<TaskResult> DEFAULT_TASK_RESULTS_2 = List.of(
+            TaskResult.builder().task(DEFAULT_TASKS_2.get(0)).actualEffort(7).verifiedBy(DEFAULT_ADMINS.get(1))
+                    .resultsDescription("Task Result 3 desc").build(),
+            TaskResult.builder().task(DEFAULT_TASKS_2.get(1)).actualEffort(1).verifiedBy(DEFAULT_ADMINS.get(1))
+                    .resultsDescription("Task Result 4 desc").build()
     );
 
     private final List<SprintResult> DEFAULT_SPRINT_RESULTS = List.of(
-            new SprintResult(DEFAULT_SPRINT, DEFAULT_TASK_RESULTS),
-            new SprintResult(DEFAULT_SPRINT, DEFAULT_TASK_RESULTS)
+            SprintResult.builder().sprint(DEFAULT_SPRINTS.get(0)).resultsDescription("Sprint result 1 desc")
+                    .taskResults(DEFAULT_TASK_RESULTS_1).build(),
+            SprintResult.builder().sprint(DEFAULT_SPRINTS.get(1)).resultsDescription("Sprint result 2 desc")
+                    .taskResults(DEFAULT_TASK_RESULTS_2).build()
     );
 
     private final List<ProjectResult> DEFAULT_PROJECT_RESULTS = List.of(
-            new ProjectResult(DEFAULT_PROJECTS.get(0), 15, DEFAULT_SPRINT_RESULTS),
-            new ProjectResult(DEFAULT_PROJECTS.get(1), 25, DEFAULT_SPRINT_RESULTS)
+            ProjectResult.builder().project(DEFAULT_PROJECTS.get(0)).duration(10)
+                    .sprintResultList(DEFAULT_SPRINT_RESULTS).build()
     );
 
     @Override
@@ -76,23 +110,25 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created devs: {}", DEFAULT_DEVS.stream().map(userService::create).collect(Collectors.toList()));
             log.info("Successfully created product owner: {}", userService.create(DEFAULT_OWNER));
         }
-        if(taskService.count() == 0){
-            log.info("Successfully created tasks: {}",DEFAULT_TASKS.stream().map(taskService::create).collect(Collectors.toList()));
+        if (taskService.count() == 0) {
+            log.info("Successfully created tasks1: {}", DEFAULT_TASKS_1.stream().map(taskService::create).collect(Collectors.toList()));
+            log.info("Successfully created tasks2: {}", DEFAULT_TASKS_2.stream().map(taskService::create).collect(Collectors.toList()));
         }
-        if(sprintService.count() == 0){
-            log.info("Successfully created sprint: {}",sprintService.create(DEFAULT_SPRINT));
+        if (sprintService.count() == 0) {
+            log.info("Successfully created sprints: {}", DEFAULT_SPRINTS.stream().map(sprintService::create).collect(Collectors.toList()));
         }
-        if(projectService.count() == 0){
-            log.info("Successfully created projects: {}",DEFAULT_PROJECTS.stream().map(projectService::create).collect(Collectors.toList()));
+        if (projectService.count() == 0) {
+            log.info("Successfully created projects: {}", DEFAULT_PROJECTS.stream().map(projectService::create).collect(Collectors.toList()));
         }
-        if(projectResultService.count() == 0){
-            log.info("Successfully created project results: {}",DEFAULT_PROJECT_RESULTS.stream().map(projectResultService::create).collect(Collectors.toList()));
+        if (projectResultService.count() == 0) {
+            log.info("Successfully created project results: {}", DEFAULT_PROJECT_RESULTS.stream().map(projectResultService::create).collect(Collectors.toList()));
         }
-        if(sprintResultService.count() == 0){
-            log.info("Successfully created sprint result: {}",DEFAULT_SPRINT_RESULTS.stream().map(sprintResultService::create).collect(Collectors.toList()));
+        if (sprintResultService.count() == 0) {
+            log.info("Successfully created sprint results: {}", DEFAULT_SPRINT_RESULTS.stream().map(sprintResultService::create).collect(Collectors.toList()));
         }
-        if(taskResultService.count() == 0){
-            log.info("Successfully created task result: {}",DEFAULT_TASK_RESULTS.stream().map(taskResultService::create).collect(Collectors.toList()));
+        if (taskResultService.count() == 0) {
+            log.info("Successfully created task results 1: {}", DEFAULT_TASK_RESULTS_1.stream().map(taskResultService::create).collect(Collectors.toList()));
+            log.info("Successfully created task results 2: {}", DEFAULT_TASK_RESULTS_2.stream().map(taskResultService::create).collect(Collectors.toList()));
         }
     }
 }
