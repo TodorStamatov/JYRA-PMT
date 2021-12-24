@@ -15,4 +15,10 @@ import java.util.List;
 public class ProductOwner extends User {
     private List<Project> projects;
     private List<ProjectResult> completedProjectResults;
+
+    public String printProjects() {
+        StringBuilder stringBuilder = new StringBuilder();
+        projects.forEach(project -> stringBuilder.append(String.format("%s, ", project.getTitle())));
+        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
+    }
 }
