@@ -1,4 +1,4 @@
-<ul th:fragment="navbar(project)" class="nav flex-column">
+<ul th:fragment="proj-vnav(project)" class="nav flex-column">
     <li class="nav-item mt-4">
         <h3 style="text-align: center" th:text="${project.title}"></h3>
     </li>
@@ -12,10 +12,10 @@
         <a class="nav-link" href="#">Current Sprint</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Backlog</a>
+        <a class="nav-link" th:href="@{'/projects/' + ${project.id} + '/backlog'}">Backlog</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Previous Sprint Results</a>
+        <a class="nav-link" th:href="@{'/projects/' + ${project.id} + '/sprint-results'}">Previous Sprint Results</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">Settings</a>

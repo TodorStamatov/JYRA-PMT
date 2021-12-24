@@ -35,8 +35,7 @@
             </thead>
             <tbody>
             <tr th:each="sprintResult : ${sprintResults}">
-                <!--                TODO: Update when SP-44 is done-->
-                <!--                <td style="text-align: center" th:text="${sprintResult.sprint.title}">Sprint not found</td>-->
+                <td style="text-align: center" th:text="${sprintResult.sprint.title}">Sprint not found</td>
                 <td style="text-align: center" th:text="${sprintResult.teamVelocity}">Team velocity not found</td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->

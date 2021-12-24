@@ -50,10 +50,21 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/backlog")
     public String getProjectBacklog(Model model, @PathVariable("projectId") String id) {
+        model.addAttribute("project", projectService.findById(id));
         model.addAttribute("backlog", projectService.findById(id).getTasksBacklog());
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project-backlog";
     }
+
+    @GetMapping("/{projectId}/sprint-results")
+    public String getPrevSprintResults(Model model, @PathVariable("projectId") String id) {
+        model.addAttribute("project", projectService.findById(id));
+        model.addAttribute("sprintResults", projectService.findById(id).getPreviousSprintResults());
+        log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
+        return "single-project-sprint-results";
+    }
+
+//    TODO: Add GetMapping for board (current sprint)
 
     @PutMapping
     public String updateProject(@RequestParam("update") String id) {
