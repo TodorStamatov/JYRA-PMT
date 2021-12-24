@@ -38,7 +38,9 @@
             </thead>
             <tbody>
             <tr style="text-align: center" th:each="task : ${tasks}">
-                <td th:text="${task.title}">Title not found</td>
+                <td>
+                    <a th:href="@{'/tasks/' + ${task.id}}" th:text="${task.title}"></a>
+                </td>
                 <td th:text="${task.taskType.getReadable()}">Task type not found</td>
                 <td>
                     <a th:href="@{'/users/' + ${task.addedBy.id}}" th:text="'@' + ${task.addedBy.username}"></a>

@@ -45,8 +45,7 @@ public class TaskController {
     public String getTaskById(Model model, @PathVariable("taskId") String id) {
         model.addAttribute("task", taskService.findById(id));
         log.debug("GET: Task with Id=%s : {}", id, taskService.findById(id));
-        //TODO:should redirect to other page
-        return "redirect:/tasks";
+        return "single-task";
     }
 
     @PutMapping

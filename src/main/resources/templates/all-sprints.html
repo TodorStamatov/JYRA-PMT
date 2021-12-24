@@ -28,7 +28,7 @@
             <caption>List of all sprints</caption>
             <thead class="table-dark">
             <tr style="text-align: center">
-                <!--                <th style="text-align: center" scope="col">Project</th>-->
+                <th style="text-align: center" scope="col">Title</th>
                 <th scope="col">Start date</th>
                 <th scope="col">End date</th>
                 <th scope="col">Duration</th>
@@ -38,8 +38,7 @@
             </thead>
             <tbody>
             <tr style="text-align: center" th:each="sprint : ${sprints}">
-                <!--                TODO: Fix if necessary when SP-43 is done.-->
-                <!--                <td style="text-align: center" th:text="${sprint.project}">Title not found</td>-->
+                <td style="text-align: center" th:text="${sprint.title}">Title not found</td>
                 <td
                         th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(sprint.startDate)}">Start date
                     not
