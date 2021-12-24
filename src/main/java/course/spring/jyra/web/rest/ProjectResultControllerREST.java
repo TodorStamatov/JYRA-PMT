@@ -5,6 +5,7 @@ import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
 import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.service.ProjectResultService;
+import course.spring.jyra.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,12 @@ import java.util.List;
 @RequestMapping("/api/projects")
 public class ProjectResultControllerREST {
     private final ProjectResultService projectResultService;
+    private final ProjectService projectService;
 
     @Autowired
-    public ProjectResultControllerREST(ProjectResultService projectResultService) {
+    public ProjectResultControllerREST(ProjectResultService projectResultService, ProjectService projectService) {
         this.projectResultService = projectResultService;
+        this.projectService = projectService;
     }
 
     @GetMapping("/project-results")
@@ -48,10 +51,10 @@ public class ProjectResultControllerREST {
         return projectResultService.update(projectResult);
     }
 
-    @DeleteMapping("{projectId}/project-result")
+    @DeleteMapping("/{projectId}/project-result")
     public ProjectResult deleteProjectResult(@PathVariable("projectId") String id) {
-        //TODO: check if the id is for project or result
-        return projectResultService.deleteById(id);
+        String deletedId = projectService.findById(id).getProjectResult().getId();
+        return projectResultService.deleteById(deletedId);
     }
 
     @ExceptionHandler

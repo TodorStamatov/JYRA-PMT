@@ -46,6 +46,7 @@ public class Project {
     private List<SprintResult> previousSprintResults;
     private List<Task> tasksBacklog;
     private String tags;
+    private ProjectResult projectResult;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();

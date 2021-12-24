@@ -49,7 +49,7 @@ public class TaskControllerREST {
         return taskService.update(task);
     }
 
-    @DeleteMapping("{taskId}")
+    @DeleteMapping("/{taskId}")
     public Task deleteTask(@PathVariable("taskId") String id) {
         return taskService.deleteById(id);
     }

@@ -50,7 +50,7 @@ public class SprintControllerREST {
         return sprintService.update(sprint);
     }
 
-    @DeleteMapping("{sprintId}")
+    @DeleteMapping("/{sprintId}")
     public Sprint deleteSprint(@PathVariable("sprintId") String id) {
         return sprintService.deleteById(id);
     }

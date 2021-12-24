@@ -39,6 +39,7 @@ public class Sprint {
     private List<Developer> developers;
     private List<Task> tasks;
     private List<TaskResult> completedTaskResults;
+    private SprintResult sprintResult;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();

@@ -6,6 +6,7 @@ import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.TaskResultService;
+import course.spring.jyra.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,12 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 public class TaskResultControllerREST {
     private final TaskResultService taskResultService;
+    private final TaskService taskService;
 
     @Autowired
-    public TaskResultControllerREST(TaskResultService taskResultService) {
+    public TaskResultControllerREST(TaskResultService taskResultService, TaskService taskService) {
         this.taskResultService = taskResultService;
+        this.taskService = taskService;
     }
 
     @GetMapping("/task-results")
@@ -49,10 +52,10 @@ public class TaskResultControllerREST {
         return taskResultService.update(taskResult);
     }
 
-    @DeleteMapping("{taskId}/task-result")
+    @DeleteMapping("/{taskId}/task-result")
     public TaskResult deleteTaskResult(@PathVariable("taskId") String id) {
-        //TODO: check if the id is for task or result
-        return taskResultService.deleteById(id);
+        String deletedId = taskService.findById(id).getTaskResult().getId();
+        return taskResultService.deleteById(deletedId);
     }
 
     @ExceptionHandler

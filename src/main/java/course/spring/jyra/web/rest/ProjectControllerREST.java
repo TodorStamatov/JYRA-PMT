@@ -48,7 +48,7 @@ public class ProjectControllerREST {
         return projectService.update(project);
     }
 
-    @DeleteMapping("{projectId}")
+    @DeleteMapping("/{projectId}")
     public Project deleteProject(@PathVariable("projectId") String id) {
         return projectService.deleteById(id);
     }

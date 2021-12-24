@@ -5,6 +5,7 @@ import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
 import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.service.SprintResultService;
+import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,12 @@ import java.util.List;
 @RequestMapping("/api/sprints")
 public class SprintResultControllerREST {
     private final SprintResultService sprintResultService;
+    private final SprintService sprintService;
 
     @Autowired
-    public SprintResultControllerREST(SprintResultService sprintResultService) {
+    public SprintResultControllerREST(SprintResultService sprintResultService, SprintService sprintService) {
         this.sprintResultService = sprintResultService;
+        this.sprintService = sprintService;
     }
 
     @GetMapping("/sprint-results")
@@ -48,10 +51,10 @@ public class SprintResultControllerREST {
         return sprintResultService.update(sprintResult);
     }
 
-    @DeleteMapping("{sprintId}/sprint-result")
-    public SprintResult deletesprintResult(@PathVariable("sprintId") String id) {
-        //TODO: check if the id is for sprint or result
-        return sprintResultService.deleteById(id);
+    @DeleteMapping("/{sprintId}/sprint-result")
+    public SprintResult deleteSprintResult(@PathVariable("sprintId") String id) {
+        String deletedId = sprintService.findById(id).getSprintResult().getId();
+        return sprintResultService.deleteById(deletedId);
     }
 
     @ExceptionHandler
