@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class Developer extends User {
-    private List<Task> assignedTask;
+    private List<Task> assignedTasks;
     private List<TaskResult> completedTaskResults;
 }
