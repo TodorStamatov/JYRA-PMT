@@ -48,6 +48,7 @@ public class Sprint {
     private List<Developer> developers;
     private List<Task> tasks;
     private List<TaskResult> completedTaskResults;
+    private SprintResult sprintResult;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
