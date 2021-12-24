@@ -15,4 +15,10 @@ import java.util.List;
 public class Developer extends User {
     private List<Task> assignedTasks;
     private List<TaskResult> completedTaskResults;
+
+    public String printAssignedTasks() {
+        StringBuilder stringBuilder = new StringBuilder();
+        assignedTasks.forEach(task -> stringBuilder.append(String.format("%s, ", task.getTitle())));
+        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
+    }
 }
