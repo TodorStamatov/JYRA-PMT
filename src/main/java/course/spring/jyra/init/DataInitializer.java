@@ -8,7 +8,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,8 +102,23 @@ public class DataInitializer implements ApplicationRunner {
                     .sprintResultList(DEFAULT_SPRINT_RESULTS).build()
     );
 
+    private void setTasksToDevs() {
+        DEFAULT_DEVS.get(0).setAssignedTasks(DEFAULT_TASKS_1);
+        DEFAULT_DEVS.get(0).setCompletedTaskResults(DEFAULT_TASK_RESULTS_1);
+        DEFAULT_DEVS.get(1).setAssignedTasks(DEFAULT_TASKS_2);
+        DEFAULT_DEVS.get(1).setCompletedTaskResults(DEFAULT_TASK_RESULTS_2);
+    }
+
+    private void setProjectsToOwner() {
+        DEFAULT_OWNER.setProjects(DEFAULT_PROJECTS);
+        DEFAULT_OWNER.setCompletedProjectResults(DEFAULT_PROJECT_RESULTS);
+    }
+
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        setProjectsToOwner();
+        setTasksToDevs();
         if (userService.count() == 0) {
             log.info("Successfully created admins: {}", DEFAULT_ADMINS.stream().map(userService::create).collect(Collectors.toList()));
             log.info("Successfully created devs: {}", DEFAULT_DEVS.stream().map(userService::create).collect(Collectors.toList()));
