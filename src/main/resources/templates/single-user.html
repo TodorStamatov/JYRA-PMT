@@ -16,6 +16,7 @@
                      width="192"
                      height="192"/>
                 <h3 class="mt-2" th:text="${user.firstName} + ' ' + ${user.lastName}"></h3>
+                <p th:text="'@' + ${user.username}"></p>
                 <p th:text="'Roles: ' + ${user.roles}"></p>
 
                 <hr class="m-2"/>

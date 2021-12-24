@@ -40,7 +40,7 @@
             <tbody>
             <tr th:each="user : ${users}">
                 <td style="text-align: center">
-                    <a th:href="@{'/users/' + ${user.id}}" th:text="${user.username}"></a>
+                    <a th:href="@{'/users/' + ${user.id}}" th:text="'@' + ${user.username}"></a>
                 </td>
                 <td style="text-align: center" th:text="${user.firstName}">First name not found</td>
                 <td style="text-align: center" th:text="${user.lastName}">Last name not found</td>

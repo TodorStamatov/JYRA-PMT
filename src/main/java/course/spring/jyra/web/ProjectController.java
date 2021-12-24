@@ -45,8 +45,14 @@ public class ProjectController {
     public String getProjectById(Model model, @PathVariable("projectId") String id) {
         model.addAttribute("project", projectService.findById(id));
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
-        //TODO:should redirect to other page
-        return "redirect:/projects";
+        return "single-project";
+    }
+
+    @GetMapping("/{projectId}/backlog")
+    public String getProjectBacklog(Model model, @PathVariable("projectId") String id) {
+        model.addAttribute("backlog", projectService.findById(id).getTasksBacklog());
+        log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
+        return "single-project-backlog";
     }
 
     @PutMapping

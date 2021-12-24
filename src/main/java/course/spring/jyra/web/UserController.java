@@ -60,7 +60,6 @@ public class UserController {
         model.addAttribute("userType", userType);
 
         log.debug("GET: User with Id=%s : {}", id, userService.findById(id));
-        //TODO:should redirect to other page
         return "single-user";
     }
 

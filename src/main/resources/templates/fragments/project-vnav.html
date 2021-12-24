@@ -1,0 +1,23 @@
+<ul th:fragment="navbar(project)" class="nav flex-column">
+    <li class="nav-item mt-4">
+        <h3 style="text-align: center" th:text="${project.title}"></h3>
+    </li>
+    <li class="nav-item">
+        <hr/>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{'/projects/' + ${project.id}}">Information</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Current Sprint</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Backlog</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Previous Sprint Results</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Settings</a>
+    </li>
+</ul>
