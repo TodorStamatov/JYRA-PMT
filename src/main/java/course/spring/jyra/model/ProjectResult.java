@@ -34,7 +34,7 @@ public class ProjectResult {
 
     @NonNull
     @NotNull
-    private Project project;
+    private String projectId;
 
     @NonNull
     @NotNull
@@ -51,7 +51,7 @@ public class ProjectResult {
 
     @NonNull
     @NotNull
-    private List<SprintResult> sprintResultList;
+    private List<String> sprintResultListIds;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

@@ -13,12 +13,13 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class ProductOwner extends User {
-    private List<Project> projects;
-    private List<ProjectResult> completedProjectResults;
+    private List<String> projectsIds;
+    private List<String> completedProjectResultsIds;
 
-    public String printProjects() {
-        StringBuilder stringBuilder = new StringBuilder();
-        projects.forEach(project -> stringBuilder.append(String.format("%s, ", project.getTitle())));
-        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
-    }
+    //TODO: fix printProjects
+//    public String printProjects() {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        projects.forEach(project -> stringBuilder.append(String.format("%s, ", project.getTitle())));
+//        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
+//    }
 }

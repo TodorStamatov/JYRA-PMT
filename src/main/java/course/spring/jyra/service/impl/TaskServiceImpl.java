@@ -54,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
     public Task update(Task task) {
         Task oldTask = findById(task.getId());
         task.setModified(LocalDateTime.now());
-        task.setAddedBy(oldTask.getAddedBy());
+        task.setAddedById(oldTask.getAddedById());
 //        task.setSprint(sprintRepository.findById(oldTask.getSprint().getId()).orElseThrow(() -> new InvalidEntityException("Sprint of task could not ne changed")));
 //        task.setAddedBy(userRepository.findById(oldTask.getAddedBy().getId()).orElseThrow(() -> new InvalidEntityException("Author of task could not ne changed")));
 //        task.getDevelopersAssigned().clear();

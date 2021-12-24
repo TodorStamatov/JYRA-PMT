@@ -35,7 +35,7 @@ public class SprintResult {
 
     @NotNull
     @NonNull
-    private Sprint sprint;
+    private String sprintId;
 
     @Builder.Default
     private int teamVelocity = 0;
@@ -45,7 +45,7 @@ public class SprintResult {
 
     @NonNull
     @NotNull
-    private List<TaskResult> taskResults;
+    private List<String> taskResultsIds;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -56,7 +56,8 @@ public class SprintResult {
     private LocalDateTime modified = LocalDateTime.now();
 
     @PostConstruct
+    //TODO: fix calculateTeamVelocity
     public void calculateTeamVelocity() {
-        this.teamVelocity = this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
+//        this.teamVelocity = this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
     }
 }

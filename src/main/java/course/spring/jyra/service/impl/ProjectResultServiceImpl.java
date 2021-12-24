@@ -35,8 +35,8 @@ public class ProjectResultServiceImpl implements ProjectResultService {
 
     @Override
     public ProjectResult create(ProjectResult projectResult) {
-        String projectId = projectResult.getProject().getId();
-        Optional<ProjectResult> projectMatch = projectResultRepository.findAll().stream().filter(projectResult1 -> projectResult1.getProject().getId().equals(projectId)).findAny();
+        String projectId = projectResult.getProjectId();
+        Optional<ProjectResult> projectMatch = projectResultRepository.findAll().stream().filter(projectResult1 -> projectResult1.getProjectId().equals(projectId)).findAny();
         if (!projectMatch.isEmpty()) {
             throw new EntityNotFoundException(String.format("There is a result created for project with ID=%s", projectId));
         }
@@ -63,7 +63,7 @@ public class ProjectResultServiceImpl implements ProjectResultService {
 
     @Override
     public ProjectResult findByProject(String id) {
-        return projectResultRepository.findAll().stream().filter(projectResult -> projectResult.getProject().getId().equals(id)).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found or is not finished.", id)));
+        return projectResultRepository.findAll().stream().filter(projectResult -> projectResult.getProjectId().equals(id)).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found or is not finished.", id)));
     }
 
     @Override

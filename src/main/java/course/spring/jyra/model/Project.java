@@ -37,20 +37,20 @@ public class Project {
 
     @NonNull
     @NotNull
-    private ProductOwner owner;
+    private String ownerId;
 
     @NonNull
     @NotNull
-    private List<Developer> developers;
+    private List<String> developersIds;
 
     @NonNull
     @NotNull
     private Sprint currentSprint;
 
-    private List<SprintResult> previousSprintResults;
-    private List<Task> tasksBacklog;
+    private List<String> previousSprintResultsIds;
+    private List<String> tasksBacklogIds;
     private String tags;
-    private ProjectResult projectResult;
+    private String projectResultId;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

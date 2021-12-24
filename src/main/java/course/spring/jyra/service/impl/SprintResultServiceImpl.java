@@ -56,7 +56,7 @@ public class SprintResultServiceImpl implements SprintResultService {
 
     @Override
     public SprintResult findBySprintId(String id) {
-        return sprintResultRepository.findAll().stream().filter(sprintResult -> sprintResult.getSprint().getId().equals(id)).findFirst()
+        return sprintResultRepository.findAll().stream().filter(sprintResult -> sprintResult.getSprintId().equals(id)).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found or is not finished.", id)));
     }
 

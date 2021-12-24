@@ -37,6 +37,7 @@ public class DataInitializer implements ApplicationRunner {
             Administrator.builder().firstName("Ivan").lastName("Todorov").email("ivan@example.com").password("Ivan1!").username("vankata").roles(List.of(Role.ADMIN)).imageUrl("images/vankata.jpg").build(),
             Administrator.builder().firstName("Admin").lastName("Admin").email("admin@example.com").password("Admin1!").username("admin").roles(List.of(Role.ADMIN)).imageUrl("images/default.jpg").build()
     );
+
     private final List<Developer> DEFAULT_DEVS = List.of(
             Developer.builder().firstName("Bogdan").lastName("Kosev").email("bogdan@example.com").password("Bogdan1!").username("bogi4").roles(List.of(Role.DEVELOPER)).imageUrl("images/bogi4.jpg").build(),
             Developer.builder().firstName("Todor").lastName("Stamatov").email("todor@example.com").password("Todor1!").username("toshko").roles(List.of(Role.DEVELOPER)).imageUrl("images/toshko.jpg").build()
@@ -44,74 +45,88 @@ public class DataInitializer implements ApplicationRunner {
     private final ProductOwner DEFAULT_OWNER = ProductOwner.builder().firstName("Ivailo").lastName("Panayotov").email("ivailo@example.com").password("Ivailo1!").username("ivaka").roles(List.of(Role.PRODUCT_OWNER)).imageUrl("images/ivaka.jpg").build();
 
     private final List<Sprint> DEFAULT_SPRINTS = List.of(
-            Sprint.builder().title("Sprint1").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build(),
-            Sprint.builder().title("Sprint2").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build(),
-            Sprint.builder().title("Sprint3").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build()
+            Sprint.builder().title("Sprint1").ownerId(DEFAULT_OWNER.getId())
+                    .developersIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList())).build(),
+            Sprint.builder().title("Sprint2").ownerId(DEFAULT_OWNER.getId())
+                    .developersIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList())).build(),
+            Sprint.builder().title("Sprint3").ownerId(DEFAULT_OWNER.getId())
+                    .developersIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList())).build()
     );
 
     private final List<Task> DEFAULT_TASKS_1 = List.of(
-            Task.builder().taskType(TaskType.TASK).title("Task1").addedBy(DEFAULT_ADMINS.get(0)).estimatedEffort(5)
-                    .sprint(DEFAULT_SPRINTS.get(0)).developersAssigned(DEFAULT_DEVS).description("Task 1 desc")
-                    .tags("tag1,tag2").build(),
-            Task.builder().taskType(TaskType.STORY).title("Task2").addedBy(DEFAULT_ADMINS.get(1)).estimatedEffort(7)
-                    .sprint(DEFAULT_SPRINTS.get(0)).developersAssigned(DEFAULT_DEVS).description("Task 2 desc")
-                    .tags("tag1,tag2").build()
+            Task.builder().taskType(TaskType.TASK).title("Task1").addedById(DEFAULT_ADMINS.get(0).getId()).estimatedEffort(5)
+                    .sprintId(DEFAULT_SPRINTS.get(0).getId()).
+                    developersAssignedIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
+                    .description("Task 1 desc").tags("tag1,tag2").build(),
+            Task.builder().taskType(TaskType.STORY).title("Task2").addedById(DEFAULT_ADMINS.get(1).getId()).estimatedEffort(7)
+                    .sprintId(DEFAULT_SPRINTS.get(0).getId())
+                    .developersAssignedIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
+                    .description("Task 2 desc").tags("tag1,tag2").build()
     );
 
     private final List<Task> DEFAULT_TASKS_2 = List.of(
-            Task.builder().taskType(TaskType.TASK).title("Task3").addedBy(DEFAULT_ADMINS.get(0)).estimatedEffort(1)
-                    .sprint(DEFAULT_SPRINTS.get(1)).developersAssigned(DEFAULT_DEVS).description("Task 3 desc")
-                    .tags("tag1,tag2").build(),
-            Task.builder().taskType(TaskType.STORY).title("Task4").addedBy(DEFAULT_ADMINS.get(1)).estimatedEffort(1)
-                    .sprint(DEFAULT_SPRINTS.get(1)).developersAssigned(DEFAULT_DEVS).description("Task 4 desc")
-                    .tags("tag1,tag2").build()
+            Task.builder().taskType(TaskType.TASK).title("Task3").addedById(DEFAULT_ADMINS.get(0).getId()).estimatedEffort(1)
+                    .sprintId(DEFAULT_SPRINTS.get(1).getId())
+                    .developersAssignedIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
+                    .description("Task 3 desc").tags("tag1,tag2").build(),
+            Task.builder().taskType(TaskType.STORY).title("Task4").addedById(DEFAULT_ADMINS.get(1).getId()).estimatedEffort(1)
+                    .sprintId(DEFAULT_SPRINTS.get(1).getId())
+                    .developersAssignedIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
+                    .description("Task 4 desc").tags("tag1,tag2").build()
     );
 
     private final List<Project> DEFAULT_PROJECTS = List.of(
-            Project.builder().title("Project1").description("Project1 desc").owner(DEFAULT_OWNER)
-                    .developers(DEFAULT_DEVS).currentSprint(DEFAULT_SPRINTS.get(0)).tasksBacklog(DEFAULT_TASKS_1)
+            Project.builder().title("Project1").description("Project1 desc").ownerId(DEFAULT_OWNER.getId())
+                    .developersIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
+                    .currentSprint(DEFAULT_SPRINTS.get(0))
+                    .tasksBacklogIds(DEFAULT_TASKS_1.stream().map(Task::getAddedById).collect(Collectors.toList()))
                     .tags("tag1,tag2").build(),
-            Project.builder().title("Project2").description("Project2 desc").owner(DEFAULT_OWNER)
-                    .developers(DEFAULT_DEVS).currentSprint(DEFAULT_SPRINTS.get(1)).tasksBacklog(DEFAULT_TASKS_2)
+            Project.builder().title("Project2").description("Project2 desc").ownerId(DEFAULT_OWNER.getId())
+                    .developersIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
+                    .currentSprint(DEFAULT_SPRINTS.get(1))
+                    .tasksBacklogIds(DEFAULT_TASKS_2.stream().map(Task::getAddedById).collect(Collectors.toList()))
                     .tags("tag1,tag2").build()
     );
 
     private final List<TaskResult> DEFAULT_TASK_RESULTS_1 = List.of(
-            TaskResult.builder().task(DEFAULT_TASKS_1.get(0)).actualEffort(3).verifiedBy(DEFAULT_ADMINS.get(0))
+            TaskResult.builder().taskId(DEFAULT_TASKS_1.get(0).getId()).actualEffort(3).verifiedById(DEFAULT_ADMINS.get(0).getId())
                     .resultsDescription("Task Result 1 desc").build(),
-            TaskResult.builder().task(DEFAULT_TASKS_1.get(1)).actualEffort(5).verifiedBy(DEFAULT_ADMINS.get(0))
+            TaskResult.builder().taskId(DEFAULT_TASKS_1.get(1).getId()).actualEffort(5).verifiedById(DEFAULT_ADMINS.get(0).getId())
                     .resultsDescription("Task Result 2 desc").build()
     );
 
     private final List<TaskResult> DEFAULT_TASK_RESULTS_2 = List.of(
-            TaskResult.builder().task(DEFAULT_TASKS_2.get(0)).actualEffort(7).verifiedBy(DEFAULT_ADMINS.get(1))
+            TaskResult.builder().taskId(DEFAULT_TASKS_2.get(0).getId()).actualEffort(7).verifiedById(DEFAULT_ADMINS.get(1).getId())
                     .resultsDescription("Task Result 3 desc").build(),
-            TaskResult.builder().task(DEFAULT_TASKS_2.get(1)).actualEffort(1).verifiedBy(DEFAULT_ADMINS.get(1))
+            TaskResult.builder().taskId(DEFAULT_TASKS_2.get(1).getId()).actualEffort(1).verifiedById(DEFAULT_ADMINS.get(1).getId())
                     .resultsDescription("Task Result 4 desc").build()
     );
 
     private final List<SprintResult> DEFAULT_SPRINT_RESULTS = List.of(
-            SprintResult.builder().sprint(DEFAULT_SPRINTS.get(0)).resultsDescription("Sprint result 1 desc")
-                    .taskResults(DEFAULT_TASK_RESULTS_1).build(),
-            SprintResult.builder().sprint(DEFAULT_SPRINTS.get(1)).resultsDescription("Sprint result 2 desc")
-                    .taskResults(DEFAULT_TASK_RESULTS_2).build()
+            SprintResult.builder().sprintId(DEFAULT_SPRINTS.get(0).getId()).resultsDescription("Sprint result 1 desc")
+                    .taskResultsIds(DEFAULT_TASK_RESULTS_1.stream().map(TaskResult::getId).collect(Collectors.toList()))
+                    .build(),
+            SprintResult.builder().sprintId(DEFAULT_SPRINTS.get(1).getId()).resultsDescription("Sprint result 2 desc")
+                    .taskResultsIds(DEFAULT_TASK_RESULTS_2.stream().map(TaskResult::getId).collect(Collectors.toList()))
+                    .build()
     );
 
     private final List<ProjectResult> DEFAULT_PROJECT_RESULTS = List.of(
-            ProjectResult.builder().project(DEFAULT_PROJECTS.get(0)).duration(10)
-                    .sprintResultList(DEFAULT_SPRINT_RESULTS).build()
+            ProjectResult.builder().projectId(DEFAULT_PROJECTS.get(0).getId()).duration(10)
+                    .sprintResultListIds(DEFAULT_SPRINT_RESULTS.stream().map(SprintResult::getId).collect(Collectors.toList()))
+                    .build()
     );
 
     private void setTasksToDevs() {
-        DEFAULT_DEVS.get(0).setAssignedTasks(DEFAULT_TASKS_1);
-        DEFAULT_DEVS.get(0).setCompletedTaskResults(DEFAULT_TASK_RESULTS_1);
-        DEFAULT_DEVS.get(1).setAssignedTasks(DEFAULT_TASKS_2);
-        DEFAULT_DEVS.get(1).setCompletedTaskResults(DEFAULT_TASK_RESULTS_2);
+        DEFAULT_DEVS.get(0).setAssignedTasksIds(DEFAULT_TASKS_1.stream().map(Task::getId).collect(Collectors.toList()));
+        DEFAULT_DEVS.get(0).setCompletedTaskResultsIds(DEFAULT_TASK_RESULTS_1.stream().map(TaskResult::getId).collect(Collectors.toList()));
+        DEFAULT_DEVS.get(1).setAssignedTasksIds(DEFAULT_TASKS_2.stream().map(Task::getId).collect(Collectors.toList()));
+        DEFAULT_DEVS.get(1).setCompletedTaskResultsIds(DEFAULT_TASK_RESULTS_2.stream().map(TaskResult::getId).collect(Collectors.toList()));
     }
 
     private void setProjectsToOwner() {
-        DEFAULT_OWNER.setProjects(DEFAULT_PROJECTS);
-        DEFAULT_OWNER.setCompletedProjectResults(DEFAULT_PROJECT_RESULTS);
+        DEFAULT_OWNER.setProjectsIds(DEFAULT_PROJECTS.stream().map(Project::getId).collect(Collectors.toList()));
+        DEFAULT_OWNER.setCompletedProjectResultsIds(DEFAULT_PROJECT_RESULTS.stream().map(ProjectResult::getId).collect(Collectors.toList()));
     }
 
 
@@ -119,6 +134,7 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         setProjectsToOwner();
         setTasksToDevs();
+
         if (userService.count() == 0) {
             log.info("Successfully created admins: {}", DEFAULT_ADMINS.stream().map(userService::create).collect(Collectors.toList()));
             log.info("Successfully created devs: {}", DEFAULT_DEVS.stream().map(userService::create).collect(Collectors.toList()));

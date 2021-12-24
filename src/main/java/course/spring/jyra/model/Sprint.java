@@ -43,12 +43,12 @@ public class Sprint {
 
     @NonNull
     @NotNull
-    private ProductOwner owner;
+    private String ownerId;
 
-    private List<Developer> developers;
-    private List<Task> tasks;
-    private List<TaskResult> completedTaskResults;
-    private SprintResult sprintResult;
+    private List<String> developersIds;
+    private List<String> tasksIds;
+    private List<String> completedTaskResultsIds;
+    private String sprintResultId;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
