@@ -70,6 +70,8 @@ public class Task {
     @NonNull
     private String tags;
 
+    private TaskResult taskResult;
+
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();

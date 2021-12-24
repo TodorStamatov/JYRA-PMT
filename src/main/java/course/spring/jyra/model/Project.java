@@ -50,6 +50,7 @@ public class Project {
     private List<SprintResult> previousSprintResults;
     private List<Task> tasksBacklog;
     private String tags;
+    private ProjectResult projectResult;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
