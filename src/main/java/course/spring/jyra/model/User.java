@@ -102,4 +102,10 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return isActive();
     }
+
+    public String printRoles() {
+        StringBuilder stringBuilder = new StringBuilder();
+        roles.forEach(role -> stringBuilder.append(String.format("%s, ", role.getReadable())));
+        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
+    }
 }
