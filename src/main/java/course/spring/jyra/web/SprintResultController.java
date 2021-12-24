@@ -23,9 +23,9 @@ public class SprintResultController {
 
     @GetMapping
     public String getSprintResult(Model model) {
-        model.addAttribute("sprint results", sprintResultService.findAll());
+        model.addAttribute("sprintResults", sprintResultService.findAll());
         log.debug("GET: Sprint results: {}", sprintResultService.findAll());
-        return "sprintresults";
+        return "all-sprint-results";
     }
 
 

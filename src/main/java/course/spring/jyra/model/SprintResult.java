@@ -11,6 +11,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
  */
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,6 +28,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class SprintResult {
     @Id
     private String id;
@@ -35,6 +37,7 @@ public class SprintResult {
     @NonNull
     private Sprint sprint;
 
+    @Builder.Default
     private int teamVelocity = 0;
 
     @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters String, supporting Markdown syntax.")
@@ -44,9 +47,11 @@ public class SprintResult {
     @NotNull
     private List<TaskResult> taskResults;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 

@@ -1,6 +1,7 @@
 package course.spring.jyra.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +27,7 @@ modified (generated automatically) - time stamp of the moment the entity was las
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class ProjectResult {
     @Id
     private String id;
@@ -36,6 +38,8 @@ public class ProjectResult {
 
     @NonNull
     @NotNull
+    @Builder.Default
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endDate=LocalDateTime.now();
 
     @NonNull
@@ -49,9 +53,11 @@ public class ProjectResult {
     @NotNull
     private List<SprintResult> sprintResultList;
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime created = LocalDateTime.now();
 
+    @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 

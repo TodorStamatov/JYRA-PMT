@@ -23,7 +23,7 @@ public class TaskController {
     public String getTasks(Model model) {
         model.addAttribute("tasks", taskService.findAll());
         log.debug("GET: Tasks: {}", taskService.findAll());
-        return "tasks";
+        return "all-tasks";
     }
 
     @PostMapping
@@ -50,7 +50,7 @@ public class TaskController {
     }
 
     @PutMapping
-    public String updateSprint(@RequestParam("update") String id) {
+    public String updateTask(@RequestParam("update") String id) {
         Task task = taskService.findById(id);
         log.debug("UPDATE: Task: {}", task);
         taskService.update(task);

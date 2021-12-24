@@ -1,5 +1,0 @@
-package course.spring.jyra.model;
-
-public enum Kind {
-    RESEARCH, DESIGN, PROTOTYPING, IMPLEMENTATION, QA, OPERATIONS, BUG_FIXING, DOCUMENTATION, OTHER
-}

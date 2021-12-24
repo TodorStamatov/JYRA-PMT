@@ -21,9 +21,9 @@ public class TaskResultController {
 
     @GetMapping
     public String getTaskResult(Model model) {
-        model.addAttribute("task results", taskResultService.findAll());
+        model.addAttribute("taskResults", taskResultService.findAll());
         log.debug("GET: Task results: {}", taskResultService.findAll());
-        return "taskresults";
+        return "all-task-results";
     }
 
     @GetMapping("/{taskId}/task-result")
