@@ -43,7 +43,9 @@
                 <td style="text-align: center" th:text="${sprint.startDate}">Start date not found</td>
                 <td style="text-align: center" th:text="${sprint.endDate}">End date not found</td>
                 <td style="text-align: center" th:text="${sprint.duration}">Duration not found</td>
-                <td style="text-align: center" th:text="${sprint.owner.username}">Owner not found</td>
+                <td style="text-align: center">
+                    <a th:href="@{'/users/' + ${sprint.owner.id}}" th:text="'@' + ${sprint.owner.username}"></a>
+                </td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->
                     <a class="btn btn-primary" href="#" role="button">Edit</a>

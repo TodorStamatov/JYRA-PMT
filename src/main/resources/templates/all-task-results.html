@@ -37,7 +37,10 @@
             <tbody>
             <tr th:each="taskResult : ${taskResults}">
                 <td style="text-align: center" th:text="${taskResult.task.title}">Task not found</td>
-                <td style="text-align: center" th:text="${taskResult.verifiedBy.username}">Reporter not found</td>
+                <td style="text-align: center">
+                    <a th:href="@{'/users/' + ${taskResult.verifiedBy.id}}"
+                       th:text="'@' + ${taskResult.verifiedBy.username}"></a>
+                </td>
                 <td style="text-align: center" th:text="${taskResult.actualEffort}">Actual effort not found</td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->

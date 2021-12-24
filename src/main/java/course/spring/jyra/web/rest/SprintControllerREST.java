@@ -31,8 +31,8 @@ public class SprintControllerREST {
     }
 
     @GetMapping("/{sprintId}")
-    public Sprint getSprintById(@PathVariable("sprintId") String id) {
-        return sprintService.findById(id);
+    public Sprint getSprintById(@PathVariable String sprintId) {
+        return sprintService.findById(sprintId);
     }
 
     @PostMapping
@@ -44,15 +44,15 @@ public class SprintControllerREST {
     }
 
     @PutMapping("/{sprintId}")
-    public Sprint updateSprint(@PathVariable("sprintId") String id, @RequestBody Sprint sprint) {
-        if (!id.equals(sprint.getId()))
-            throw new InvalidClientDataException(String.format("Sprint ID %s from URL doesn't match ID %s in Request body", id, sprint.getId()));
+    public Sprint updateSprint(@PathVariable String sprintId, @RequestBody Sprint sprint) {
+        if (!sprintId.equals(sprint.getId()))
+            throw new InvalidClientDataException(String.format("Sprint ID %s from URL doesn't match ID %s in Request body", sprintId, sprint.getId()));
         return sprintService.update(sprint);
     }
 
     @DeleteMapping("/{sprintId}")
-    public Sprint deleteSprint(@PathVariable("sprintId") String id) {
-        return sprintService.deleteById(id);
+    public Sprint deleteSprint(@PathVariable String sprintId) {
+        return sprintService.deleteById(sprintId);
     }
 
     @ExceptionHandler
