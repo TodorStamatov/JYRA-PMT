@@ -11,7 +11,7 @@
             <a th:href="@{'/projects/' + ${projectResult.project.id}}" th:text="${projectResult.project.title}"></a>
         </div>
         <div class="col-md-3 border">
-            <p th:text="'End date: ' + ${projectResult.endDate}"></p>
+            <p th:text="'End date: ' + ${T(course.spring.jyra.utils.DateConverter).convertDate(projectResult.endDate)}"></p>
         </div>
         <div class="col-md-3 border">
             <p th:text="'Duration: ' + ${projectResult.duration}"></p>
