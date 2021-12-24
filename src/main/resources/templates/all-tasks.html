@@ -39,10 +39,12 @@
             <tbody>
             <tr th:each="task : ${tasks}">
                 <td style="text-align: center" th:text="${task.title}">Title not found</td>
-                <td style="text-align: center" th:text="${task.taskType}">Task type not found</td>
-                <td style="text-align: center" th:text="${task.addedBy.username}">Reporter not found</td>
+                <td style="text-align: center" th:text="${task.taskType.getReadable()}">Task type not found</td>
+                <td style="text-align: center">
+                    <a th:href="@{'/users/' + ${task.addedBy.id}}" th:text="'@' + ${task.addedBy.username}"></a>
+                </td>
                 <td style="text-align: center" th:text="${task.estimatedEffort}">Estimation not found</td>
-                <td style="text-align: center" th:text="${task.status}">Status not found</td>
+                <td style="text-align: center" th:text="${task.status.getReadable()}">Status not found</td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->
                     <a class="btn btn-primary" href="#" role="button">Edit</a>

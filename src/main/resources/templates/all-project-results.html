@@ -37,7 +37,10 @@
             <tbody>
             <tr th:each="projectResult : ${projectResults}">
                 <td style="text-align: center" th:text="${projectResult.project.title}">Project not found</td>
-                <td style="text-align: center" th:text="${projectResult.endDate}">End date not found</td>
+                <td style="text-align: center"
+                    th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(projectResult.endDate)}">End date
+                    not found
+                </td>
                 <td style="text-align: center" th:text="${projectResult.duration}">Duration not found</td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->

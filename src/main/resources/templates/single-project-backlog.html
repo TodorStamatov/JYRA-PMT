@@ -27,10 +27,10 @@
                     <tbody>
                     <tr th:each="task : ${backlog}">
                         <td style="text-align: center" th:text="${task.title}">Title not found</td>
-                        <td style="text-align: center" th:text="${task.taskType}">Task type not found</td>
+                        <td style="text-align: center" th:text="${task.taskType.getReadable()}">Task type not found</td>
                         <td style="text-align: center" th:text="${task.addedBy.username}">Reporter not found</td>
                         <td style="text-align: center" th:text="${task.estimatedEffort}">Estimation not found</td>
-                        <td style="text-align: center" th:text="${task.status}">Status not found</td>
+                        <td style="text-align: center" th:text="${task.status.getReadable()}">Status not found</td>
                     </tr>
                     </tbody>
                 </table>

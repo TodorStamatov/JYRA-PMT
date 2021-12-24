@@ -40,8 +40,14 @@
             <tr th:each="sprint : ${sprints}">
                 <!--                TODO: Fix if necessary when SP-43 is done.-->
                 <!--                <td style="text-align: center" th:text="${sprint.project}">Title not found</td>-->
-                <td style="text-align: center" th:text="${sprint.startDate}">Start date not found</td>
-                <td style="text-align: center" th:text="${sprint.endDate}">End date not found</td>
+                <td style="text-align: center"
+                    th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(sprint.startDate)}">Start date not
+                    found
+                </td>
+                <td style="text-align: center"
+                    th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(sprint.endDate)}">End date not
+                    found
+                </td>
                 <td style="text-align: center" th:text="${sprint.duration}">Duration not found</td>
                 <td style="text-align: center">
                     <a th:href="@{'/users/' + ${sprint.owner.id}}" th:text="'@' + ${sprint.owner.username}"></a>

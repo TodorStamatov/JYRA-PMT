@@ -117,8 +117,8 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        setProjectsToOwner();
-        setTasksToDevs();
+//        setProjectsToOwner();
+//        setTasksToDevs();
         if (userService.count() == 0) {
             log.info("Successfully created admins: {}", DEFAULT_ADMINS.stream().map(userService::create).collect(Collectors.toList()));
             log.info("Successfully created devs: {}", DEFAULT_DEVS.stream().map(userService::create).collect(Collectors.toList()));

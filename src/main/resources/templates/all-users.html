@@ -45,8 +45,8 @@
                 <td style="text-align: center" th:text="${user.firstName}">First name not found</td>
                 <td style="text-align: center" th:text="${user.lastName}">Last name not found</td>
                 <td style="text-align: center" th:text="${user.email}">Email not found</td>
-                <td style="text-align: center" th:text="${user.roles}">Roles not found</td>
-                <td style="text-align: center" th:text="${user.status}">Status not found</td>
+                <td style="text-align: center" th:text="${user.printRoles()}">Roles not found</td>
+                <td style="text-align: center" th:text="${user.status.getReadable()}">Status not found</td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->
                     <a class="btn btn-primary" href="#" role="button">Edit</a>
