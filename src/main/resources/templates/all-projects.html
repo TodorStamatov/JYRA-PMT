@@ -38,7 +38,9 @@
             <tr th:each="project : ${projects}">
                 <td style="text-align: center" th:text="${project.title}">Title not found</td>
                 <td style="text-align: center" th:text="${project.description}">Description not found</td>
-                <td style="text-align: center" th:text="${project.owner.username}">Owner not found</td>
+                <td style="text-align: center">
+                    <a th:href="@{'/users/' + ${project.owner.id}}" th:text="'@' + ${project.owner.username}"></a>
+                </td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->
                     <a class="btn btn-primary" href="#" role="button">Edit</a>

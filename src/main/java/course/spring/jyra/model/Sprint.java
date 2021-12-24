@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -45,9 +46,14 @@ public class Sprint {
     @NotNull
     private String ownerId;
 
-    private List<String> developersIds;
-    private List<String> tasksIds;
-    private List<String> completedTaskResultsIds;
+    @Builder.Default
+    private List<String> developersIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> tasksIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> completedTaskResultsIds = new ArrayList<>();
     private String sprintResultId;
 
     @Builder.Default

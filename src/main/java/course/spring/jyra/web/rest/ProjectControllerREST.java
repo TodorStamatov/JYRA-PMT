@@ -29,8 +29,8 @@ public class ProjectControllerREST {
     }
 
     @GetMapping("/{projectId}")
-    public Project getProjectById(@PathVariable("projectId") String id) {
-        return projectService.findById(id);
+    public Project getProjectById(@PathVariable String projectId) {
+        return projectService.findById(projectId);
     }
 
     @PostMapping
@@ -42,15 +42,15 @@ public class ProjectControllerREST {
     }
 
     @PutMapping("/{projectId}")
-    public Project updateProject(@PathVariable("projectId") String id, @RequestBody Project project) {
-        if (!id.equals(project.getId()))
-            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", id, project.getId()));
+    public Project updateProject(@PathVariable String projectId, @RequestBody Project project) {
+        if (!projectId.equals(project.getId()))
+            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", projectId, project.getId()));
         return projectService.update(project);
     }
 
     @DeleteMapping("/{projectId}")
-    public Project deleteProject(@PathVariable("projectId") String id) {
-        return projectService.deleteById(id);
+    public Project deleteProject(@PathVariable String projectId) {
+        return projectService.deleteById(projectId);
     }
 
     @ExceptionHandler

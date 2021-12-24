@@ -32,12 +32,14 @@ public class SprintResultControllerREST {
     }
 
     @GetMapping("/{sprintId}/sprint-result")
-    public SprintResult getResultsByProjectId(@PathVariable("{sprintId}") String id) {
-        return sprintResultService.findBySprintId(id);
+    public SprintResult getResultsByProjectId(@PathVariable String sprintId) {
+        return sprintResultService.findBySprintId(sprintId);
     }
 
-    @PostMapping
-    public ResponseEntity<SprintResult> addSprint(@RequestBody SprintResult sprintResult) {
+    @PostMapping("/{sprintId}/sprint-result")
+    public ResponseEntity<SprintResult> addSprintResult(@PathVariable String sprintId, @RequestBody SprintResult sprintResult) {
+        if (!sprintId.equals(sprintResult.getSprintId()))
+            throw new InvalidClientDataException(String.format("sprint ID %s from URL doesn't match ID %s in Request body", sprintId, sprintResult.getSprintId()));
         SprintResult created = sprintResultService.create(sprintResult);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
@@ -45,15 +47,15 @@ public class SprintResultControllerREST {
     }
 
     @PutMapping("/{sprintId}/sprint-result")
-    public SprintResult updateSprint(@PathVariable("sprintId") String sprintId, @RequestBody SprintResult sprintResult) {
+    public SprintResult updateSprint(@PathVariable String sprintId, @RequestBody SprintResult sprintResult) {
         if (!sprintId.equals(sprintResult.getSprintId()))
             throw new InvalidClientDataException(String.format("sprint ID %s from URL doesn't match ID %s in Request body", sprintId, sprintResult.getSprintId()));
         return sprintResultService.update(sprintResult);
     }
 
     @DeleteMapping("/{sprintId}/sprint-result")
-    public SprintResult deleteSprintResult(@PathVariable("sprintId") String id) {
-        String deletedId = sprintService.findById(id).getSprintResultId();
+    public SprintResult deleteSprintResult(@PathVariable String sprintId) {
+        String deletedId = sprintService.findById(sprintId).getSprintResultId();
         return sprintResultService.deleteById(deletedId);
     }
 
