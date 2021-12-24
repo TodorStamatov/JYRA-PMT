@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TaskType {
     TASK("Task"), SUBTASK("Subtask"), BUG("Bug"), STORY("Story"),
-    UI("UI"), QA("QA"), DOCS("Documentation"), EPIC("Epic"),
+    UI("User Interface (UI)"), QA("Quality Assurance (QA)"), DOCS("Documentation"), EPIC("Epic"),
     FEATURE("Feature"), IMPROVEMENT("Improvement"), SPIKE("Spike"), OTHER("Other");
 
     private final String readable;
