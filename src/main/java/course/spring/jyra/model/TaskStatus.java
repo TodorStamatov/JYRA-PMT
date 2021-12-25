@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TaskStatus {
-    TO_DO("To do"), IN_PROGRESS("In progress"), IN_REVIEW("In review"), DONE("Done");
+    TO_DO("To Do"), IN_PROGRESS("In Progress"), IN_REVIEW("In Review"), DONE("Done");
 
     private final String readable;
 }

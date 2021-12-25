@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head.html :: head"></head>
+<body>
+
+<div th:replace="fragments/navbar.html :: navbar"></div>
+
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 border">
+            <div class="row">
+                <div id="task-title" class="col-md-12">
+                    <h3 style="text-align: center" th:text="${task.title}"></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div id="task-desc" class="col-md-12 border">
+                    <h5>Description</h5>
+                    <p th:text="${task.description}"></p>
+                </div>
+            </div>
+            <div class="row">
+                <div id="task-devs" class="col-md-12" th:if="${task.developersAssigned}">
+                    <table class="table table-striped table-hover">
+                        <caption>List of all developers assigned to the task</caption>
+                        <thead class="table-dark">
+                        <tr style="text-align: center">
+                            <th scope="col">Username</th>
+                            <th scope="col">First name</th>
+                            <th scope="col">Last name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Roles</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="text-align: center" th:each="user : ${task.developersAssigned}">
+                            <td>
+                                <a th:href="@{'/users/' + ${user.id}}" th:text="${user.username}"></a>
+                            </td>
+                            <td th:text="${user.firstName}">First name not found</td>
+                            <td th:text="${user.lastName}">Last name not found</td>
+                            <td th:text="${user.email}">Email not found</td>
+                            <td th:text="${user.printRoles()}">Roles not found</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 border">
+            <div id="task-status" class="row">
+                <div class="col-md-6">
+                    <p>Status</p>
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${task.status.getReadable()}"></p>
+                </div>
+            </div>
+            <div id="task-type" class="row border">
+                <div class="col-md-6">
+                    <p>Task Type</p>
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${task.taskType.getReadable()}"></p>
+                </div>
+            </div>
+            <div id="task-reporter" class="row border">
+                <div class="col-md-6">
+                    <p>Task Reporter</p>
+                </div>
+                <div class="col-md-6">
+                    <a th:href="@{'/users/' + ${task.addedBy.id}}" th:text="'@' + ${task.addedBy.username}"></a>
+                </div>
+            </div>
+            <div id="task-sprint" class="row border">
+                <div class="col-md-6">
+                    <p>Task Sprint</p>
+                </div>
+                <div class="col-md-6">
+                    <a th:href="@{'/sprints/' + ${task.sprint.id}}" th:text="${task.sprint.title}"></a>
+                </div>
+            </div>
+            <div id="task-estimate" class="row border">
+                <div class="col-md-6">
+                    <p>Estimated effort</p>
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${task.estimatedEffort}"></p>
+                </div>
+            </div>
+            <div id="task-result" class="row">
+                <div class="col-md-12">
+                    <a th:href="@{'/taskresults/' + ${task.id} + '/task-result'}">Task Result</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="fragments/foot.html :: scripts"></script>
+</body>
+</html>

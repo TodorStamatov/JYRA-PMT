@@ -28,10 +28,9 @@ public class TaskResultController {
 
     @GetMapping("/{taskId}/task-result")
     public String getTaskResultByTaskId(Model model, @PathVariable("taskId") String id) {
-        model.addAttribute("task result", taskResultService.findByTaskId(id));
+        model.addAttribute("taskResult", taskResultService.findByTaskId(id));
         log.debug("GET: Result of task with Id:%s {}", id, taskResultService.findAll());
-        //TODO: change view
-        return "taskresults";
+        return "single-task-result";
     }
 
     @PostMapping
