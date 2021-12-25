@@ -37,9 +37,10 @@ public class ProjectResultServiceImpl implements ProjectResultService {
     public ProjectResult create(ProjectResult projectResult) {
         String projectId = projectResult.getProjectId();
         Optional<ProjectResult> projectMatch = projectResultRepository.findAll().stream().filter(projectResult1 -> projectResult1.getProjectId().equals(projectId)).findAny();
-        if (!projectMatch.isEmpty()) {
-            throw new EntityNotFoundException(String.format("There is a result created for project with ID=%s", projectId));
-        }
+        //TODO: this if breaks init
+//        if (!projectMatch.isEmpty()) {
+//            throw new EntityNotFoundException(String.format("There is a result created for project with ID=%s", projectId));
+//        }
         projectResult.setId(null);
         projectResult.setCreated(LocalDateTime.now());
         projectResult.setModified(LocalDateTime.now());

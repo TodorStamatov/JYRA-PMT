@@ -117,9 +117,7 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created tasks2: {}", DEFAULT_TASKS_2);
         }
 
-//        The reverse binding
-
-        //TODO: update sprintResultsIds and projectResultId
+        //TODO: update previous sprint results
         List<Project> DEFAULT_PROJECTS = List.of(
                 Project.builder().title("Project1").description("Project1 desc").ownerId(DEFAULT_OWNER.getId())
                         .developersIds(DEFAULT_DEVS.stream().map(Developer::getId).collect(Collectors.toList()))
@@ -134,6 +132,8 @@ public class DataInitializer implements ApplicationRunner {
         );
 
         if (projectService.count() == 0) {
+            DEFAULT_PROJECTS = DEFAULT_PROJECTS.stream().map(projectService::create).collect(Collectors.toList());
+
             log.info("Successfully created projects: {}", DEFAULT_PROJECTS.stream().map(projectService::create).collect(Collectors.toList()));
         }
 
@@ -152,6 +152,9 @@ public class DataInitializer implements ApplicationRunner {
         );
 
         if (taskResultService.count() == 0) {
+            DEFAULT_TASK_RESULTS_1 = DEFAULT_TASK_RESULTS_1.stream().map(taskResultService::create).collect(Collectors.toList());
+            DEFAULT_TASK_RESULTS_2 = DEFAULT_TASK_RESULTS_2.stream().map(taskResultService::create).collect(Collectors.toList());
+
             log.info("Successfully created task results 1: {}", DEFAULT_TASK_RESULTS_1.stream().map(taskResultService::create).collect(Collectors.toList()));
             log.info("Successfully created task results 2: {}", DEFAULT_TASK_RESULTS_2.stream().map(taskResultService::create).collect(Collectors.toList()));
         }
@@ -166,6 +169,8 @@ public class DataInitializer implements ApplicationRunner {
         );
 
         if (sprintResultService.count() == 0) {
+            DEFAULT_SPRINT_RESULTS = DEFAULT_SPRINT_RESULTS.stream().map(sprintResultService::create).collect(Collectors.toList());
+
             log.info("Successfully created sprint results: {}", DEFAULT_SPRINT_RESULTS.stream().map(sprintResultService::create).collect(Collectors.toList()));
         }
 
@@ -176,6 +181,8 @@ public class DataInitializer implements ApplicationRunner {
         );
 
         if (projectResultService.count() == 0) {
+            DEFAULT_PROJECT_RESULTS = DEFAULT_PROJECT_RESULTS.stream().map(projectResultService::create).collect(Collectors.toList());
+
             log.info("Successfully created project results: {}", DEFAULT_PROJECT_RESULTS.stream().map(projectResultService::create).collect(Collectors.toList()));
         }
 
@@ -207,7 +214,8 @@ public class DataInitializer implements ApplicationRunner {
 
 //        updated projects
         Project project1 = DEFAULT_PROJECTS.get(0);
-        DEFAULT_SPRINT_RESULTS.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
+        //TODO: fix next line (throws npe)
+//        DEFAULT_SPRINT_RESULTS.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
         project1.setProjectResultId(DEFAULT_PROJECT_RESULTS.get(0).getId());
         projectService.update(project1);
     }
