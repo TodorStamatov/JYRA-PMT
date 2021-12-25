@@ -14,7 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class ProductOwner extends User {
+    @Builder.Default
     private List<String> projectsIds = new ArrayList<>();
+
+    @Builder.Default
     private List<String> completedProjectResultsIds = new ArrayList<>();
 
     //TODO: fix printProjects

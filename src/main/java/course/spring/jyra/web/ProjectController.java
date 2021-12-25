@@ -51,7 +51,8 @@ public class ProjectController {
     @GetMapping("/{projectId}/backlog")
     public String getProjectBacklog(Model model, @PathVariable("projectId") String id) {
         model.addAttribute("project", projectService.findById(id));
-        model.addAttribute("backlog", projectService.findById(id).getTasksBacklog());
+        //TODO: pass to view list of objects
+//        model.addAttribute("backlog", projectService.findById(id).getTasksBacklogIds());
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project-backlog";
     }
@@ -59,7 +60,8 @@ public class ProjectController {
     @GetMapping("/{projectId}/sprint-results")
     public String getPrevSprintResults(Model model, @PathVariable("projectId") String id) {
         model.addAttribute("project", projectService.findById(id));
-        model.addAttribute("sprintResults", projectService.findById(id).getPreviousSprintResults());
+        //TODO: pass to view list of objects
+//        model.addAttribute("sprintResults", projectService.findById(id).getPreviousSprintResultsIds());
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project-sprint-results";
     }

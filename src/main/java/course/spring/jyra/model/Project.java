@@ -46,10 +46,14 @@ public class Project {
 
     @NonNull
     @NotNull
-    private Sprint currentSprint;
+    private String currentSprintId;
 
+    @Builder.Default
     private List<String> previousSprintResultsIds = new ArrayList<>();
+
+    @Builder.Default
     private List<String> tasksBacklogIds = new ArrayList<>();
+
     private String tags;
     private String projectResultId;
 

@@ -16,6 +16,7 @@ import java.util.List;
 public class Developer extends User {
     @Builder.Default
     private List<String> assignedTasksIds = new ArrayList<>();
+
     @Builder.Default
     private List<String> completedTaskResultsIds = new ArrayList<>();
 
