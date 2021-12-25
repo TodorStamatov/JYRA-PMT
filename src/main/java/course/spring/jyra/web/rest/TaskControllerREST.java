@@ -30,8 +30,8 @@ public class TaskControllerREST {
     }
 
     @GetMapping("/{taskId}")
-    public Task getTaskById(@PathVariable("taskId") String id) {
-        return taskService.findById(id);
+    public Task getTaskById(@PathVariable String taskId) {
+        return taskService.findById(taskId);
     }
 
     @PostMapping
@@ -43,15 +43,15 @@ public class TaskControllerREST {
     }
 
     @PutMapping("/{taskId}")
-    public Task updateTask(@PathVariable("taskId") String id, @RequestBody Task task) {
-        if (!id.equals(task.getId()))
-            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", id, task.getId()));
+    public Task updateTask(@PathVariable String taskId, @RequestBody Task task) {
+        if (!taskId.equals(task.getId()))
+            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, task.getId()));
         return taskService.update(task);
     }
 
     @DeleteMapping("/{taskId}")
-    public Task deleteTask(@PathVariable("taskId") String id) {
-        return taskService.deleteById(id);
+    public Task deleteTask(@PathVariable String taskId) {
+        return taskService.deleteById(taskId);
     }
 
     @ExceptionHandler

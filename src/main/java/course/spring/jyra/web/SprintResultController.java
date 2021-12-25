@@ -31,10 +31,9 @@ public class SprintResultController {
 
     @GetMapping("/{projectId}/sprint-result")
     public String getSprintResultByProjectId(Model model, @PathVariable("projectId") String id) {
-        model.addAttribute("sprint result", sprintResultService.findBySprintId(id));
+        model.addAttribute("sprintResult", sprintResultService.findBySprintId(id));
         log.debug("GET: Sprint result: {}", sprintResultService.findBySprintId(id));
-        //TODO: change view
-        return "sprintresults";
+        return "single-sprint-result";
     }
 
     @PostMapping

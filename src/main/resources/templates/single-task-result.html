@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head.html :: head"></head>
+<body>
+
+<div th:replace="fragments/navbar.html :: navbar"></div>
+
+<div class="container-fluid mt-5">
+    <div style="text-align: center" class="row justify-content-center">
+        <div id="taskresult-task-title" class="col-md-3 border">
+            <a th:href="@{'/tasks/' + ${taskResult.task.id}}" th:text="${taskResult.task.title}"></a>
+        </div>
+        <div id="taskresult-verifiedby" class="col-md-3 border">
+            <p>Verified by: <a th:href="@{'/users/' + ${taskResult.verifiedBy.id}}"
+                               th:text="'@' + ${taskResult.verifiedBy.username}"></a></p>
+        </div>
+        <div id="taskresult-effort" class="col-md-3 border">
+            <p th:text="'Actual effort: ' + ${taskResult.actualEffort}"></p>
+        </div>
+    </div>
+    <div id="taskresult-desc" class="row justify-content-center">
+        <div class="col-md-9 border">
+            <h5>Description</h5>
+            <p th:text="${taskResult.resultsDescription}"></p>
+        </div>
+    </div>
+</div>
+
+<script th:replace="fragments/foot.html :: scripts"></script>
+</body>
+</html>

@@ -34,14 +34,14 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private final List<User> DEFAULT_ADMINS = List.of(
-            Administrator.builder().firstName("Ivan").lastName("Todorov").email("ivan@example.com").password("Ivan1!").username("vankata").roles(List.of(Role.ADMIN)).imageUrl("images/vankata.jpg").build(),
-            Administrator.builder().firstName("Admin").lastName("Admin").email("admin@example.com").password("Admin1!").username("admin").roles(List.of(Role.ADMIN)).imageUrl("images/default.jpg").build()
+            Administrator.builder().firstName("Ivan").lastName("Todorov").email("ivan@example.com").password("Ivan1!").username("vankata").roles(List.of(Role.ADMIN)).imageUrl("/images/vankata.jpg").build(),
+            Administrator.builder().firstName("Admin").lastName("Admin").email("admin@example.com").password("Admin1!").username("admin").roles(List.of(Role.ADMIN)).imageUrl("/images/default.jpg").build()
     );
     private final List<Developer> DEFAULT_DEVS = List.of(
-            Developer.builder().firstName("Bogdan").lastName("Kosev").email("bogdan@example.com").password("Bogdan1!").username("bogi4").roles(List.of(Role.DEVELOPER)).imageUrl("images/bogi4.jpg").build(),
-            Developer.builder().firstName("Todor").lastName("Stamatov").email("todor@example.com").password("Todor1!").username("toshko").roles(List.of(Role.DEVELOPER)).imageUrl("images/toshko.jpg").build()
+            Developer.builder().firstName("Bogdan").lastName("Kosev").email("bogdan@example.com").password("Bogdan1!").username("bogi4").roles(List.of(Role.DEVELOPER)).imageUrl("/images/bogi4.jpg").build(),
+            Developer.builder().firstName("Todor").lastName("Stamatov").email("todor@example.com").password("Todor1!").username("toshko").roles(List.of(Role.DEVELOPER)).imageUrl("/images/toshko.jpg").build()
     );
-    private final ProductOwner DEFAULT_OWNER = ProductOwner.builder().firstName("Ivailo").lastName("Panayotov").email("ivailo@example.com").password("Ivailo1!").username("ivaka").roles(List.of(Role.PRODUCT_OWNER)).imageUrl("images/ivaka.jpg").build();
+    private final ProductOwner DEFAULT_OWNER = ProductOwner.builder().firstName("Ivailo").lastName("Panayotov").email("ivailo@example.com").password("Ivailo1!").username("ivaka").roles(List.of(Role.PRODUCT_OWNER)).imageUrl("/images/ivaka.jpg").build();
 
     private final List<Sprint> DEFAULT_SPRINTS = List.of(
             Sprint.builder().title("Sprint1").owner(DEFAULT_OWNER).developers(DEFAULT_DEVS).build(),
@@ -117,8 +117,8 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        setProjectsToOwner();
-        setTasksToDevs();
+//        setProjectsToOwner();
+//        setTasksToDevs();
         if (userService.count() == 0) {
             log.info("Successfully created admins: {}", DEFAULT_ADMINS.stream().map(userService::create).collect(Collectors.toList()));
             log.info("Successfully created devs: {}", DEFAULT_DEVS.stream().map(userService::create).collect(Collectors.toList()));

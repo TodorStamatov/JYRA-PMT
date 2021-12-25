@@ -29,10 +29,9 @@ public class ProjectResultController {
 
     @GetMapping("/{projectId}/project-result")
     public String getResultsByProjectId(Model model, @PathVariable("projectId") String projectId) {
-        model.addAttribute("project result", projectResultService.findByProject(projectId));
+        model.addAttribute("projectResult", projectResultService.findByProject(projectId));
         log.debug("GET: Result of Project with ID=%s: {}", projectId, projectResultService.findByProject(projectId));
-        //TODO: change view
-        return "projectresults";
+        return "single-project-result";
     }
 
     @PostMapping

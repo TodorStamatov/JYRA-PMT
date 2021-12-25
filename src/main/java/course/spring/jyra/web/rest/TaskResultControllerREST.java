@@ -33,12 +33,14 @@ public class TaskResultControllerREST {
     }
 
     @GetMapping("/{taskId}/task-result")
-    public TaskResult getResultsByTaskId(@PathVariable("{taskId}") String id) {
-        return taskResultService.findById(id);
+    public TaskResult getResultsByTaskId(@PathVariable String taskId) {
+        return taskResultService.findById(taskId);
     }
 
-    @PostMapping
-    public ResponseEntity<TaskResult> addTask(@RequestBody TaskResult taskResult) {
+    @PostMapping("/{taskId}/task-result")
+    public ResponseEntity<TaskResult> addTaskResult(@PathVariable String taskId, @RequestBody TaskResult taskResult) {
+        if (!taskId.equals(taskResult.getTask().getId()))
+            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTask().getId()));
         TaskResult created = taskResultService.create(taskResult);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
@@ -46,15 +48,15 @@ public class TaskResultControllerREST {
     }
 
     @PutMapping("/{taskId}/task-result")
-    public TaskResult updateTask(@PathVariable("taskId") String taskId, @RequestBody TaskResult taskResult) {
+    public TaskResult updateTask(@PathVariable String taskId, @RequestBody TaskResult taskResult) {
         if (!taskId.equals(taskResult.getTask().getId()))
             throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTask().getId()));
         return taskResultService.update(taskResult);
     }
 
     @DeleteMapping("/{taskId}/task-result")
-    public TaskResult deleteTaskResult(@PathVariable("taskId") String id) {
-        String deletedId = taskService.findById(id).getTaskResult().getId();
+    public TaskResult deleteTaskResult(@PathVariable String taskId) {
+        String deletedId = taskService.findById(taskId).getTaskResult().getId();
         return taskResultService.deleteById(deletedId);
     }
 
