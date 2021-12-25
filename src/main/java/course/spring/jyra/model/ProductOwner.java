@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class ProductOwner extends User {
-    private List<String> projectsIds;
-    private List<String> completedProjectResultsIds;
+    private List<String> projectsIds = new ArrayList<>();
+    private List<String> completedProjectResultsIds = new ArrayList<>();
 
     //TODO: fix printProjects
 //    public String printProjects() {

@@ -56,7 +56,7 @@ public class TaskResultControllerREST {
 
     @DeleteMapping("/{taskId}/task-result")
     public TaskResult deleteTaskResult(@PathVariable String taskId) {
-        String deletedId = taskService.findById(taskId).getTaskResult().getId();
+        String deletedId = taskService.findById(taskId).getTaskResultId();
         return taskResultService.deleteById(deletedId);
     }
 

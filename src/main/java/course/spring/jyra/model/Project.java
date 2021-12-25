@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -41,14 +42,14 @@ public class Project {
 
     @NonNull
     @NotNull
-    private List<String> developersIds;
+    private List<String> developersIds = new ArrayList<>();
 
     @NonNull
     @NotNull
     private Sprint currentSprint;
 
-    private List<String> previousSprintResultsIds;
-    private List<String> tasksBacklogIds;
+    private List<String> previousSprintResultsIds = new ArrayList<>();
+    private List<String> tasksBacklogIds = new ArrayList<>();
     private String tags;
     private String projectResultId;
 

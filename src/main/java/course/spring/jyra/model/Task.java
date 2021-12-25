@@ -70,7 +70,7 @@ public class Task {
     @NonNull
     private String tags;
 
-    private TaskResult taskResult;
+    private String taskResultId;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
