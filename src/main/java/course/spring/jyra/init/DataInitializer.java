@@ -217,5 +217,25 @@ public class DataInitializer implements ApplicationRunner {
         DEFAULT_SPRINT_RESULTS.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
         project1.setProjectResultId(DEFAULT_PROJECT_RESULTS.get(0).getId());
         projectService.update(project1);
+
+//        updated developers
+        Developer developer1 = DEFAULT_DEVS.get(0);
+        Developer developer2 = DEFAULT_DEVS.get(1);
+        DEFAULT_TASKS_1.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
+        DEFAULT_TASKS_1.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
+        DEFAULT_TASKS_2.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
+        DEFAULT_TASKS_2.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
+        DEFAULT_TASK_RESULTS_1.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
+        DEFAULT_TASK_RESULTS_1.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
+        DEFAULT_TASK_RESULTS_2.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
+        DEFAULT_TASK_RESULTS_2.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
+        userService.update(developer1);
+        userService.update(developer2);
+
+//        updated owner
+        ProductOwner productOwner = DEFAULT_OWNER;
+        DEFAULT_PROJECTS.forEach(project -> productOwner.getProjectsIds().add(project.getId()));
+        DEFAULT_PROJECT_RESULTS.forEach(projectResult -> productOwner.getCompletedProjectResultsIds().add(projectResult.getId()));
+        userService.update(productOwner);
     }
 }
