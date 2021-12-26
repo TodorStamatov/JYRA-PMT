@@ -20,11 +20,4 @@ public class ProductOwner extends User {
 
     @Builder.Default
     private List<String> completedProjectResultsIds = new ArrayList<>();
-
-    public String printProjects(ProjectService projectService) {
-        StringBuilder stringBuilder = new StringBuilder();
-        this.getProjectsIds().forEach(projectId ->
-                stringBuilder.append(String.format("%s , ", projectService.findById(projectId).getTitle())));
-        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
-    }
 }

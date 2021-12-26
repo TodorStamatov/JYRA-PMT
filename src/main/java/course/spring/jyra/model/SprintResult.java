@@ -58,9 +58,4 @@ public class SprintResult {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
-    @PostConstruct
-    //TODO: fix calculateTeamVelocity
-    public void calculateTeamVelocity() {
-//        this.teamVelocity = this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
-    }
 }

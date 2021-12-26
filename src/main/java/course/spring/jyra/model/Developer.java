@@ -22,11 +22,4 @@ public class Developer extends User {
     @Builder.Default
     private List<String> completedTaskResultsIds = new ArrayList<>();
 
-    public String printAssignedTasks(TaskService taskService) {
-        StringBuilder stringBuilder = new StringBuilder();
-        this.getAssignedTasksIds().forEach(taskId ->
-                stringBuilder.append(String.format("%s , ", taskService.findById(taskId).getTitle())));
-        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
-    }
-
 }
