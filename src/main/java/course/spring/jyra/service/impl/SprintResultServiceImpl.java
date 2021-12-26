@@ -2,10 +2,10 @@ package course.spring.jyra.service.impl;
 
 import course.spring.jyra.dao.SprintResultRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
-import course.spring.jyra.model.ProjectResult;
-import course.spring.jyra.model.Sprint;
 import course.spring.jyra.model.SprintResult;
+import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.SprintResultService;
+import course.spring.jyra.service.TaskResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,12 @@ import java.util.List;
 @Service
 public class SprintResultServiceImpl implements SprintResultService {
     private final SprintResultRepository sprintResultRepository;
+    private final TaskResultService taskResultService;
 
     @Autowired
-    public SprintResultServiceImpl(SprintResultRepository sprintResultRepository) {
+    public SprintResultServiceImpl(SprintResultRepository sprintResultRepository, TaskResultService taskResultService) {
         this.sprintResultRepository = sprintResultRepository;
+        this.taskResultService = taskResultService;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class SprintResultServiceImpl implements SprintResultService {
         sprintResult.setId(null);
         sprintResult.setCreated(LocalDateTime.now());
         sprintResult.setModified(LocalDateTime.now());
+        sprintResult.setTeamVelocity(calculateTeamVelocity(sprintResult));
         return sprintResultRepository.insert(sprintResult);
     }
 
@@ -44,6 +47,7 @@ public class SprintResultServiceImpl implements SprintResultService {
         SprintResult oldSprintResult = findById(sprintResult.getId());
         sprintResult.setCreated(oldSprintResult.getCreated());
         sprintResult.setModified(LocalDateTime.now());
+        sprintResult.setTeamVelocity(calculateTeamVelocity(sprintResult));
         return sprintResultRepository.save(sprintResult);
     }
 
@@ -56,8 +60,12 @@ public class SprintResultServiceImpl implements SprintResultService {
 
     @Override
     public SprintResult findBySprintId(String id) {
-        return sprintResultRepository.findAll().stream().filter(sprintResult -> sprintResult.getSprint().getId().equals(id)).findFirst()
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found or is not finished.", id)));
+        return sprintResultRepository.findAll().stream().filter(sprintResult -> sprintResult.getSprintId().equals(id)).findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found.", id)));
+    }
+
+    private int calculateTeamVelocity(SprintResult sprintResult) {
+        return sprintResult.getTaskResultsIds().stream().map(taskResultService::findById).mapToInt(TaskResult::getActualEffort).sum();
     }
 
     @Override

@@ -39,24 +39,24 @@ public class TaskResultControllerREST {
 
     @PostMapping("/{taskId}/task-result")
     public ResponseEntity<TaskResult> addTaskResult(@PathVariable String taskId, @RequestBody TaskResult taskResult) {
-        if (!taskId.equals(taskResult.getTask().getId()))
-            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTask().getId()));
+        if (!taskId.equals(taskResult.getTaskId()))
+            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTaskId()));
         TaskResult created = taskResultService.create(taskResult);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                        .pathSegment("{taskId}").buildAndExpand(created.getTask().getId()).toUri()).body(created);
+                        .pathSegment("{taskId}").buildAndExpand(created.getTaskId()).toUri()).body(created);
     }
 
     @PutMapping("/{taskId}/task-result")
     public TaskResult updateTask(@PathVariable String taskId, @RequestBody TaskResult taskResult) {
-        if (!taskId.equals(taskResult.getTask().getId()))
-            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTask().getId()));
+        if (!taskId.equals(taskResult.getTaskId()))
+            throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTaskId()));
         return taskResultService.update(taskResult);
     }
 
     @DeleteMapping("/{taskId}/task-result")
     public TaskResult deleteTaskResult(@PathVariable String taskId) {
-        String deletedId = taskService.findById(taskId).getTaskResult().getId();
+        String deletedId = taskService.findById(taskId).getTaskResultId();
         return taskResultService.deleteById(deletedId);
     }
 

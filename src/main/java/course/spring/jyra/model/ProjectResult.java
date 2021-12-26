@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -34,7 +35,7 @@ public class ProjectResult {
 
     @NonNull
     @NotNull
-    private Project project;
+    private String projectId;
 
     @NonNull
     @NotNull
@@ -51,7 +52,7 @@ public class ProjectResult {
 
     @NonNull
     @NotNull
-    private List<SprintResult> sprintResultList;
+    private List<String> sprintResultListIds = new ArrayList<>();
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

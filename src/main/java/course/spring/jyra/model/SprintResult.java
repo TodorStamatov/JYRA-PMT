@@ -10,6 +10,8 @@ created (generated automatically) - time stamp of the moment the entity was crea
 modified (generated automatically) - time stamp of the moment the entity was last modified;
  */
 
+import course.spring.jyra.service.SprintService;
+import course.spring.jyra.service.TaskService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -20,6 +22,7 @@ import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +38,7 @@ public class SprintResult {
 
     @NotNull
     @NonNull
-    private Sprint sprint;
+    private String sprintId;
 
     @Builder.Default
     private int teamVelocity = 0;
@@ -45,7 +48,7 @@ public class SprintResult {
 
     @NonNull
     @NotNull
-    private List<TaskResult> taskResults;
+    private List<String> taskResultsIds = new ArrayList<>();
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -55,8 +58,4 @@ public class SprintResult {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime modified = LocalDateTime.now();
 
-    @PostConstruct
-    public void calculateTeamVelocity() {
-        this.teamVelocity = this.sprint.getCompletedTaskResults().stream().mapToInt(TaskResult::getActualEffort).sum();
-    }
 }

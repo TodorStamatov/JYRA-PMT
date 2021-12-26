@@ -1,9 +1,12 @@
 package course.spring.jyra.model;
 
+import course.spring.jyra.service.TaskResultService;
+import course.spring.jyra.service.TaskService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,12 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class Developer extends User {
-    private List<Task> assignedTasks;
-    private List<TaskResult> completedTaskResults;
+    @Builder.Default
+    private List<String> assignedTasksIds = new ArrayList<>();
 
-    public String printAssignedTasks() {
-        StringBuilder stringBuilder = new StringBuilder();
-        assignedTasks.forEach(task -> stringBuilder.append(String.format("%s, ", task.getTitle())));
-        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
-    }
+    @Builder.Default
+    private List<String> completedTaskResultsIds = new ArrayList<>();
+
 }

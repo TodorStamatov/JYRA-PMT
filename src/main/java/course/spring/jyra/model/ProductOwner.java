@@ -1,9 +1,11 @@
 package course.spring.jyra.model;
 
+import course.spring.jyra.service.ProjectService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,12 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 public class ProductOwner extends User {
-    private List<Project> projects;
-    private List<ProjectResult> completedProjectResults;
+    @Builder.Default
+    private List<String> projectsIds = new ArrayList<>();
 
-    public String printProjects() {
-        StringBuilder stringBuilder = new StringBuilder();
-        projects.forEach(project -> stringBuilder.append(String.format("%s, ", project.getTitle())));
-        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
-    }
+    @Builder.Default
+    private List<String> completedProjectResultsIds = new ArrayList<>();
 }

@@ -32,7 +32,7 @@ public class TaskResult {
 
     @NotNull
     @NonNull
-    private Task task;
+    private String taskId;
 
     @NotNull
     @NonNull
@@ -40,7 +40,7 @@ public class TaskResult {
 
     @NotNull
     @NonNull
-    private User verifiedBy;
+    private String verifiedById;
 
     @Size(min = 10, max = 2500, message = "String must be between 10 and 2500 characters String, supporting Markdown syntax.")
     private String resultsDescription;

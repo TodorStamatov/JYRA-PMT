@@ -3,8 +3,12 @@ package course.spring.jyra.service.impl;
 import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidEntityException;
+import course.spring.jyra.model.Developer;
+import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.Role;
 import course.spring.jyra.model.User;
+import course.spring.jyra.service.ProjectService;
+import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -17,10 +21,14 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ProjectService projectService;
+    private final TaskService taskService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ProjectService projectService, TaskService taskService) {
         this.userRepository = userRepository;
+        this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @Override
@@ -95,6 +103,31 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         oldUser.setPassword("");
         return oldUser;
+    }
+
+    @Override
+    public String printProjects(String id) {
+        StringBuilder stringBuilder = new StringBuilder();
+        User user = findById(id);
+        if (!(user instanceof ProductOwner)) {
+            throw new InvalidEntityException(String.format("User with ID=%s is not product owner", id));
+        }
+        ProductOwner productOwner = (ProductOwner) user;
+        productOwner.getProjectsIds().forEach(projectId ->
+                stringBuilder.append(String.format("%s , ", projectService.findById(projectId).getTitle())));
+        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
+    }
+
+    public String printAssignedTasks(String id) {
+        StringBuilder stringBuilder = new StringBuilder();
+        User user = findById(id);
+        if (!(user instanceof Developer)) {
+            throw new InvalidEntityException(String.format("User with ID=%s is not developer", id));
+        }
+        Developer developer = (Developer) user;
+        developer.getAssignedTasksIds().forEach(taskId ->
+                stringBuilder.append(String.format("%s , ", taskService.findById(taskId).getTitle())));
+        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
     }
 
     @Override

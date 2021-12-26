@@ -38,24 +38,24 @@ public class ProjectResultControllerREST {
 
     @PostMapping("/{projectId}/project-result")
     public ResponseEntity<ProjectResult> addProjectResult(@PathVariable String projectId, @RequestBody ProjectResult projectResult) {
-        if (!projectId.equals(projectResult.getProject().getId()))
-            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", projectId, projectResult.getProject().getId()));
+        if (!projectId.equals(projectResult.getProjectId()))
+            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", projectId, projectResult.getProjectId()));
         ProjectResult created = projectResultService.create(projectResult);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
-                        .pathSegment("{projectId}").buildAndExpand(created.getProject().getId()).toUri()).body(created);
+                        .pathSegment("{projectId}").buildAndExpand(created.getProjectId()).toUri()).body(created);
     }
 
     @PutMapping("/{projectId}/project-result")
     public ProjectResult updateProject(@PathVariable String projectId, @RequestBody ProjectResult projectResult) {
-        if (!projectId.equals(projectResult.getProject().getId()))
-            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", projectId, projectResult.getProject().getId()));
+        if (!projectId.equals(projectResult.getProjectId()))
+            throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", projectId, projectResult.getProjectId()));
         return projectResultService.update(projectResult);
     }
 
     @DeleteMapping("/{projectId}/project-result")
     public ProjectResult deleteProjectResult(@PathVariable String projectId) {
-        String deletedId = projectService.findById(projectId).getProjectResult().getId();
+        String deletedId = projectService.findById(projectId).getProjectResultId();
         return projectResultService.deleteById(deletedId);
     }
 
