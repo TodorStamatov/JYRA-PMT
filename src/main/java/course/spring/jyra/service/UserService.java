@@ -17,5 +17,9 @@ public interface UserService {
 
     User update(User user);
 
+    String printProjects(String id);
+
+    String printAssignedTasks(String id);
+
     long count();
 }

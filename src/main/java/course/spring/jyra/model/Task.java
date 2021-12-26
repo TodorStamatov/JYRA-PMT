@@ -46,7 +46,7 @@ public class Task {
 
     @NotNull
     @NonNull
-    private User addedBy;
+    private String addedById;
 
     @NotNull
     @NonNull
@@ -57,11 +57,11 @@ public class Task {
     @Builder.Default
     private TaskStatus status = TaskStatus.TO_DO;
 
-    private Sprint sprint;
+    private String sprintId;
 
     @NotNull
     @NonNull
-    private List<Developer> developersAssigned;
+    private List<String> developersAssignedIds;
 
     @Size(min = 150, max = 2500, message = "String must be between 150 and 2500 characters String, supporting Markdown syntax")
     private String description;
@@ -70,7 +70,7 @@ public class Task {
     @NonNull
     private String tags;
 
-    private TaskResult taskResult;
+    private String taskResultId;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

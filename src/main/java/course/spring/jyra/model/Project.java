@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -37,20 +38,24 @@ public class Project {
 
     @NonNull
     @NotNull
-    private ProductOwner owner;
+    private String ownerId;
 
     @NonNull
     @NotNull
-    private List<Developer> developers;
+    private List<String> developersIds = new ArrayList<>();
 
     @NonNull
     @NotNull
-    private Sprint currentSprint;
+    private String currentSprintId;
 
-    private List<SprintResult> previousSprintResults;
-    private List<Task> tasksBacklog;
+    @Builder.Default
+    private List<String> previousSprintResultsIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> tasksBacklogIds = new ArrayList<>();
+
     private String tags;
-    private ProjectResult projectResult;
+    private String projectResultId;
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

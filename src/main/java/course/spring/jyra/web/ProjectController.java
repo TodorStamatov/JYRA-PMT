@@ -1,22 +1,33 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.Project;
+import course.spring.jyra.model.SprintResult;
+import course.spring.jyra.model.Task;
 import course.spring.jyra.service.ProjectService;
+import course.spring.jyra.service.SprintResultService;
+import course.spring.jyra.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/projects")
 @Slf4j
 public class ProjectController {
     private final ProjectService projectService;
+    private final TaskService taskService;
+    private final SprintResultService sprintResultService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, TaskService taskService, SprintResultService sprintResultService) {
         this.projectService = projectService;
+        this.taskService = taskService;
+        this.sprintResultService = sprintResultService;
     }
 
     @GetMapping
@@ -51,7 +62,10 @@ public class ProjectController {
     @GetMapping("/{projectId}/backlog")
     public String getProjectBacklog(Model model, @PathVariable("projectId") String id) {
         model.addAttribute("project", projectService.findById(id));
-        model.addAttribute("backlog", projectService.findById(id).getTasksBacklog());
+//        maybe can be done without creating list
+        List<Task> taskBacklog = new ArrayList<>();
+        projectService.findById(id).getTasksBacklogIds().forEach(taskId -> taskBacklog.add(taskService.findById(taskId)));
+        model.addAttribute("backlog", taskBacklog);
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project-backlog";
     }
@@ -59,7 +73,10 @@ public class ProjectController {
     @GetMapping("/{projectId}/sprint-results")
     public String getPrevSprintResults(Model model, @PathVariable("projectId") String id) {
         model.addAttribute("project", projectService.findById(id));
-        model.addAttribute("sprintResults", projectService.findById(id).getPreviousSprintResults());
+//        maybe can be done without creating list
+        List<SprintResult> sprintResults = new ArrayList<>();
+        projectService.findById(id).getPreviousSprintResultsIds().forEach(sprintId -> sprintResults.add(sprintResultService.findById(sprintId)));
+        model.addAttribute("sprintResults", sprintResults);
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project-sprint-results";
     }
