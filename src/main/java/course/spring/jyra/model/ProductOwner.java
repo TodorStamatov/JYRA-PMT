@@ -1,5 +1,6 @@
 package course.spring.jyra.model;
 
+import course.spring.jyra.service.ProjectService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,10 +21,10 @@ public class ProductOwner extends User {
     @Builder.Default
     private List<String> completedProjectResultsIds = new ArrayList<>();
 
-    //TODO: fix printProjects
-//    public String printProjects() {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        projects.forEach(project -> stringBuilder.append(String.format("%s, ", project.getTitle())));
-//        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
-//    }
+    public String printProjects(ProjectService projectService) {
+        StringBuilder stringBuilder = new StringBuilder();
+        this.getProjectsIds().forEach(projectId ->
+                stringBuilder.append(String.format("%s , ", projectService.findById(projectId).getTitle())));
+        return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
+    }
 }
