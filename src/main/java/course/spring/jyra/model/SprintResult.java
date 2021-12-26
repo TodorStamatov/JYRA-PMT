@@ -10,6 +10,8 @@ created (generated automatically) - time stamp of the moment the entity was crea
 modified (generated automatically) - time stamp of the moment the entity was last modified;
  */
 
+import course.spring.jyra.service.SprintService;
+import course.spring.jyra.service.TaskService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
