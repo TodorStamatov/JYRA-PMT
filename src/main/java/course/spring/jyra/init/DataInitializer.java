@@ -44,6 +44,16 @@ public class DataInitializer implements ApplicationRunner {
     );
     private ProductOwner defaultOwner = ProductOwner.builder().firstName("Ivailo").lastName("Panayotov").email("ivailo@example.com").password("Ivailo1!").username("ivaka").roles(List.of(Role.PRODUCT_OWNER)).imageUrl("/images/ivaka.jpg").build();
 
+    private List<Sprint> defaultSprints;
+    private List<Task> defaultTasks1;
+    private List<Task> defaultTasks2;
+    private List<Project> defaultProjects;
+    private List<TaskResult> defaultTaskResults1;
+    private List<TaskResult> defaultTaskResults2;
+    private List<SprintResult> defaultSprintResults;
+    private ProjectResult defaultProjectResult;
+    private boolean updateSprint = false, updateTask = false, updateProject = false, updateDev = false, updateOwner = false;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -55,88 +65,97 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created admins: {}", defaultAdmins);
             log.info("Successfully created devs: {}", defaultDevs);
             log.info("Successfully created product owner: {}", defaultOwner);
+
+            updateDev = true;
+            updateOwner = true;
         }
 
-        List<Sprint> defaultSprints = List.of(
-                Sprint.builder().title("Sprint1").ownerId(defaultOwner.getId())
-                        .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build(),
-                Sprint.builder().title("Sprint2").ownerId(defaultOwner.getId())
-                        .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build(),
-                Sprint.builder().title("Sprint3").ownerId(defaultOwner.getId())
-                        .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build()
-        );
-
         if (sprintService.count() == 0) {
+            defaultSprints = List.of(
+                    Sprint.builder().title("Sprint1").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build(),
+                    Sprint.builder().title("Sprint2").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build(),
+                    Sprint.builder().title("Sprint3").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build()
+            );
+
             defaultSprints = defaultSprints.stream().map(sprintService::create).collect(Collectors.toList());
 
             log.info("Successfully created sprints: {}", defaultSprints);
+
+            updateSprint = true;
         }
 
-        List<Task> defaultTasks1 = List.of(
-                Task.builder().taskType(TaskType.TASK).title("Task1").addedById(defaultAdmins.get(0).getId()).estimatedEffort(5)
-                        .sprintId(defaultSprints.get(0).getId()).
-                        developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                        .description("Task 1 desc").tags("tag1,tag2").build(),
-                Task.builder().taskType(TaskType.STORY).title("Task2").addedById(defaultAdmins.get(1).getId()).estimatedEffort(7)
-                        .sprintId(defaultSprints.get(0).getId())
-                        .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                        .description("Task 2 desc").tags("tag1,tag2").build()
-        );
+        if (taskService.count() == 0) {
+            defaultTasks1 = List.of(
+                    Task.builder().taskType(TaskType.TASK).title("Task1").addedById(defaultAdmins.get(0).getId()).estimatedEffort(5)
+                            .sprintId(defaultSprints.get(0).getId()).
+                            developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .description("Task 1 desc").tags("tag1,tag2").build(),
+                    Task.builder().taskType(TaskType.STORY).title("Task2").addedById(defaultAdmins.get(1).getId()).estimatedEffort(7)
+                            .sprintId(defaultSprints.get(0).getId())
+                            .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .description("Task 2 desc").tags("tag1,tag2").build()
+            );
 
 //        Here we add the sprint to the task and later we need to make the reverse binding - add the tasks (once they are created) to this sprints
-        List<Task> defaultTasks2 = List.of(
-                Task.builder().taskType(TaskType.TASK).title("Task3").addedById(defaultAdmins.get(0).getId()).estimatedEffort(1)
-                        .sprintId(defaultSprints.get(1).getId())
-                        .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                        .description("Task 3 desc").tags("tag1,tag2").build(),
-                Task.builder().taskType(TaskType.STORY).title("Task4").addedById(defaultAdmins.get(1).getId()).estimatedEffort(1)
-                        .sprintId(defaultSprints.get(1).getId())
-                        .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                        .description("Task 4 desc").tags("tag1,tag2").build()
-        );
+            defaultTasks2 = List.of(
+                    Task.builder().taskType(TaskType.TASK).title("Task3").addedById(defaultAdmins.get(0).getId()).estimatedEffort(1)
+                            .sprintId(defaultSprints.get(1).getId())
+                            .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .description("Task 3 desc").tags("tag1,tag2").build(),
+                    Task.builder().taskType(TaskType.STORY).title("Task4").addedById(defaultAdmins.get(1).getId()).estimatedEffort(1)
+                            .sprintId(defaultSprints.get(1).getId())
+                            .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .description("Task 4 desc").tags("tag1,tag2").build()
+            );
 
-        if (taskService.count() == 0) {
             defaultTasks1 = defaultTasks1.stream().map(taskService::create).collect(Collectors.toList());
             defaultTasks2 = defaultTasks2.stream().map(taskService::create).collect(Collectors.toList());
 
             log.info("Successfully created tasks1: {}", defaultTasks1);
             log.info("Successfully created tasks2: {}", defaultTasks2);
+
+            updateTask = true;
         }
 
-        List<Project> defaultProjects = List.of(
-                Project.builder().title("Project1").description("Project1 desc").ownerId(defaultOwner.getId())
-                        .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                        .currentSprintId(defaultSprints.get(0).getId())
-                        .tasksBacklogIds(defaultTasks1.stream().map(Task::getId).collect(Collectors.toList()))
-                        .tags("tag1,tag2").build(),
-                Project.builder().title("Project2").description("Project2 desc").ownerId(defaultOwner.getId())
-                        .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                        .currentSprintId(defaultSprints.get(1).getId())
-                        .tasksBacklogIds(defaultTasks2.stream().map(Task::getId).collect(Collectors.toList()))
-                        .tags("tag1,tag2").build()
-        );
-
         if (projectService.count() == 0) {
+            defaultProjects = List.of(
+                    Project.builder().title("Project1").description("Project1 desc").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .currentSprintId(defaultSprints.get(0).getId())
+                            .tasksBacklogIds(defaultTasks1.stream().map(Task::getId).collect(Collectors.toList()))
+                            .tags("tag1,tag2").build(),
+                    Project.builder().title("Project2").description("Project2 desc").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .currentSprintId(defaultSprints.get(1).getId())
+                            .tasksBacklogIds(defaultTasks2.stream().map(Task::getId).collect(Collectors.toList()))
+                            .tags("tag1,tag2").build()
+            );
+
             defaultProjects = defaultProjects.stream().map(projectService::create).collect(Collectors.toList());
 
             log.info("Successfully created projects: {}", defaultProjects);
+
+            updateProject = true;
         }
 
-        List<TaskResult> defaultTaskResults1 = List.of(
-                TaskResult.builder().taskId(defaultTasks1.get(0).getId()).actualEffort(3).verifiedById(defaultAdmins.get(0).getId())
-                        .resultsDescription("Task Result 1 desc").build(),
-                TaskResult.builder().taskId(defaultTasks1.get(1).getId()).actualEffort(5).verifiedById(defaultAdmins.get(0).getId())
-                        .resultsDescription("Task Result 2 desc").build()
-        );
-
-        List<TaskResult> defaultTaskResults2 = List.of(
-                TaskResult.builder().taskId(defaultTasks2.get(0).getId()).actualEffort(7).verifiedById(defaultAdmins.get(1).getId())
-                        .resultsDescription("Task Result 3 desc").build(),
-                TaskResult.builder().taskId(defaultTasks2.get(1).getId()).actualEffort(1).verifiedById(defaultAdmins.get(1).getId())
-                        .resultsDescription("Task Result 4 desc").build()
-        );
-
         if (taskResultService.count() == 0) {
+            defaultTaskResults1 = List.of(
+                    TaskResult.builder().taskId(defaultTasks1.get(0).getId()).actualEffort(3).verifiedById(defaultAdmins.get(0).getId())
+                            .resultsDescription("Task Result 1 desc").build(),
+                    TaskResult.builder().taskId(defaultTasks1.get(1).getId()).actualEffort(5).verifiedById(defaultAdmins.get(0).getId())
+                            .resultsDescription("Task Result 2 desc").build()
+            );
+
+            defaultTaskResults2 = List.of(
+                    TaskResult.builder().taskId(defaultTasks2.get(0).getId()).actualEffort(7).verifiedById(defaultAdmins.get(1).getId())
+                            .resultsDescription("Task Result 3 desc").build(),
+                    TaskResult.builder().taskId(defaultTasks2.get(1).getId()).actualEffort(1).verifiedById(defaultAdmins.get(1).getId())
+                            .resultsDescription("Task Result 4 desc").build()
+            );
+
             defaultTaskResults1 = defaultTaskResults1.stream().map(taskResultService::create).collect(Collectors.toList());
             defaultTaskResults2 = defaultTaskResults2.stream().map(taskResultService::create).collect(Collectors.toList());
 
@@ -144,81 +163,91 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created task results 2: {}", defaultTaskResults2);
         }
 
-        List<SprintResult> defaultSprintResults = List.of(
-                SprintResult.builder().sprintId(defaultSprints.get(0).getId()).resultsDescription("Sprint result 1 desc")
-                        .taskResultsIds(defaultTaskResults1.stream().map(TaskResult::getId).collect(Collectors.toList()))
-                        .build(),
-                SprintResult.builder().sprintId(defaultSprints.get(1).getId()).resultsDescription("Sprint result 2 desc")
-                        .taskResultsIds(defaultTaskResults2.stream().map(TaskResult::getId).collect(Collectors.toList()))
-                        .build()
-        );
-
         if (sprintResultService.count() == 0) {
+            defaultSprintResults = List.of(
+                    SprintResult.builder().sprintId(defaultSprints.get(0).getId()).resultsDescription("Sprint result 1 desc")
+                            .taskResultsIds(defaultTaskResults1.stream().map(TaskResult::getId).collect(Collectors.toList()))
+                            .build(),
+                    SprintResult.builder().sprintId(defaultSprints.get(1).getId()).resultsDescription("Sprint result 2 desc")
+                            .taskResultsIds(defaultTaskResults2.stream().map(TaskResult::getId).collect(Collectors.toList()))
+                            .build()
+            );
+
             defaultSprintResults = defaultSprintResults.stream().map(sprintResultService::create).collect(Collectors.toList());
 
             log.info("Successfully created sprint results: {}", defaultSprintResults);
         }
 
-        ProjectResult defaultProjectResult = ProjectResult.builder().projectId(defaultProjects.get(0).getId()).duration(10).resultsDescription("project result desc")
-                .sprintResultListIds(defaultSprintResults.stream().map(SprintResult::getId).collect(Collectors.toList()))
-                .build();
-
         if (projectResultService.count() == 0) {
+            defaultProjectResult = ProjectResult.builder().projectId(defaultProjects.get(0).getId()).duration(10).resultsDescription("project result desc")
+                    .sprintResultListIds(defaultSprintResults.stream().map(SprintResult::getId).collect(Collectors.toList()))
+                    .build();
+
             defaultProjectResult = projectResultService.create(defaultProjectResult);
 
             log.info("Successfully created project result: {}", defaultProjectResult);
         }
 
 //        updated sprint
-        Sprint sprint1 = defaultSprints.get(0);
-        Sprint sprint2 = defaultSprints.get(1);
-        defaultTasks1.forEach(task -> sprint1.getTasksIds().add(task.getId()));
-        defaultTasks2.forEach(task -> sprint2.getTasksIds().add(task.getId()));
-        defaultTaskResults1.forEach(taskResult -> sprint1.getCompletedTaskResultsIds().add(taskResult.getId()));
-        defaultTaskResults2.forEach(taskResult -> sprint2.getCompletedTaskResultsIds().add(taskResult.getId()));
-        sprint1.setSprintResultId(defaultSprintResults.get(0).getId());
-        sprint2.setSprintResultId(defaultSprintResults.get(1).getId());
-        sprintService.update(sprint1);
-        sprintService.update(sprint2);
+        if (updateSprint) {
+            Sprint sprint1 = defaultSprints.get(0);
+            Sprint sprint2 = defaultSprints.get(1);
+            defaultTasks1.forEach(task -> sprint1.getTasksIds().add(task.getId()));
+            defaultTasks2.forEach(task -> sprint2.getTasksIds().add(task.getId()));
+            defaultTaskResults1.forEach(taskResult -> sprint1.getCompletedTaskResultsIds().add(taskResult.getId()));
+            defaultTaskResults2.forEach(taskResult -> sprint2.getCompletedTaskResultsIds().add(taskResult.getId()));
+            sprint1.setSprintResultId(defaultSprintResults.get(0).getId());
+            sprint2.setSprintResultId(defaultSprintResults.get(1).getId());
+            sprintService.update(sprint1);
+            sprintService.update(sprint2);
+        }
 
 //        updated task
-        Task task1 = defaultTasks1.get(0);
-        Task task2 = defaultTasks1.get(1);
-        Task task3 = defaultTasks2.get(0);
-        Task task4 = defaultTasks2.get(1);
-        task1.setTaskResultId(defaultTaskResults1.get(0).getId());
-        task2.setTaskResultId(defaultTaskResults1.get(1).getId());
-        task3.setTaskResultId(defaultTaskResults2.get(0).getId());
-        task4.setTaskResultId(defaultTaskResults2.get(1).getId());
-        taskService.update(task1);
-        taskService.update(task2);
-        taskService.update(task3);
-        taskService.update(task4);
+        if (updateTask) {
+            Task task1 = defaultTasks1.get(0);
+            Task task2 = defaultTasks1.get(1);
+            Task task3 = defaultTasks2.get(0);
+            Task task4 = defaultTasks2.get(1);
+            task1.setTaskResultId(defaultTaskResults1.get(0).getId());
+            task2.setTaskResultId(defaultTaskResults1.get(1).getId());
+            task3.setTaskResultId(defaultTaskResults2.get(0).getId());
+            task4.setTaskResultId(defaultTaskResults2.get(1).getId());
+            taskService.update(task1);
+            taskService.update(task2);
+            taskService.update(task3);
+            taskService.update(task4);
+        }
 
 //        updated projects
-        Project project1 = defaultProjects.get(0);
-        defaultSprintResults.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
-        project1.setProjectResultId(defaultProjectResult.getId());
-        projectService.update(project1);
+        if (updateProject) {
+            Project project1 = defaultProjects.get(0);
+            defaultSprintResults.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
+            project1.setProjectResultId(defaultProjectResult.getId());
+            projectService.update(project1);
+        }
 
 //        updated developers
-        Developer developer1 = defaultDevs.get(0);
-        Developer developer2 = defaultDevs.get(1);
-        defaultTasks1.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
-        defaultTasks1.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
-        defaultTasks2.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
-        defaultTasks2.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
-        defaultTaskResults1.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
-        defaultTaskResults1.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
-        defaultTaskResults2.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
-        defaultTaskResults2.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
-        userService.update(developer1);
-        userService.update(developer2);
+        if (updateDev) {
+            Developer developer1 = defaultDevs.get(0);
+            Developer developer2 = defaultDevs.get(1);
+            defaultTasks1.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
+            defaultTasks1.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
+            defaultTasks2.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
+            defaultTasks2.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
+            defaultTaskResults1.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
+            defaultTaskResults1.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
+            defaultTaskResults2.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
+            defaultTaskResults2.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
+            userService.update(developer1);
+            userService.update(developer2);
+        }
 
 //        updated owner
-        ProductOwner productOwner = defaultOwner;
-        defaultProjects.forEach(project -> productOwner.getProjectsIds().add(project.getId()));
-        productOwner.getCompletedProjectResultsIds().add(defaultProjectResult.getId());
-        userService.update(productOwner);
+        if (updateOwner) {
+            ProductOwner productOwner = defaultOwner;
+            defaultProjects.forEach(project -> productOwner.getProjectsIds().add(project.getId()));
+            productOwner.getCompletedProjectResultsIds().add(defaultProjectResult.getId());
+            userService.update(productOwner);
+        }
     }
 }

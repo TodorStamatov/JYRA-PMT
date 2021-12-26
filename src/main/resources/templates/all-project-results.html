@@ -37,8 +37,8 @@
             <tbody>
             <tr style="text-align: center" th:each="projectResult : ${projectResults}">
                 <td>
-                    <a th:href="@{'/projects/' + ${projectResult.project.id}}"
-                       th:text="${projectResult.project.title}"></a>
+                    <a th:href="@{'/projects/' + ${projectResult.projectId}}"
+                       th:text="${map.get(projectResult).title}"></a>
                 </td>
                 <td
                         th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(projectResult.endDate)}">End

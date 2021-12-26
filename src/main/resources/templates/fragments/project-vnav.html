@@ -8,7 +8,7 @@
     <li class="nav-item">
         <a class="nav-link" th:href="@{'/projects/' + ${project.id}}">Information</a>
     </li>
-    <li class="nav-item" th:if="${project.currentSprint}">
+    <li class="nav-item" th:if="${project.currentSprintId}">
         <a class="nav-link" href="#">Current Sprint</a>
     </li>
     <li class="nav-item">
@@ -17,8 +17,8 @@
     <li class="nav-item">
         <a class="nav-link" th:href="@{'/projects/' + ${project.id} + '/sprint-results'}">Previous Sprint Results</a>
     </li>
-    <li class="nav-item" th:if="${project.projectResult}">
-        <a class="nav-link" th:href="@{'/projectresults/' + ${project.id} + '/project-resultt'}">Project Result</a>
+    <li class="nav-item" th:if="${project.projectResultId}">
+        <a class="nav-link" th:href="@{'/projectresults/' + ${project.id} + '/project-result'}">Project Result</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">Settings</a>

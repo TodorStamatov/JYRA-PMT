@@ -33,7 +33,7 @@
         </div>
         <div class="col-sm-8 d-flex justify-content-center">
             <div id="dev-content" th:if="${userType == 'DEV'}">
-                <div class="m-2" th:if="${user.assignedTasks}">
+                <div class="m-2" th:if="${assignedTasks}">
                     <table class="table table-striped table-hover">
                         <caption>List of all tasks the user is assigned to</caption>
                         <thead class="table-dark">
@@ -46,12 +46,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="text-align: center" th:each="task : ${user.assignedTasks}">
-                            <td th:text="${task.title}">Title not found</td>
+                        <tr style="text-align: center" th:each="task : ${assignedTasks}">
+                            <td>
+                                <a th:href="@{'/tasks/' + ${task.id}}" th:text="${task.title}"></a>
+                            </td>
                             <td th:text="${task.taskType.getReadable()}">Task type not
                                 found
                             </td>
-                            <td th:text="${task.addedBy.username}">Reporter not found</td>
+                            <td>
+                                <a th:href="@{'/users/' + ${task.addedById}}"
+                                   th:text="'@' + ${taskUserMapDev.get(task).username}"></a>
+                            </td>
                             <td th:text="${task.estimatedEffort}">Estimation not found</td>
                             <td th:text="${task.status.getReadable()}">Status not found</td>
                         </tr>
@@ -59,23 +64,27 @@
                     </table>
                 </div>
 
-                <div class="m-2" th:if="${user.completedTaskResults}">
+                <div class="m-2" th:if="${completedTaskResults}">
                     <table class="table table-striped table-hover">
-                        <caption>List of all tasks the user is assigned to</caption>
+                        <caption>List of all completed tasks the user was assigned to</caption>
                         <thead class="table-dark">
-                        <tr>
-                            <th style="text-align: center" scope="col">Task</th>
-                            <th style="text-align: center" scope="col">Verified by</th>
-                            <th style="text-align: center" scope="col">Actual effort</th>
+                        <tr style="text-align: center">
+                            <th scope="col">Task</th>
+                            <th scope="col">Verified by</th>
+                            <th scope="col">Actual effort</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="taskResult : ${user.completedTaskResults}">
-                            <td style="text-align: center" th:text="${taskResult.task.title}">Task not found</td>
-                            <td style="text-align: center" th:text="${taskResult.verifiedBy.username}">Reporter not
-                                found
+                        <tr style="text-align: center" th:each="taskResult : ${completedTaskResults}">
+                            <td>
+                                <a th:href="@{'/tasks/' + ${taskResult.taskId}}"
+                                   th:text="${taskResultTaskMapDev.get(taskResult).title}"></a>
                             </td>
-                            <td style="text-align: center" th:text="${taskResult.actualEffort}">Actual effort not
+                            <td>
+                                <a th:href="@{'/users/' + ${taskResultUserMapDev.get(taskResult).id}}"
+                                   th:text="'@' + ${taskResultUserMapDev.get(taskResult).username}"></a>
+                            </td>
+                            <td th:text="${taskResult.actualEffort}">Actual effort not
                                 found
                             </td>
                         </tr>
@@ -85,42 +94,46 @@
             </div>
 
             <div id="po-content" th:if="${userType == 'PO'}">
-                <div class="m-2" th:if="${user.projects}">
+                <div class="m-2" th:if="${projects}">
                     <table class="table table-striped table-hover">
                         <caption>List of all projects the user is responsible for</caption>
                         <thead class="table-dark">
-                        <tr>
-                            <th style="text-align: center" scope="col">Title</th>
-                            <th style="text-align: center" scope="col">Description</th>
-                            <th style="text-align: center" scope="col">Owner</th>
+                        <tr style="text-align: center">
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="project : ${user.projects}">
-                            <td style="text-align: center" th:text="${project.title}">Title not found</td>
-                            <td style="text-align: center" th:text="${project.description}">Description not found</td>
-                            <td style="text-align: center" th:text="${project.owner.username}">Owner not found</td>
+                        <tr style="text-align: center" th:each="project : ${projects}">
+                            <td>
+                                <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.title}"></a>
+                            </td>
+                            <td th:text="${project.description}">Description not found</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="m-2" th:if="${user.completedProjectResults}">
+                <div class="m-2" th:if="${completedProjectResults}">
                     <table class="table table-striped table-hover">
-                        <caption>List of all tasks the user is assigned to</caption>
+                        <caption>List of all completed projects the user is owner of</caption>
                         <thead class="table-dark">
-                        <tr>
-                            <th style="text-align: center" scope="col">Project</th>
-                            <th style="text-align: center" scope="col">End date</th>
-                            <th style="text-align: center" scope="col">Duration</th>
+                        <tr style="text-align: center">
+                            <th scope="col">Project</th>
+                            <th scope="col">End date</th>
+                            <th scope="col">Duration</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="projectResult : ${user.completedProjectResults}">
-                            <td style="text-align: center" th:text="${projectResult.project.title}">Project not found
+                        <tr style="text-align: center" th:each="projectResult : ${completedProjectResults}">
+                            <td>
+                                <a th:href="@{'/projects/' + ${projectResult.projectId}}"
+                                   th:text="${projectMapPo.get(projectResult).title}"></a>
                             </td>
-                            <td style="text-align: center" th:text="${projectResult.endDate}">End date not found</td>
-                            <td style="text-align: center" th:text="${projectResult.duration}">Duration not found</td>
+                            <td th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(projectResult.endDate)}">
+                                End date not found
+                            </td>
+                            <td th:text="${projectResult.duration}">Duration not found</td>
                         </tr>
                         </tbody>
                     </table>
