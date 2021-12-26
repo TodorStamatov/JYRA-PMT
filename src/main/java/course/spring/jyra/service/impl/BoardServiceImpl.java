@@ -30,11 +30,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Board findByTitle(String title) {
-        return boardRepository.findByTitle(title).orElseThrow(() -> new EntityNotFoundException(String.format("Project with title=%s not found.", title)));
-    }
-
-    @Override
     public Board create(Board board) {
         board.setId(null);
         board.setCreated(LocalDateTime.now());

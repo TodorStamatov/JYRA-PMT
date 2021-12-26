@@ -17,6 +17,9 @@ public class Board {
     @Id
     private String id;
 
+    private String projectId;
+    private String sprintId;
+
     private List<String> toDoIds;
     private List<String> inProgressIds;
     private List<String> inReviewIds;
