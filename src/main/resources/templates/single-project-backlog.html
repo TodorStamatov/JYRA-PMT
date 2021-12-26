@@ -31,7 +31,7 @@
                         </td>
                         <td th:text="${task.taskType.getReadable()}">Task type not found</td>
                         <td>
-                            <a th:href="@{'/users/' + ${task.addedBy.id}}" th:text="${task.addedBy.username}"></a>
+                            <a th:href="@{'/users/' + ${task.addedById}}" th:text="'@' + ${map.get(task).username}"></a>
                         </td>
                         <td th:text="${task.estimatedEffort}">Estimation not found</td>
                         <td th:text="${task.status.getReadable()}">Status not found</td>

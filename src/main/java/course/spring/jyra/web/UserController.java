@@ -1,26 +1,36 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.exception.InvalidEntityException;
-import course.spring.jyra.model.Administrator;
-import course.spring.jyra.model.Developer;
-import course.spring.jyra.model.ProductOwner;
-import course.spring.jyra.model.User;
-import course.spring.jyra.service.UserService;
+import course.spring.jyra.model.*;
+import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final TaskService taskService;
+    private final TaskResultService taskResultService;
+    private final ProjectService projectService;
+    private final ProjectResultService projectResultService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TaskService taskService, TaskResultService taskResultService, ProjectService projectService, ProjectResultService projectResultService) {
         this.userService = userService;
+        this.taskService = taskService;
+        this.taskResultService = taskResultService;
+        this.projectService = projectService;
+        this.projectResultService = projectResultService;
     }
 
     @GetMapping
@@ -45,7 +55,22 @@ public class UserController {
         if (user instanceof Developer) {
             userType = "DEV";
             Developer dev = (Developer) user;
+
+            List<Task> assignedTasks = dev.getAssignedTasksIds().stream().map(taskService::findById).collect(Collectors.toList());
+            List<TaskResult> completedTaskResults = dev.getCompletedTaskResultsIds().stream().map(taskResultService::findById).collect(Collectors.toList());
+            Map<Task, User> taskUserMapDev = new HashMap<>();
+            Map<TaskResult, User> taskResultUserMapDev = new HashMap<>();
+            Map<TaskResult, Task> taskResultTaskMapDev = new HashMap<>();
+            assignedTasks.forEach(task -> taskUserMapDev.put(task, userService.findById(task.getAddedById())));
+            completedTaskResults.forEach(taskResult -> taskResultUserMapDev.put(taskResult, userService.findById(taskResult.getVerifiedById())));
+            completedTaskResults.forEach(taskResult -> taskResultTaskMapDev.put(taskResult, taskService.findById(taskResult.getTaskId())));
+
             model.addAttribute("user", dev);
+            model.addAttribute("assignedTasks", assignedTasks);
+            model.addAttribute("completedTaskResults", completedTaskResults);
+            model.addAttribute("taskUserMapDev", taskUserMapDev);
+            model.addAttribute("taskResultUserMapDev", taskResultUserMapDev);
+            model.addAttribute("taskResultTaskMapDev", taskResultTaskMapDev);
         } else if (user instanceof Administrator) {
             userType = "ADMIN";
             Administrator admin = (Administrator) user;
@@ -53,7 +78,16 @@ public class UserController {
         } else if (user instanceof ProductOwner) {
             userType = "PO";
             ProductOwner po = (ProductOwner) user;
+
+            List<Project> projects = po.getProjectsIds().stream().map(projectService::findById).collect(Collectors.toList());
+            List<ProjectResult> completedProjectResults = po.getCompletedProjectResultsIds().stream().map(projectResultService::findById).collect(Collectors.toList());
+            Map<ProjectResult, Project> projectMapPo = new HashMap<>();
+            completedProjectResults.forEach(projectResult -> projectMapPo.put(projectResult, projectService.findById(projectResult.getProjectId())));
+
             model.addAttribute("user", po);
+            model.addAttribute("projects", projects);
+            model.addAttribute("completedProjectResults", completedProjectResults);
+            model.addAttribute("projectMapPo", projectMapPo);
         } else {
             throw new InvalidEntityException(String.format("User with ID=%s is not one of the supported user types format.", id));
         }

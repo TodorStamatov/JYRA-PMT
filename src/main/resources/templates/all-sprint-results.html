@@ -35,7 +35,7 @@
             </thead>
             <tbody>
             <tr style="text-align: center" th:each="sprintResult : ${sprintResults}">
-                <td th:text="${sprintResult.sprint.title}">Sprint not found</td>
+                <td th:text="${map.get(sprintResult).title}">Sprint not found</td>
                 <td th:text="${sprintResult.teamVelocity}">Team velocity not found</td>
                 <td class="align-middle w-25">
                     <!--                    TODO: Add links-->
