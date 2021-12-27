@@ -10,6 +10,7 @@ spring:
       host: localhost
       port: 27017
       database: jyra-db
+      auto-index-creation: true
 
 management:
   endpoints:

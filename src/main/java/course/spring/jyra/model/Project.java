@@ -3,6 +3,7 @@ package course.spring.jyra.model;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,6 +25,7 @@ public class Project {
 
     @NonNull
     @NotNull
+    @TextIndexed
     @Size(min = 2, max = 120, message = "Project title must be between 2 and 120 characters String.")
     private String title;
 
@@ -54,7 +56,9 @@ public class Project {
     @Builder.Default
     private List<String> tasksBacklogIds = new ArrayList<>();
 
+    @TextIndexed
     private String tags;
+
     private String projectResultId;
 
     @Builder.Default
