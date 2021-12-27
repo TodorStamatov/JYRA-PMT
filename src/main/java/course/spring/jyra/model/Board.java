@@ -6,13 +6,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "boards")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
+@Builder
 public class Board {
     @Id
     private String id;
@@ -20,10 +21,17 @@ public class Board {
     private String projectId;
     private String sprintId;
 
-    private List<String> toDoIds;
-    private List<String> inProgressIds;
-    private List<String> inReviewIds;
-    private List<String> doneIds;
+    @Builder.Default
+    private List<String> toDoIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> inProgressIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> inReviewIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> doneIds = new ArrayList<>();
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
