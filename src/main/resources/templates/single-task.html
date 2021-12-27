@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="row">
-                <div id="task-devs" class="col-md-12" th:if="${task.developersAssigned}">
+                <div id="task-devs" class="col-md-12" th:if="${developersAssigned}">
                     <table class="table table-striped table-hover">
                         <caption>List of all developers assigned to the task</caption>
                         <thead class="table-dark">
@@ -33,9 +33,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="text-align: center" th:each="user : ${task.developersAssigned}">
+                        <tr style="text-align: center" th:each="user : ${developersAssigned}">
                             <td>
-                                <a th:href="@{'/users/' + ${user.id}}" th:text="${user.username}"></a>
+                                <a th:href="@{'/users/' + ${user.id}}" th:text="'@' + ${user.username}"></a>
                             </td>
                             <td th:text="${user.firstName}">First name not found</td>
                             <td th:text="${user.lastName}">Last name not found</td>
@@ -69,7 +69,7 @@
                     <p>Task Reporter</p>
                 </div>
                 <div class="col-md-6">
-                    <a th:href="@{'/users/' + ${task.addedBy.id}}" th:text="'@' + ${task.addedBy.username}"></a>
+                    <a th:href="@{'/users/' + ${task.addedById}}" th:text="'@' + ${reporter.username}"></a>
                 </div>
             </div>
             <div id="task-sprint" class="row border">
@@ -77,7 +77,7 @@
                     <p>Task Sprint</p>
                 </div>
                 <div class="col-md-6">
-                    <a th:href="@{'/sprints/' + ${task.sprint.id}}" th:text="${task.sprint.title}"></a>
+                    <a th:href="@{'/sprints/' + ${task.sprintId}}" th:text="${sprint.title}"></a>
                 </div>
             </div>
             <div id="task-estimate" class="row border">

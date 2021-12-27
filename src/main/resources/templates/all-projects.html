@@ -41,7 +41,7 @@
                 </td>
                 <td th:text="${project.description}">Description not found</td>
                 <td>
-                    <a th:href="@{'/users/' + ${project.owner.id}}" th:text="'@' + ${project.owner.username}"></a>
+                    <a th:href="@{'/users/' + ${project.ownerId}}" th:text="'@' + ${map.get(project).username}"></a>
                 </td>
                 <td class="align-middle w-25" style="text-align: right">
                     <!--                    TODO: Add links-->

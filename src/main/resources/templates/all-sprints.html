@@ -49,7 +49,7 @@
                 </td>
                 <td th:text="${sprint.duration}">Duration not found</td>
                 <td style="text-align: center">
-                    <a th:href="@{'/users/' + ${sprint.owner.id}}" th:text="'@' + ${sprint.owner.username}"></a>
+                    <a th:href="@{'/users/' + ${sprint.ownerId}}" th:text="'@' + ${map.get(sprint).username}"></a>
                 </td>
                 <td class="align-middle w-25">
                     <!--                    TODO: Add links-->

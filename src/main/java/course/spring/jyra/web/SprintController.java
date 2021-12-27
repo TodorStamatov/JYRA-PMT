@@ -1,27 +1,39 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.Sprint;
+import course.spring.jyra.model.User;
 import course.spring.jyra.service.SprintService;
+import course.spring.jyra.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/sprints")
 @Slf4j
 public class SprintController {
     private final SprintService sprintService;
+    private final UserService userService;
 
     @Autowired
-    public SprintController(SprintService sprintService) {
+    public SprintController(SprintService sprintService, UserService userService) {
         this.sprintService = sprintService;
+        this.userService = userService;
     }
 
     @GetMapping
     public String getSprints(Model model) {
+        Map<Sprint, User> map = new HashMap<>();
+        sprintService.findAll().forEach(sprint -> map.put(sprint, userService.findById(sprint.getOwnerId())));
+
         model.addAttribute("sprints", sprintService.findAll());
+        model.addAttribute("map", map);
+
         log.debug("GET: Sprints: {}", sprintService.findAll());
         return "all-sprints";
     }
