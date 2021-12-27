@@ -21,9 +21,10 @@ public class DataInitializer implements ApplicationRunner {
     private final ProjectResultService projectResultService;
     private final SprintResultService sprintResultService;
     private final TaskResultService taskResultService;
+    private final BoardService boardService;
 
     @Autowired
-    public DataInitializer(UserService userService, TaskService taskService, SprintService sprintService, ProjectService projectService, ProjectResultService projectResultService, SprintResultService sprintResultService, TaskResultService taskResultService) {
+    public DataInitializer(UserService userService, TaskService taskService, SprintService sprintService, ProjectService projectService, ProjectResultService projectResultService, SprintResultService sprintResultService, TaskResultService taskResultService, BoardService boardService) {
         this.userService = userService;
         this.taskService = taskService;
         this.sprintService = sprintService;
@@ -31,6 +32,7 @@ public class DataInitializer implements ApplicationRunner {
         this.projectResultService = projectResultService;
         this.sprintResultService = sprintResultService;
         this.taskResultService = taskResultService;
+        this.boardService = boardService;
     }
 
     private List<User> defaultAdmins = List.of(
@@ -52,6 +54,7 @@ public class DataInitializer implements ApplicationRunner {
     private List<TaskResult> defaultTaskResults2;
     private List<SprintResult> defaultSprintResults;
     private ProjectResult defaultProjectResult;
+    private List<Board> defaultBoards;
     private boolean updateSprint = false, updateTask = false, updateProject = false, updateDev = false, updateOwner = false;
 
     @Override
@@ -186,6 +189,18 @@ public class DataInitializer implements ApplicationRunner {
             defaultProjectResult = projectResultService.create(defaultProjectResult);
 
             log.info("Successfully created project result: {}", defaultProjectResult);
+        }
+
+        if (boardService.count() == 0) {
+            defaultBoards = List.of(
+                    Board.builder().projectId(defaultProjects.get(0).getId()).sprintId(defaultSprints.get(0).getId())
+                            .doneIds(defaultTasks1.stream().map(Task::getId).collect(Collectors.toList())).build(),
+                    Board.builder().projectId(defaultProjects.get(1).getId()).sprintId(defaultSprints.get(1).getId())
+                            .toDoIds(defaultTasks2.stream().map(Task::getId).collect(Collectors.toList())).build()
+            );
+            defaultBoards = defaultBoards.stream().map(boardService::create).collect(Collectors.toList());
+
+            log.info("Successfully created boards: {}", defaultBoards);
         }
 
 //        updated sprint

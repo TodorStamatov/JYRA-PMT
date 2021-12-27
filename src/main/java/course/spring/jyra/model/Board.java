@@ -1,15 +1,50 @@
 package course.spring.jyra.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
-/* @Document(collection = "boards")
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Document(collection = "boards")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor */
+@RequiredArgsConstructor
+@Builder
 public class Board {
+    @Id
+    private String id;
+
+    @NotNull
+    @NonNull
+    private String projectId;
+
+    @NotNull
+    @NonNull
+    private String sprintId;
+
+    @Builder.Default
+    private List<String> toDoIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> inProgressIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> inReviewIds = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> doneIds = new ArrayList<>();
+
+    @Builder.Default
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime created = LocalDateTime.now();
+
+    @Builder.Default
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime modified = LocalDateTime.now();
 }
