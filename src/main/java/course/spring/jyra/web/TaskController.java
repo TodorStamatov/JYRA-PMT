@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.model.Project;
 import course.spring.jyra.model.Task;
 import course.spring.jyra.model.User;
 import course.spring.jyra.service.SprintService;
@@ -75,5 +76,17 @@ public class TaskController {
         log.debug("UPDATE: Task: {}", task);
         taskService.update(task);
         return "redirect:/tasks";
+    }
+
+    @GetMapping("/search")
+    public String getTasksBySearch(Model model, @RequestParam String keywords) {
+        Map<Task, User> map = new HashMap<>();
+        taskService.findBySearch(keywords).forEach(task -> map.put(task, userService.findById(task.getAddedById())));
+
+        model.addAttribute("tasks", taskService.findBySearch(keywords));
+        model.addAttribute("map", map);
+
+        log.debug("GET: Tasks by search: {}", taskService.findBySearch(keywords));
+        return "all-tasks";
     }
 }

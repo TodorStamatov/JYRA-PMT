@@ -17,9 +17,11 @@
 
     <div class="row m-3 w-25 h-25">
         <div class="input-group p-0">
-            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                   aria-describedby="search-addon"/>
-            <button type="button" class="btn btn-outline-primary">Search</button>
+            <form th:action="@{/tasks/search}">
+                <input type="text" th:name="keywords" class="form-control rounded" placeholder="Search"
+                       aria-label="Search"/>
+                <input class="btn btn-outline-primary" type="submit" value="Search">
+            </form>
         </div>
     </div>
     <hr/>

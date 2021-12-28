@@ -3,14 +3,15 @@ package course.spring.jyra.service.impl;
 import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidEntityException;
-import course.spring.jyra.model.Developer;
-import course.spring.jyra.model.ProductOwner;
-import course.spring.jyra.model.Role;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.*;
 import course.spring.jyra.service.ProjectService;
 import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ProjectService projectService, TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, ProjectService projectService, TaskService taskService, MongoTemplate mongoTemplate) {
         this.userRepository = userRepository;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -129,6 +132,14 @@ public class UserServiceImpl implements UserService {
                 stringBuilder.append(String.format("%s , ", taskService.findById(taskId).getTitle())));
         return stringBuilder.substring(0, stringBuilder.lastIndexOf(","));
     }
+
+//    @Override
+//    public List<User> findBySearch(String keywords) {
+//        String[] words = keywords.split(" ");
+//        TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(words);
+//        Query query = TextQuery.queryText(criteria);
+//        return mongoTemplate.find(query, User.class);
+//    }
 
     @Override
     public long count() {

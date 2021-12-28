@@ -18,5 +18,7 @@ public interface SprintService {
 
     Sprint update(Sprint sprint);
 
+    List<Sprint> findBySearch(String keywords);
+
     long count();
 }

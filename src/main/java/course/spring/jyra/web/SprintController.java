@@ -1,6 +1,7 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.Sprint;
+import course.spring.jyra.model.Task;
 import course.spring.jyra.model.User;
 import course.spring.jyra.service.SprintService;
 import course.spring.jyra.service.UserService;
@@ -69,4 +70,15 @@ public class SprintController {
         return "redirect:/sprints";
     }
 
+    @GetMapping("/search")
+    public String getSprintsBySearch(Model model, @RequestParam String keywords) {
+        Map<Sprint, User> map = new HashMap<>();
+        sprintService.findBySearch(keywords).forEach(sprint -> map.put(sprint, userService.findById(sprint.getOwnerId())));
+
+        model.addAttribute("sprints", sprintService.findBySearch(keywords));
+        model.addAttribute("map", map);
+
+        log.debug("GET: Tasks by search: {}", sprintService.findBySearch(keywords));
+        return "all-sprints";
+    }
 }

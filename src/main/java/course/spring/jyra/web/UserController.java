@@ -104,4 +104,12 @@ public class UserController {
         userService.update(user);
         return "redirect:/users";
     }
+
+//    @GetMapping("/search")
+//    public String getUsersBySearch(Model model, @RequestParam String keywords) {
+//        model.addAttribute("users", userService.findBySearch(keywords));
+//
+//        log.debug("GET: Users by search: {}", userService.findBySearch(keywords));
+//        return "all-users";
+//    }
 }

@@ -17,5 +17,7 @@ public interface TaskService {
 
     Task deleteById(String id);
 
+    List<Task> findBySearch(String keywords);
+
     long count();
 }

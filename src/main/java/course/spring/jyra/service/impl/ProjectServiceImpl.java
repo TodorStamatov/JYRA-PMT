@@ -64,8 +64,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findBySearch(String searchString) {
-        String[] words = searchString.split(" ");
+    public List<Project> findBySearch(String keywords) {
+        if (keywords == null || keywords.length() == 0) {
+            return projectRepository.findAll();
+        }
+        String[] words = keywords.split(" ");
         TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(words);
         Query query = TextQuery.queryText(criteria);
         return mongoTemplate.find(query, Project.class);

@@ -114,14 +114,14 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public String getProjectsBySearch(Model model, @RequestParam String searchString) {
+    public String getProjectsBySearch(Model model, @RequestParam String keywords) {
         Map<Project, User> map = new HashMap<>();
-        projectService.findBySearch(searchString).forEach(project -> map.put(project, userService.findById(project.getOwnerId())));
+        projectService.findBySearch(keywords).forEach(project -> map.put(project, userService.findById(project.getOwnerId())));
 
-        model.addAttribute("projects", projectService.findBySearch(searchString));
+        model.addAttribute("projects", projectService.findBySearch(keywords));
         model.addAttribute("map", map);
 
-        log.debug("GET: Projects by search: {}", projectService.findBySearch(searchString));
+        log.debug("GET: Projects by search: {}", projectService.findBySearch(keywords));
         return "all-projects";
     }
 }

@@ -17,7 +17,7 @@ public interface ProjectService {
 
     Project update(Project project);
 
-    List<Project> findBySearch(String searchString);
+    List<Project> findBySearch(String keywords);
 
     long count();
 
