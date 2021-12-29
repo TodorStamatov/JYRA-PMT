@@ -46,9 +46,7 @@ public class Project {
     @NotNull
     private List<String> developersIds = new ArrayList<>();
 
-//    @NonNull
-//    @NotNull
-private String currentSprintId;
+    private String currentSprintId;
 
     @Builder.Default
     private List<String> previousSprintResultsIds = new ArrayList<>();
