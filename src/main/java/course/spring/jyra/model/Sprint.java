@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,6 +30,7 @@ public class Sprint {
 
     @NonNull
     @NotNull
+    @TextIndexed
     @Size(min = 2, max = 120, message = "Sprint title must be between 2 and 120 characters String.")
     private String title;
 

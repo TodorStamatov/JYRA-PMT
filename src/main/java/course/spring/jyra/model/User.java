@@ -3,6 +3,8 @@ package course.spring.jyra.model;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,11 +31,13 @@ public class User implements UserDetails {
 
     @NonNull
     @NotNull
+//    @TextIndexed
     @Size(min = 2, max = 15, message = "First name must be between 2 and 15 characters long.")
     private String firstName;
 
     @NonNull
     @NotNull
+//    @TextIndexed
     @Size(min = 2, max = 15, message = "Last name must be between 2 and 15 characters long.")
     private String lastName;
 
@@ -44,6 +48,7 @@ public class User implements UserDetails {
 
     @NonNull
     @NotNull
+//    @TextIndexed
     @Size(min = 2, max = 15, message = "Username must e between 2 and 15 characters long.")
     private String username;
 
