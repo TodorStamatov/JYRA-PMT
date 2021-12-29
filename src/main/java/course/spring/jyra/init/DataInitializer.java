@@ -49,6 +49,7 @@ public class DataInitializer implements ApplicationRunner {
     private List<Sprint> defaultSprints;
     private List<Task> defaultTasks1;
     private List<Task> defaultTasks2;
+    private List<Task> defaultTasks3;
     private List<Project> defaultProjects;
     private List<TaskResult> defaultTaskResults1;
     private List<TaskResult> defaultTaskResults2;
@@ -95,30 +96,43 @@ public class DataInitializer implements ApplicationRunner {
                     Task.builder().taskType(TaskType.TASK).title("Task1").addedById(defaultAdmins.get(0).getId()).estimatedEffort(5)
                             .sprintId(defaultSprints.get(0).getId()).
                             developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .description("Task 1 desc").tags("tag1,tag2").build(),
+                            .description("Task 1 desc").tags("tag1,tag2").status(TaskStatus.DONE).build(),
                     Task.builder().taskType(TaskType.STORY).title("Task2").addedById(defaultAdmins.get(1).getId()).estimatedEffort(7)
                             .sprintId(defaultSprints.get(0).getId())
                             .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .description("Task 2 desc").tags("tag1,tag2").build()
+                            .description("Task 2 desc").tags("tag1,tag2").status(TaskStatus.DONE).build()
             );
 
-//        Here we add the sprint to the task and later we need to make the reverse binding - add the tasks (once they are created) to this sprints
             defaultTasks2 = List.of(
-                    Task.builder().taskType(TaskType.TASK).title("Task3").addedById(defaultAdmins.get(0).getId()).estimatedEffort(1)
+                    Task.builder().taskType(TaskType.EPIC).title("Task3").addedById(defaultAdmins.get(0).getId()).estimatedEffort(1)
                             .sprintId(defaultSprints.get(1).getId())
                             .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .description("Task 3 desc").tags("tag1,tag2").build(),
-                    Task.builder().taskType(TaskType.STORY).title("Task4").addedById(defaultAdmins.get(1).getId()).estimatedEffort(1)
+                            .description("Task 3 desc").tags("tag1,tag2").status(TaskStatus.DONE).build(),
+                    Task.builder().taskType(TaskType.SUBTASK).title("Task4").addedById(defaultAdmins.get(1).getId()).estimatedEffort(5)
                             .sprintId(defaultSprints.get(1).getId())
                             .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .description("Task 4 desc").tags("tag1,tag2").build()
+                            .description("Task 4 desc").tags("tag1,tag2").status(TaskStatus.DONE).build()
+            );
+
+            defaultTasks3 = List.of(
+                    Task.builder().taskType(TaskType.TASK).title("Task5").addedById(defaultAdmins.get(0).getId()).estimatedEffort(3)
+                            .sprintId(defaultSprints.get(2).getId())
+                            .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .description("Task 5 desc").tags("tag1,tag2").status(TaskStatus.IN_PROGRESS).build(),
+                    Task.builder().taskType(TaskType.BUG).title("Task6").addedById(defaultAdmins.get(1).getId()).estimatedEffort(8)
+                            .sprintId(defaultSprints.get(2).getId())
+                            .developersAssignedIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .description("Task 6 desc").tags("tag1,tag2").build()
             );
 
             defaultTasks1 = defaultTasks1.stream().map(taskService::create).collect(Collectors.toList());
             defaultTasks2 = defaultTasks2.stream().map(taskService::create).collect(Collectors.toList());
+            defaultTasks3 = defaultTasks3.stream().map(taskService::create).collect(Collectors.toList());
 
             log.info("Successfully created tasks1: {}", defaultTasks1);
             log.info("Successfully created tasks2: {}", defaultTasks2);
+            log.info("Successfully created tasks3: {}", defaultTasks3);
+
 
             updateTask = true;
         }
@@ -127,13 +141,12 @@ public class DataInitializer implements ApplicationRunner {
             defaultProjects = List.of(
                     Project.builder().title("Project1").description("Project1 desc").ownerId(defaultOwner.getId())
                             .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .currentSprintId(defaultSprints.get(0).getId())
                             .tasksBacklogIds(defaultTasks1.stream().map(Task::getId).collect(Collectors.toList()))
                             .tags("tag1,tag2").build(),
                     Project.builder().title("Project2").description("Project2 desc").ownerId(defaultOwner.getId())
                             .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .currentSprintId(defaultSprints.get(1).getId())
-                            .tasksBacklogIds(defaultTasks2.stream().map(Task::getId).collect(Collectors.toList()))
+                            .currentSprintId(defaultSprints.get(2).getId())
+                            .tasksBacklogIds(defaultTasks3.stream().map(Task::getId).collect(Collectors.toList()))
                             .tags("tag1,tag2").build()
             );
 
@@ -153,9 +166,9 @@ public class DataInitializer implements ApplicationRunner {
             );
 
             defaultTaskResults2 = List.of(
-                    TaskResult.builder().taskId(defaultTasks2.get(0).getId()).actualEffort(7).verifiedById(defaultAdmins.get(1).getId())
+                    TaskResult.builder().taskId(defaultTasks2.get(0).getId()).actualEffort(1).verifiedById(defaultAdmins.get(1).getId())
                             .resultsDescription("Task Result 3 desc").build(),
-                    TaskResult.builder().taskId(defaultTasks2.get(1).getId()).actualEffort(1).verifiedById(defaultAdmins.get(1).getId())
+                    TaskResult.builder().taskId(defaultTasks2.get(1).getId()).actualEffort(7).verifiedById(defaultAdmins.get(1).getId())
                             .resultsDescription("Task Result 4 desc").build()
             );
 
@@ -191,6 +204,7 @@ public class DataInitializer implements ApplicationRunner {
             log.info("Successfully created project result: {}", defaultProjectResult);
         }
 
+//        Is not checked for mistakes
         if (boardService.count() == 0) {
             defaultBoards = List.of(
                     Board.builder().projectId(defaultProjects.get(0).getId()).sprintId(defaultSprints.get(0).getId())
@@ -207,14 +221,17 @@ public class DataInitializer implements ApplicationRunner {
         if (updateSprint) {
             Sprint sprint1 = defaultSprints.get(0);
             Sprint sprint2 = defaultSprints.get(1);
+            Sprint sprint3 = defaultSprints.get(2);
             defaultTasks1.forEach(task -> sprint1.getTasksIds().add(task.getId()));
             defaultTasks2.forEach(task -> sprint2.getTasksIds().add(task.getId()));
+            defaultTasks3.forEach(task -> sprint3.getTasksIds().add(task.getId()));
             defaultTaskResults1.forEach(taskResult -> sprint1.getCompletedTaskResultsIds().add(taskResult.getId()));
             defaultTaskResults2.forEach(taskResult -> sprint2.getCompletedTaskResultsIds().add(taskResult.getId()));
             sprint1.setSprintResultId(defaultSprintResults.get(0).getId());
             sprint2.setSprintResultId(defaultSprintResults.get(1).getId());
             sprintService.update(sprint1);
             sprintService.update(sprint2);
+            sprintService.update(sprint3);
         }
 
 //        updated task
@@ -238,6 +255,7 @@ public class DataInitializer implements ApplicationRunner {
             Project project1 = defaultProjects.get(0);
             defaultSprintResults.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
             project1.setProjectResultId(defaultProjectResult.getId());
+            defaultTasks2.forEach(task -> project1.getTasksBacklogIds().add(task.getId()));
             projectService.update(project1);
         }
 
@@ -249,6 +267,8 @@ public class DataInitializer implements ApplicationRunner {
             defaultTasks1.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
             defaultTasks2.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
             defaultTasks2.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
+            defaultTasks3.forEach(task -> developer1.getAssignedTasksIds().add(task.getId()));
+            defaultTasks3.forEach(task -> developer2.getAssignedTasksIds().add(task.getId()));
             defaultTaskResults1.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
             defaultTaskResults1.forEach(taskResult -> developer2.getCompletedTaskResultsIds().add(taskResult.getId()));
             defaultTaskResults2.forEach(taskResult -> developer1.getCompletedTaskResultsIds().add(taskResult.getId()));
