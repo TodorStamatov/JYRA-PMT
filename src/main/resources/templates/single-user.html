@@ -46,7 +46,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="text-align: center" th:each="task : ${assignedTasks}">
+                        <tr style="text-align: center" th:each="task : ${assignedTasks}"
+                            th:if="${task.status.getReadable() != 'Done'}">
                             <td>
                                 <a th:href="@{'/tasks/' + ${task.id}}" th:text="${task.title}"></a>
                             </td>
@@ -104,7 +105,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="text-align: center" th:each="project : ${projects}">
+                        <tr style="text-align: center" th:each="project : ${projects}"
+                            th:if="${project.projectResultId == null}">
                             <td>
                                 <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.title}"></a>
                             </td>
