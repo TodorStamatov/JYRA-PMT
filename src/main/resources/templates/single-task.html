@@ -90,7 +90,8 @@
             </div>
             <div id="task-result" class="row">
                 <div class="col-md-12">
-                    <a th:href="@{'/taskresults/' + ${task.id} + '/task-result'}">Task Result</a>
+                    <a th:if="${task.taskResultId}!=null"
+                       th:href="@{'/taskresults/' + ${task.id} + '/task-result'}">Task Result</a>
                 </div>
             </div>
         </div>
