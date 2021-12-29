@@ -8,12 +8,12 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <div class="card border-0 shadow rounded-3 my-5">
-                <div class="card-body p-4 p-sm-5">
-                    <h5 class="card-title text-center mb-5 fw-light fs-5">Create Project</h5>
+            <div class="border-0 shadow rounded-3 my-5">
+                <div class="p-4 p-sm-5">
+                    <h5 class="text-center mb-5 fw-light fs-5">Create Project</h5>
                     <form th:object="${project}" method="POST">
                         <div class="form-floating mb-3">
-                            <input th:value="${project.title}" id="projectTitleId" name="Title" type="text" min="2"
+                            <input th:value="${project.title}" id="projectTitleId" name="title" type="text" min="2"
                                    max="120"
                                    class="form-control"
                                    placeholder="Title"/>
@@ -21,7 +21,7 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input th:value="${project.description}" id="projectDescriptionId" name="projectDescription"
+                            <input th:value="${project.description}" id="projectDescriptionId" name="description"
                                    type="text" min="10"
                                    max="2500"
                                    class="form-control"
@@ -30,10 +30,31 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input th:value="${project.tags}" id="projectTagsId" name="projectTags" type="text"
+                            <input th:value="${project.tags}" id="projectTagsId" name="tags" type="text"
                                    class="form-control"
                                    placeholder="Tags"/>
                             <label for="projectTagsId">Tags</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select th:field="*{ownerId}" id="ownerId" class="form-control">
+                                <option th:each="user : ${users}"
+                                        th:value="${user.id}"
+                                        th:text="${user.username}">
+                                    <!--                                    th:selected="${#sets.contains(user.roles, role)}">Owner-->
+                                </option>
+                            </select>
+                            <label for="ownerId">Owner</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select class="form-control" th:field="*{developersIds}" id="devIds" th:multiple="multiple">
+                                <option th:each="developer : ${developers}"
+                                        th:value="${developer.id}"
+                                        th:text="${developer.username}">Developer
+                                </option>
+                            </select>
+                            <label for="devIds">Developers</label>
                         </div>
 
                         <!--                        <div class="form-floating mb-3">-->
@@ -48,17 +69,6 @@
                         <!--                                   class="form-control"-->
                         <!--                                   placeholder="Password"/>-->
                         <!--                            <label for="passwordId">Password</label>-->
-                        <!--                        </div>-->
-
-                        <!--                        <div class="form-floating mb-3">-->
-                        <!--                            <select th:field="*{roles}" id="userType" class="form-control">-->
-                        <!--                                <option th:each="role : ${T(course.spring.jyra.model.Role).values()}"-->
-                        <!--                                        th:value="${role}"-->
-                        <!--                                        th:text="${role}"-->
-                        <!--                                        th:selected="${#sets.contains(user.roles, role)}">User type-->
-                        <!--                                </option>-->
-                        <!--                            </select>-->
-                        <!--                            <label for="userType">User type</label>-->
                         <!--                        </div>-->
 
                         <!--                        <div class="form-floating mb-3">-->

@@ -45,6 +45,16 @@ public class ProjectController {
         return "all-projects";
     }
 
+    @GetMapping("/create")
+    public String getCreateProject(Model model) {
+        if (!model.containsAttribute("project")) {
+            model.addAttribute("project", new Project());
+        }
+        model.addAttribute("users", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.PRODUCT_OWNER)).collect(Collectors.toList()));
+        model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
+        return "create-project";
+    }
+
     @PostMapping
     public String addProject(@ModelAttribute("project") Project project) {
         projectService.create(project);
