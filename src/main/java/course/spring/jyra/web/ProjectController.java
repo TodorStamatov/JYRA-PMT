@@ -83,7 +83,6 @@ public class ProjectController {
         List<Task> inProgress = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.IN_PROGRESS)).collect(Collectors.toList());
         List<Task> inReview = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.IN_REVIEW)).collect(Collectors.toList());
         List<Task> done = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.DONE)).collect(Collectors.toList());
-        String devsNames = sprint.getDevelopersIds().stream().map(userService::findById).map(User::getUsername).collect(Collectors.joining(", "));
         List<User> devs = sprint.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList());
 
         model.addAttribute("sprint", sprint);
