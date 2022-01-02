@@ -46,7 +46,7 @@ public class SprintResultController {
 
 
     @GetMapping("/{sprintId}/sprint-result")
-    public String getSprintResultByProjectId(Model model, @PathVariable String sprintId) {
+    public String getSprintResultBySprintId(Model model, @PathVariable String sprintId) {
         SprintResult sprintResult = sprintResultService.findBySprintId(sprintId);
         List<TaskResult> taskResultsList = sprintResult.getTaskResultsIds().stream().map(taskResultService::findById).collect(Collectors.toList());
         Map<TaskResult, Task> taskMap = new HashMap<>();
