@@ -253,10 +253,13 @@ public class DataInitializer implements ApplicationRunner {
 //        updated projects
         if (updateProject) {
             Project project1 = defaultProjects.get(0);
+            Project project2 = defaultProjects.get(1);
             defaultSprintResults.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
             project1.setProjectResultId(defaultProjectResult.getId());
             defaultTasks2.forEach(task -> project1.getTasksBacklogIds().add(task.getId()));
+            project2.setCurrentSprintId(defaultSprints.get(2).getId());
             projectService.update(project1);
+            projectService.update(project2);
         }
 
 //        updated developers
