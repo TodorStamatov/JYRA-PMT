@@ -52,23 +52,24 @@ public class ProjectController {
         if (!model.containsAttribute("project")) {
             model.addAttribute("project", new Project());
         }
-        model.addAttribute("users", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.PRODUCT_OWNER)).collect(Collectors.toList()));
+        model.addAttribute("request", "POST");
+        model.addAttribute("owners", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.PRODUCT_OWNER)).collect(Collectors.toList()));
         model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
-        return "create-project";
+        return "form-project";
     }
 
-    @PostMapping
-    public String addProject(@ModelAttribute("project") Project project) {
+    @PostMapping("/create")
+    public String addProject(@ModelAttribute Project project) {
         projectService.create(project);
         log.debug("POST: Project: {}", project);
         return "redirect:/projects";
     }
 
-    @DeleteMapping
-    public String deleteProject(@RequestParam("delete") String id) {
-        Project project = projectService.findById(id);
+    @DeleteMapping("/delete")
+    public String deleteProject(@RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
         log.debug("DELETE: Project: {}", project);
-        projectService.deleteById(id);
+        projectService.deleteById(projectId);
         return "redirect:/projects";
     }
 
@@ -138,13 +139,23 @@ public class ProjectController {
         return "single-project-sprint-results";
     }
 
-//    TODO: Add GetMapping for board (current sprint)
+    @GetMapping("/edit")
+    public String getEditProject(Model model, @RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+        if (!model.containsAttribute("project")) {
+            model.addAttribute("project", project);
+        }
+        model.addAttribute("request", "PUT");
+        model.addAttribute("owners", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.PRODUCT_OWNER)).collect(Collectors.toList()));
+        model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
 
-    @PutMapping
-    public String updateProject(@RequestParam("update") String id) {
-        Project project = projectService.findById(id);
+        return "form-project";
+    }
+
+    @PutMapping("/edit")
+    public String updateProject(@RequestParam String projectId, @ModelAttribute Project project) {
         log.debug("UPDATE: Project: {}", project);
-        projectService.update(project);
+        projectService.update(project, projectId);
         return "redirect:/projects";
     }
 

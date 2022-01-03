@@ -12,7 +12,7 @@
         </div>
 
         <!--        TODO: Add link-->
-        <a class="btn btn-primary d-inline-block m-3" href="#" role="button">Create project</a>
+        <a class="btn btn-primary d-inline-block m-3" th:href="@{/projects/create}" role="button">Create project</a>
     </div>
 
     <div class="row m-3 w-25 h-25">
@@ -46,9 +46,10 @@
                     <a th:href="@{'/users/' + ${project.ownerId}}" th:text="'@' + ${map.get(project).username}"></a>
                 </td>
                 <td class="align-middle w-25" style="text-align: right">
-                    <!--                    TODO: Add links-->
-                    <a class="btn btn-primary" href="#" role="button">Edit</a>
-                    <a class="btn btn-danger" href="#" role="button">Delete</a>
+                    <form action="#" th:action="@{'/projects/delete'(projectId=${project.id})}" th:method="delete">
+                        <a class="btn btn-primary" th:href="@{/projects/edit(projectId=${project.id})}" role="button">Edit</a>
+                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                    </form>
                 </td>
             </tr>
             </tbody>
