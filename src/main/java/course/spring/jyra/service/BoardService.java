@@ -10,6 +10,8 @@ public interface BoardService {
 
     Board findById(String id);
 
+    Board findByProjectId(String projectId);
+
     Board create(Board board);
 
     Board deleteById(String id);

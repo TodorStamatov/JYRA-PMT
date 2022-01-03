@@ -40,7 +40,12 @@
             </thead>
             <tbody>
             <tr style="text-align: center" th:each="sprint : ${sprints}">
-                <td th:text="${sprint.title}">Title not found</td>
+                <td>
+                    <a th:if="${sprint.sprintResultId}" th:href="@{'/sprintresults/' + ${sprint.id} + '/sprint-result'}"
+                       th:text="${sprint.title}"></a>
+                    <!--                    TODO: Uncomment when SP-63 is done-->
+                    <!--                    <a th:unless="${sprint.sprintResultId}" th:href="@{'/projects/' + ${sprint.projectId} + '/board'}" th:text="${sprint.title}"></a>-->
+                </td>
                 <td
                         th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(sprint.startDate)}">Start date
                     not found

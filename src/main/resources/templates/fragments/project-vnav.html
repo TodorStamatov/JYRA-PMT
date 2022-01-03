@@ -1,6 +1,9 @@
 <ul th:fragment="proj-vnav(project)" class="nav flex-column">
-    <li class="nav-item mt-4">
-        <h3 style="text-align: center" th:text="${project.title}"></h3>
+    <li style="text-align: center" class="nav-item mt-4">
+        <h3 th:text="${project.title}"></h3>
+    </li>
+    <li style="text-align: center" class="nav-item">
+        <span th:if="${project.projectResultId}" class="badge bg-success">Completed</span>
     </li>
     <li class="nav-item">
         <hr/>
@@ -9,7 +12,7 @@
         <a class="nav-link" th:href="@{'/projects/' + ${project.id}}">Information</a>
     </li>
     <li class="nav-item" th:if="${project.currentSprintId}">
-        <a class="nav-link" href="#">Current Sprint</a>
+        <a class="nav-link" th:href="@{'/projects/' + ${project.id} + '/board'}">Current Sprint (Board)</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" th:href="@{'/projects/' + ${project.id} + '/backlog'}">Backlog</a>

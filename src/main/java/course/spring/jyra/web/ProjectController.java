@@ -23,14 +23,16 @@ public class ProjectController {
     private final SprintResultService sprintResultService;
     private final UserService userService;
     private final SprintService sprintService;
+    private final BoardService boardService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, TaskService taskService, SprintResultService sprintResultService, UserService userService, SprintService sprintService) {
+    public ProjectController(ProjectService projectService, TaskService taskService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService) {
         this.projectService = projectService;
         this.taskService = taskService;
         this.sprintResultService = sprintResultService;
         this.userService = userService;
         this.sprintService = sprintService;
+        this.boardService = boardService;
     }
 
     @GetMapping
@@ -80,6 +82,29 @@ public class ProjectController {
 
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project";
+    }
+
+    //    This method combines Board and Current Sprint
+    @GetMapping("/{projectId}/board")
+    public String getProjectBoard(Model model, @PathVariable String projectId) {
+        Board board = boardService.findByProjectId(projectId);
+        Sprint sprint = sprintService.findById(projectService.findById(projectId).getCurrentSprintId());
+        List<Task> toDo = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.TO_DO)).collect(Collectors.toList());
+        List<Task> inProgress = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.IN_PROGRESS)).collect(Collectors.toList());
+        List<Task> inReview = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.IN_REVIEW)).collect(Collectors.toList());
+        List<Task> done = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.DONE)).collect(Collectors.toList());
+        List<User> devs = sprint.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList());
+
+        model.addAttribute("sprint", sprint);
+        model.addAttribute("project", projectService.findById(projectId));
+        model.addAttribute("owner", userService.findById(sprint.getOwnerId()));
+        model.addAttribute("devs", devs);
+        model.addAttribute("toDoList", toDo);
+        model.addAttribute("inProgressList", inProgress);
+        model.addAttribute("inReviewList", inReview);
+        model.addAttribute("doneList", done);
+
+        return "single-project-board";
     }
 
     @GetMapping("/{projectId}/backlog")
