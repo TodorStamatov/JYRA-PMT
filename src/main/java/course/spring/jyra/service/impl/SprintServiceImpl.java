@@ -58,6 +58,22 @@ public class SprintServiceImpl implements SprintService {
     }
 
     @Override
+    public Sprint update(Sprint sprint, String oldId) {
+        Sprint oldSprint = findById(oldId);
+
+        sprint.setId(oldSprint.getId());
+        sprint.setStartDate(oldSprint.getStartDate());
+        oldSprint.getDevelopersIds().forEach(id -> sprint.getDevelopersIds().add(id));
+        oldSprint.getTasksIds().forEach(id -> sprint.getTasksIds().add(id));
+        oldSprint.getCompletedTaskResultsIds().forEach(id -> sprint.getCompletedTaskResultsIds().add(id));
+        sprint.setSprintResultId(oldSprint.getSprintResultId());
+        sprint.setCreated(oldSprint.getCreated());
+        sprint.setModified(LocalDateTime.now());
+
+        return sprint;
+    }
+
+    @Override
     public Sprint update(Sprint sprint) {
         Sprint oldSprint = findById(sprint.getId());
         sprint.setCreated(oldSprint.getCreated());

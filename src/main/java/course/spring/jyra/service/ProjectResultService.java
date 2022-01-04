@@ -11,6 +11,8 @@ public interface ProjectResultService {
 
     ProjectResult create(ProjectResult projectResult);
 
+    ProjectResult update(ProjectResult projectResult, String oldId);
+
     ProjectResult update(ProjectResult projectResult);
 
     ProjectResult deleteById(String id);

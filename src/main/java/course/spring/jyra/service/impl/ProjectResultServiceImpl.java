@@ -47,6 +47,17 @@ public class ProjectResultServiceImpl implements ProjectResultService {
     }
 
     @Override
+    public ProjectResult update(ProjectResult projectResult, String oldId) {
+        ProjectResult oldProjectResult = findById(oldId);
+
+        projectResult.setId(oldProjectResult.getId());
+        projectResult.setCreated(oldProjectResult.getCreated());
+        projectResult.setModified(LocalDateTime.now());
+
+        return projectResult;
+    }
+
+    @Override
     public ProjectResult update(ProjectResult projectResult) {
         ProjectResult oldProjectResult = findById(projectResult.getId());
         projectResult.setCreated(oldProjectResult.getCreated());

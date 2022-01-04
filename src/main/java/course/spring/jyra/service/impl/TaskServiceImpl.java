@@ -56,6 +56,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task update(Task task, String oldId) {
+        Task oldTask = findById(oldId);
+
+        task.setId(oldTask.getId());
+        task.setAddedById(oldTask.getAddedById());
+        oldTask.getDevelopersAssignedIds().forEach(id -> task.getDevelopersAssignedIds().add(id));
+        task.setTaskResultId(oldTask.getTaskResultId());
+        task.setCreated(oldTask.getCreated());
+        task.setModified(LocalDateTime.now());
+
+        return task;
+    }
+
+    @Override
     public Task update(Task task) {
         Task oldTask = findById(task.getId());
         task.setModified(LocalDateTime.now());

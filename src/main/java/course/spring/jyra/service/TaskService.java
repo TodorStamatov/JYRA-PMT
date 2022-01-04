@@ -13,6 +13,8 @@ public interface TaskService {
 
     Task create(Task task);
 
+    Task update(Task task, String oldId);
+
     Task update(Task task);
 
     Task deleteById(String id);
