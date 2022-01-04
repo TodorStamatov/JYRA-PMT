@@ -70,7 +70,7 @@ public class SprintServiceImpl implements SprintService {
         sprint.setCreated(oldSprint.getCreated());
         sprint.setModified(LocalDateTime.now());
 
-        return sprint;
+        return sprintRepository.save(sprint);
     }
 
     @Override

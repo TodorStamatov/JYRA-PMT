@@ -11,6 +11,8 @@ public interface SprintResultService {
 
     SprintResult create(SprintResult sprintResult);
 
+    SprintResult update(SprintResult sprintResult, String oldId);
+
     SprintResult update(SprintResult sprintResult);
 
     SprintResult deleteById(String id);

@@ -11,6 +11,8 @@ public interface TaskResultService {
 
     TaskResult create(TaskResult taskResult);
 
+    TaskResult update(TaskResult taskResult, String oldId);
+
     TaskResult update(TaskResult taskResult);
 
     TaskResult deleteById(String id);

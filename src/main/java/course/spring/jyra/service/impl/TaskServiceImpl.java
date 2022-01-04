@@ -66,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
         task.setCreated(oldTask.getCreated());
         task.setModified(LocalDateTime.now());
 
-        return task;
+        return taskRepository.save(task);
     }
 
     @Override

@@ -51,10 +51,11 @@ public class ProjectResultServiceImpl implements ProjectResultService {
         ProjectResult oldProjectResult = findById(oldId);
 
         projectResult.setId(oldProjectResult.getId());
+        projectResult.setProjectId(oldProjectResult.getId());
         projectResult.setCreated(oldProjectResult.getCreated());
         projectResult.setModified(LocalDateTime.now());
 
-        return projectResult;
+        return projectResultRepository.save(projectResult);
     }
 
     @Override

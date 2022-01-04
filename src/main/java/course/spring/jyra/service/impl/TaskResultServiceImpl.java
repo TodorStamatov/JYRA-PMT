@@ -39,6 +39,18 @@ public class TaskResultServiceImpl implements TaskResultService {
     }
 
     @Override
+    public TaskResult update(TaskResult taskResult, String oldId) {
+        TaskResult oldTaskResult = findById(oldId);
+
+        taskResult.setId(oldTaskResult.getId());
+        taskResult.setTaskId(oldTaskResult.getTaskId());
+        taskResult.setCreated(oldTaskResult.getCreated());
+        taskResult.setModified(LocalDateTime.now());
+
+        return taskResultRepository.save(taskResult);
+    }
+
+    @Override
     public TaskResult update(TaskResult taskResult) {
         TaskResult oldTaskResult = findById(taskResult.getId());
         taskResult.setCreated(oldTaskResult.getCreated());

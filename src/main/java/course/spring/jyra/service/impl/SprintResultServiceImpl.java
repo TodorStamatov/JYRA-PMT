@@ -43,6 +43,19 @@ public class SprintResultServiceImpl implements SprintResultService {
     }
 
     @Override
+    public SprintResult update(SprintResult sprintResult, String oldId) {
+        SprintResult oldSprintResult = findById(oldId);
+
+        sprintResult.setId(oldSprintResult.getId());
+        oldSprintResult.getTaskResultsIds().forEach(id -> sprintResult.getTaskResultsIds().add(id));
+        sprintResult.setCreated(oldSprintResult.getCreated());
+        sprintResult.setModified(LocalDateTime.now());
+        sprintResult.setTeamVelocity(calculateTeamVelocity(sprintResult));
+
+        return sprintResultRepository.save(sprintResult);
+    }
+
+    @Override
     public SprintResult update(SprintResult sprintResult) {
         SprintResult oldSprintResult = findById(sprintResult.getId());
         sprintResult.setCreated(oldSprintResult.getCreated());

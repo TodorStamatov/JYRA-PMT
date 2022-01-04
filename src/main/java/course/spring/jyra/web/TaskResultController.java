@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.model.Task;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.model.User;
@@ -59,26 +60,45 @@ public class TaskResultController {
         return "single-task-result";
     }
 
-    @PostMapping
-    public String addTaskResult(@ModelAttribute("taskResult") TaskResult taskResult) {
+    @GetMapping("/create")
+    public String getCreateTaskResult(Model model) {
+        if (!model.containsAttribute("taskResult")) {
+            model.addAttribute("taskResult", new TaskResult());
+        }
+        model.addAttribute("request", "POST");
+        return "form-task-result";
+    }
+
+    @PostMapping("/create")
+    public String addTaskResult(@ModelAttribute TaskResult taskResult) {
         taskResultService.create(taskResult);
         log.debug("POST: Task result: {}", taskResult);
         return "redirect:/taskresults";
     }
 
-    @DeleteMapping
-    public String deleteProjectResult(@RequestParam("delete") String id) {
-        TaskResult taskResult = taskResultService.findById(id);
+    @GetMapping("/edit")
+    public String getEditTaskResult(Model model, @RequestParam String taskResultId) {
+        TaskResult taskResult = taskResultService.findById(taskResultId);
+        if (!model.containsAttribute("taskResult")) {
+            model.addAttribute("taskResult", taskResult);
+        }
+        model.addAttribute("request", "PUT");
+
+        return "form-task-result";
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteTaskResult(@RequestParam String taskResultId) {
+        TaskResult taskResult = taskResultService.findById(taskResultId);
         log.debug("DELETE: Task result: {}", taskResult);
-        taskResultService.deleteById(id);
+        taskResultService.deleteById(taskResultId);
         return "redirect:/taskresults";
     }
 
-    @PutMapping
-    public String updateTaskResult(@RequestParam("update") String id) {
-        TaskResult taskResult = taskResultService.findById(id);
+    @PutMapping("/edit")
+    public String updateTaskResult(@RequestParam String taskResultId, @ModelAttribute TaskResult taskResult) {
         log.debug("UPDATE: Task result: {}", taskResult);
-        taskResultService.update(taskResult);
+        taskResultService.update(taskResult, taskResultId);
         return "redirect:/taskresults";
     }
 }
