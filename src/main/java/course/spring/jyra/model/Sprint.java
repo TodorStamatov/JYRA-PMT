@@ -44,8 +44,8 @@ public class Sprint {
 
     private long duration;
 
-    //    @NonNull
-//    @NotNull
+    @NonNull
+    @NotNull
     private String projectId;
 
     @NonNull
