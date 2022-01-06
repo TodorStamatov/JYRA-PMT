@@ -62,27 +62,32 @@ public class ProjectResultController {
     }
 
     @GetMapping("/create")
-    public String getCreateProjectResult(Model model) {
+    public String getCreateProjectResult(Model model, @RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+
         if (!model.containsAttribute("projectResult")) {
             model.addAttribute("projectResult", new ProjectResult());
         }
         model.addAttribute("request", "POST");
+        model.addAttribute("project", project);
         return "form-project-result";
     }
 
     @PostMapping("/create")
-    public String addProjectResult(@ModelAttribute ProjectResult projectResult) {
+    public String addProjectResult(@ModelAttribute ProjectResult projectResult, @RequestParam String projectId) {
         projectResultService.create(projectResult);
         log.debug("POST: Project result: {}", projectResult);
-        return "redirect:/projectsresults";
+        return "redirect:/projectresults";
     }
 
     @GetMapping("/edit")
     public String getEditProjectResult(Model model, @RequestParam String projectResultId) {
         ProjectResult projectResult = projectResultService.findById(projectResultId);
+
         if (!model.containsAttribute("projectResult")) {
             model.addAttribute("projectResult", projectResult);
         }
+
         model.addAttribute("request", "PUT");
 
         return "form-project-result";

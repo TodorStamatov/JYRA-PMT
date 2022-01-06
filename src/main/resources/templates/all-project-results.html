@@ -10,9 +10,6 @@
         <div class="d-inline-block m-3">
             <h3>Project Results</h3>
         </div>
-
-        <!--        TODO: Add link-->
-        <a class="btn btn-primary d-inline-block m-3" href="#" role="button">Create project result</a>
     </div>
 
     <hr/>
@@ -39,10 +36,13 @@
                     not found
                 </td>
                 <td th:text="${projectResult.duration}">Duration not found</td>
-                <td class="align-middle w-25">
-                    <!--                    TODO: Add links-->
-                    <a class="btn btn-primary" href="#" role="button">Edit</a>
-                    <a class="btn btn-danger" href="#" role="button">Delete</a>
+                <td class="align-middle w-25" style="text-align: right">
+                    <form action="#" th:action="@{'/projectresults/delete'(projectResultId=${projectResult.id})}"
+                          th:method="delete">
+                        <a class="btn btn-primary"
+                           th:href="@{/projectresults/edit(projectResultId=${projectResult.id})}" role="button">Edit</a>
+                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                    </form>
                 </td>
             </tr>
             </tbody>

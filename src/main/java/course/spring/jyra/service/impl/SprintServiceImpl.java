@@ -51,8 +51,10 @@ public class SprintServiceImpl implements SprintService {
         sprint.setId(null);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new EntityNotFoundException(String.format("User with username=%s could not be found", auth.getName())));
-        sprint.setOwnerId(user.getId());
+        if (auth != null) {
+            User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new EntityNotFoundException(String.format("User with username=%s could not be found", auth.getName())));
+            sprint.setOwnerId(user.getId());
+        }
 
         sprint.setCreated(LocalDateTime.now());
         sprint.setModified(LocalDateTime.now());
