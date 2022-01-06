@@ -2,6 +2,7 @@ package course.spring.jyra.service.impl;
 
 import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.exception.InvalidEntityException;
 import course.spring.jyra.model.*;
 import course.spring.jyra.service.ProjectService;
@@ -12,6 +13,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -78,6 +81,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User update(User user, String oldId) {
+        User oldUser = findById(oldId);
+
+        user.setId(oldUser.getId());
+        user.setUsername(oldUser.getUsername());
+
+        if (user.getPassword() == null || user.getPassword().length() == 0) {
+            user.setPassword(oldUser.getPassword());
+        } else {
+            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            user.setPassword(encoder.encode(user.getPassword()));
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = findByUsername(auth.getName());
+        if (!(editor instanceof Administrator)) {
+            user.setStatus(UserStatus.ACTIVE);
+        }
+        user.setImageUrl(oldUser.getImageUrl());
+        user.setCreated(oldUser.getCreated());
+        user.setModified(LocalDateTime.now());
+
+        if (user.getRoles().contains(Role.ADMIN)) {
+            Administrator administrator = Administrator.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
+                    .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
+                    .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
+                    .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified()).build();
+            return userRepository.save(administrator);
+        } else if (user.getRoles().contains(Role.PRODUCT_OWNER)) {
+            ProductOwner oldOwner = (ProductOwner) findById(oldId);
+            ProductOwner productOwner = ProductOwner.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
+                    .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
+                    .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
+                    .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified())
+                    .projectsIds(oldOwner.getProjectsIds()).completedProjectResultsIds(oldOwner.getCompletedProjectResultsIds()).build();
+            return userRepository.save(productOwner);
+        } else if (user.getRoles().contains(Role.DEVELOPER)) {
+            Developer oldDev = (Developer) findById(oldId);
+            Developer developer = Developer.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
+                    .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
+                    .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
+                    .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified())
+                    .assignedTasksIds(oldDev.getAssignedTasksIds()).completedTaskResultsIds(oldDev.getCompletedTaskResultsIds()).build();
+            return userRepository.save(developer);
+        } else {
+            throw new InvalidClientDataException(String.format("User with ID=%s has no roles set", user.getId()));
+        }
+    }
+
+    @Override
     public User update(User user) {
         User oldUser = findById(user.getId());
 
@@ -106,20 +159,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         oldUser.setPassword("");
         return oldUser;
-    }
-
-    @Override
-    public User update(User user, String oldId) {
-        User oldUser = findById(oldId);
-
-        user.setId(oldUser.getId());
-        user.setUsername(oldUser.getUsername());
-        user.setStatus(oldUser.getStatus());
-        user.setImageUrl(oldUser.getImageUrl());
-        user.setCreated(oldUser.getCreated());
-        user.setModified(LocalDateTime.now());
-
-        return userRepository.save(user);
     }
 
     @Override

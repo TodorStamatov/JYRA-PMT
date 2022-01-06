@@ -47,11 +47,23 @@
                                     th:if="${editorType == 'ADMIN'}">
                                 <option th:each="role : ${T(course.spring.jyra.model.Role).values()}"
                                         th:value="${role}"
-                                        th:text="${role}"
+                                        th:text="${role.readable}"
                                         th:selected="${#sets.contains(user.roles, role)}">User type
                                 </option>
                             </select>
                             <label for="userType">User type</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select th:field="*{status}" id="userStatus" class="form-control"
+                                    th:if="${editorType == 'ADMIN'}">
+                                <option th:each="status : ${T(course.spring.jyra.model.UserStatus).values()}"
+                                        th:value="${status}"
+                                        th:text="${status.readable}"
+                                        th:selected="${#sets.contains(user.status, status)}">User status
+                                </option>
+                            </select>
+                            <label for="userStatus">User status</label>
                         </div>
 
                         <div class="form-floating mb-3">

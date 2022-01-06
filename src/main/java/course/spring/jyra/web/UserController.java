@@ -127,11 +127,9 @@ public class UserController {
         if (editor instanceof Administrator) {
             editorType = "ADMIN";
         }
-        model.addAttribute("editorType", editorType);
         User user = userService.findById(userId);
-        if (!model.containsAttribute("user")) {
-            model.addAttribute("user", user);
-        }
+        model.addAttribute("user", user);
+        model.addAttribute("editorType", editorType);
         return "form-user";
     }
 
