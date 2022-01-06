@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
         user.setModified(LocalDateTime.now());
         User updated = userRepository.save(user);
         updated.setPassword("");
-        return user;
+        return updated;
     }
 
     @Override
