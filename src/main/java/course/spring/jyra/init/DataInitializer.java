@@ -225,6 +225,9 @@ public class DataInitializer implements ApplicationRunner {
             defaultTasks1.forEach(task -> sprint1.getTasksIds().add(task.getId()));
             defaultTasks2.forEach(task -> sprint2.getTasksIds().add(task.getId()));
             defaultTasks3.forEach(task -> sprint3.getTasksIds().add(task.getId()));
+            sprint1.setProjectId(defaultProjects.get(0).getId());
+            sprint2.setProjectId(defaultProjects.get(0).getId());
+            sprint3.setProjectId(defaultProjects.get(1).getId());
             defaultTaskResults1.forEach(taskResult -> sprint1.getCompletedTaskResultsIds().add(taskResult.getId()));
             defaultTaskResults2.forEach(taskResult -> sprint2.getCompletedTaskResultsIds().add(taskResult.getId()));
             sprint1.setSprintResultId(defaultSprintResults.get(0).getId());
