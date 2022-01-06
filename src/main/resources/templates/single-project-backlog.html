@@ -17,6 +17,8 @@
                 <!--                TODO: Try to make the button on the right-->
                 <a class="btn btn-primary" th:href="@{/tasks/create(projectId=${project.id})}" role="button">Create
                     task</a>
+                <a class="btn btn-primary" th:href="@{/sprints/create(projectId=${project.id})}" role="button">Create
+                    Sprint</a>
             </div>
 
             <div id="table-of-contents" th:if="${backlog}">

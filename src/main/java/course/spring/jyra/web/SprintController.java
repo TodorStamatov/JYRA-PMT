@@ -50,7 +50,7 @@ public class SprintController {
         Project project = projectService.findById(projectId);
 
         if (!model.containsAttribute("sprint")) {
-            model.addAttribute("sprint", Sprint.builder().ownerId(project.getOwnerId()).build());
+            model.addAttribute("sprint", new Sprint());
         }
 
         model.addAttribute("request", "POST");

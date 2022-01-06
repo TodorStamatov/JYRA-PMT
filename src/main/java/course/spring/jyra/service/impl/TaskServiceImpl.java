@@ -55,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
         task.setId(null);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new EntityNotFoundException(String.format("Developer with username=%s could not be found", auth.getName())));
+        User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new EntityNotFoundException(String.format("User with username=%s could not be found", auth.getName())));
         task.setAddedById(user.getId());
 
         task.setCreated(LocalDateTime.now());
