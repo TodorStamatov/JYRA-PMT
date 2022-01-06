@@ -43,7 +43,8 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select th:field="*{roles}" id="userType" class="form-control">
+                            <select th:field="*{roles}" id="userType" class="form-control"
+                                    th:if="${editorType == 'ADMIN'}">
                                 <option th:each="role : ${T(course.spring.jyra.model.Role).values()}"
                                         th:value="${role}"
                                         th:text="${role}"

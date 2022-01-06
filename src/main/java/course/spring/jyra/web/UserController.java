@@ -3,6 +3,7 @@ package course.spring.jyra.web;
 import course.spring.jyra.exception.InvalidEntityException;
 import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -62,6 +63,9 @@ public class UserController {
     @GetMapping("/{userId}")
     public String getUserById(Model model, @PathVariable("userId") String id) {
         User user = userService.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String canEdit = "";
         String userType = "";
         if (user instanceof Developer) {
             userType = "DEV";
@@ -104,12 +108,26 @@ public class UserController {
         }
         model.addAttribute("userType", userType);
 
+        if (editor.getId().equals(user.getId()) || editor instanceof Administrator) {
+            canEdit = "Yes";
+        }
+
+
+        model.addAttribute("canEdit", canEdit);
+
         log.debug("GET: User with Id=%s : {}", id, userService.findById(id));
         return "single-user";
     }
 
     @GetMapping("/edit")
     public String getEditUser(Model model, @RequestParam String userId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+        if (editor instanceof Administrator) {
+            editorType = "ADMIN";
+        }
+        model.addAttribute("editorType", editorType);
         User user = userService.findById(userId);
         if (!model.containsAttribute("user")) {
             model.addAttribute("user", user);

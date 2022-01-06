@@ -26,9 +26,9 @@
                 <p th:text="${user.contacts}"></p>
 
                 <hr class="m-2"/>
-                <!--                <a class="btn btn-primary" th:href="@{/users/edit(userId=${user.id})}" role="button">Edit</a>-->
-                <!--                <a class="btn btn-danger" href="#" role="button">Delete</a>-->
-                <form action="#" th:action="@{'/users/delete'(userId=${user.id})}" th:method="delete">
+
+                <form action="#" th:action="@{'/users/delete'(userId=${user.id})}" th:method="delete"
+                      th:if="${canEdit == 'Yes'}">
                     <a class="btn btn-primary" th:href="@{/users/edit(userId=${user.id})}" role="button">Edit</a>
                     <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
                 </form>
