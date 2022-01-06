@@ -83,13 +83,10 @@ public class ProjectResultController {
     @GetMapping("/edit")
     public String getEditProjectResult(Model model, @RequestParam String projectResultId) {
         ProjectResult projectResult = projectResultService.findById(projectResultId);
-
         if (!model.containsAttribute("projectResult")) {
             model.addAttribute("projectResult", projectResult);
         }
-
         model.addAttribute("request", "PUT");
-
         return "form-project-result";
     }
 

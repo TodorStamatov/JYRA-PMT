@@ -79,7 +79,7 @@ public class SprintResultController {
     public String addSprintResult(@ModelAttribute SprintResult sprintResult) {
         sprintResultService.create(sprintResult);
         log.debug("POST: Sprint result: {}", sprintResult);
-        return "redirect:/sprintsresults";
+        return "redirect:/sprintresults";
     }
 
     @GetMapping("/edit")
@@ -93,18 +93,18 @@ public class SprintResultController {
         return "form-sprint-result";
     }
 
+    @PutMapping("/edit")
+    public String updateSprintResult(@RequestParam String sprintResultId, @ModelAttribute SprintResult sprintResult) {
+        log.debug("UPDATE: Sprint result: {}", sprintResult);
+        sprintResultService.update(sprintResult, sprintResultId);
+        return "redirect:/sprintresults";
+    }
+
     @DeleteMapping("/delete")
     public String deleteProjectResult(@RequestParam String sprintResultId) {
         SprintResult sprintResult = sprintResultService.findById(sprintResultId);
         log.debug("DELETE: Sprint result: {}", sprintResult);
         sprintResultService.deleteById(sprintResultId);
-        return "redirect:/sprintresults";
-    }
-
-    @PutMapping("/edit")
-    public String updateSprintResult(@RequestParam String sprintResultId, @ModelAttribute SprintResult sprintResult) {
-        log.debug("UPDATE: Sprint result: {}", sprintResult);
-        sprintResultService.update(sprintResult, sprintResultId);
         return "redirect:/sprintresults";
     }
 }

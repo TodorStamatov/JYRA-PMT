@@ -48,6 +48,7 @@ public class SprintResultServiceImpl implements SprintResultService {
 
         sprintResult.setId(oldSprintResult.getId());
         oldSprintResult.getTaskResultsIds().forEach(id -> sprintResult.getTaskResultsIds().add(id));
+        sprintResult.setSprintId(oldSprintResult.getSprintId());
         sprintResult.setCreated(oldSprintResult.getCreated());
         sprintResult.setModified(LocalDateTime.now());
         sprintResult.setTeamVelocity(calculateTeamVelocity(sprintResult));

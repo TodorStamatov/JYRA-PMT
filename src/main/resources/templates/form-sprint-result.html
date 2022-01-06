@@ -10,12 +10,12 @@
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="border-0 shadow rounded-3 my-5">
                 <div class="p-4 p-sm-5">
-                    <h5 th:if="${request} == 'POST'" class="text-center mb-5 fw-light fs-5">Create Project result</h5>
-                    <h5 th:if="${request} == 'PUT'" class="text-center mb-5 fw-light fs-5">Edit Project result</h5>
-                    <form th:object="${projectResult}" th:method="${request}">
+                    <h5 th:if="${request} == 'POST'" class="text-center mb-5 fw-light fs-5">Create Sprint result</h5>
+                    <h5 th:if="${request} == 'PUT'" class="text-center mb-5 fw-light fs-5">Edit Sprint result</h5>
+                    <form th:object="${sprintResult}" th:method="${request}">
 
                         <div class="form-floating mb-3">
-                            <input th:value="${projectResult.resultsDescription}" id="projectResultDescriptionId"
+                            <input th:value="${sprintResult.resultsDescription}" id="projectResultDescriptionId"
                                    name="resultsDescription"
                                    type="text" min="10"
                                    max="2500"
@@ -41,5 +41,6 @@
 </div>
 
 <script th:replace="fragments/foot.html :: scripts"></script>
+<script src="/js/form-project.js"></script>
 </body>
 </html>
