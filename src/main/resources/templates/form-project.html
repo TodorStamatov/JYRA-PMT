@@ -50,7 +50,7 @@
                         <div class="form-group mb-3">
                             <label for="devIds" class="col-sm-2 control-label">Developers</label>
                             <select class="js-example-basic-multiple form-control" th:field="*{developersIds}"
-                                    id="devIds" name="states[]" multiple="multiple">
+                                    id="devIds" name="developersIds" multiple="multiple">
                                 <option th:each="developer : ${developers}"
                                         th:value="${developer.id}"
                                         th:text="${developer.username}">Developer

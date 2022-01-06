@@ -1,6 +1,7 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.*;
+import course.spring.jyra.service.ProjectService;
 import course.spring.jyra.service.SprintService;
 import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
@@ -21,12 +22,14 @@ public class SprintController {
     private final SprintService sprintService;
     private final UserService userService;
     private final TaskService taskService;
+    private final ProjectService projectService;
 
     @Autowired
-    public SprintController(SprintService sprintService, UserService userService, TaskService taskService) {
+    public SprintController(SprintService sprintService, UserService userService, TaskService taskService, ProjectService projectService) {
         this.sprintService = sprintService;
         this.userService = userService;
         this.taskService = taskService;
+        this.projectService = projectService;
     }
 
     @GetMapping
@@ -41,15 +44,19 @@ public class SprintController {
         return "all-sprints";
     }
 
+    //    TODO: Finish when SP-63 is done
     @GetMapping("/create")
-    public String getCreateSprint(Model model) {
+    public String getCreateSprint(Model model, @RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+
         if (!model.containsAttribute("sprint")) {
-            model.addAttribute("sprint", new Sprint());
+            model.addAttribute("sprint", Sprint.builder().ownerId(project.getOwnerId()).build());
         }
+
         model.addAttribute("request", "POST");
-        model.addAttribute("owners", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.PRODUCT_OWNER)).collect(Collectors.toList()));
+        model.addAttribute("project", project);
         model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
-        model.addAttribute("tasks", taskService.findAll().stream().filter(task -> task.getSprintId() == null).collect(Collectors.toList()));
+        model.addAttribute("tasks", project.getTasksBacklogIds().stream().map(taskService::findById).filter(task -> !task.getStatus().equals(TaskStatus.DONE)).collect(Collectors.toList()));
         return "form-sprint";
     }
 
