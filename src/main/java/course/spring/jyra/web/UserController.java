@@ -5,6 +5,8 @@ import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +37,25 @@ public class UserController {
 
     @GetMapping
     public String getUsers(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUsername(auth.getName());
+        String userType = "";
+        if (user instanceof Administrator) {
+            userType = "ADMIN";
+            Administrator admin = (Administrator) user;
+            model.addAttribute("user", admin);
+        }
+        model.addAttribute("userType", userType);
         model.addAttribute("users", userService.findAll());
         log.debug("GET: Users: {}", userService.findAll());
         return "all-users";
     }
 
-    @DeleteMapping
-    public String deleteUser(@RequestParam("delete") String id) {
-        User user = userService.findById(id);
+    @DeleteMapping("/delete")
+    public String deleteUser(@RequestParam String userId) {
+        User user = userService.findById(userId);
         log.debug("DELETE: User: {}", user);
-        userService.deleteById(id);
+        userService.deleteById(userId);
         return "redirect:/users";
     }
 
@@ -97,11 +108,19 @@ public class UserController {
         return "single-user";
     }
 
-    @PutMapping
-    public String updateUser(@RequestParam("update") String id) {
-        User user = userService.findById(id);
+    @GetMapping("/edit")
+    public String getEditUser(Model model, @RequestParam String userId) {
+        User user = userService.findById(userId);
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", user);
+        }
+        return "form-user";
+    }
+
+    @PutMapping("/edit")
+    public String updateUser(@RequestParam String userId, @ModelAttribute User user) {
         log.debug("UPDATE: User: {}", user);
-        userService.update(user);
+        userService.update(user, userId);
         return "redirect:/users";
     }
 

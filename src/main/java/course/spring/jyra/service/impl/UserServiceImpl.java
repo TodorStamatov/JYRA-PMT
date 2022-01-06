@@ -109,6 +109,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User update(User user, String oldId) {
+        User oldUser = findById(oldId);
+
+        user.setId(oldUser.getId());
+        user.setUsername(oldUser.getUsername());
+        user.setStatus(oldUser.getStatus());
+        user.setImageUrl(oldUser.getImageUrl());
+        user.setCreated(oldUser.getCreated());
+        user.setModified(LocalDateTime.now());
+
+        return userRepository.save(user);
+    }
+
+    @Override
     public String printProjects(String id) {
         StringBuilder stringBuilder = new StringBuilder();
         User user = findById(id);

@@ -15,6 +15,8 @@ public interface UserService {
 
     User deleteById(String id);
 
+    User update(User user, String oldId);
+
     User update(User user);
 
     String printProjects(String id);
