@@ -66,6 +66,7 @@ public class TaskResultController {
             model.addAttribute("taskResult", new TaskResult());
         }
         model.addAttribute("request", "POST");
+        model.addAttribute("users", userService.findAll());
         return "form-task-result";
     }
 
@@ -83,7 +84,7 @@ public class TaskResultController {
             model.addAttribute("taskResult", taskResult);
         }
         model.addAttribute("request", "PUT");
-
+        model.addAttribute("users", userService.findAll());
         return "form-task-result";
     }
 

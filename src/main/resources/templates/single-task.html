@@ -88,9 +88,13 @@
                     <p th:text="${task.estimatedEffort}"></p>
                 </div>
             </div>
-            <div id="task-result" class="row" th:if="${task.taskResultId}!=null">
-                <div class="col-md-12">
+            <div id="task-result" class="row">
+                <div class="col-md-12" th:if="${task.taskResultId}!=null">
                     <a th:href="@{'/taskresults/' + ${task.id} + '/task-result'}">Task Result</a>
+                </div>
+                <div class="col-md-12" th:unless="${task.taskResultId}!=null">
+                    <a class="btn btn-primary d-inline-block"
+                       th:href="@{/taskresults/create(taskId = ${task.id})}" role="button">Complete Task</a>
                 </div>
             </div>
         </div>

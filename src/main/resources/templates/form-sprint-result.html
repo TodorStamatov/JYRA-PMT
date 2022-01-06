@@ -10,18 +10,18 @@
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="border-0 shadow rounded-3 my-5">
                 <div class="p-4 p-sm-5">
-                    <h5 th:if="${request} == 'POST'" class="text-center mb-5 fw-light fs-5">Create Sprint result</h5>
-                    <h5 th:if="${request} == 'PUT'" class="text-center mb-5 fw-light fs-5">Edit Sprint result</h5>
+                    <h5 th:if="${request} == 'POST'" class="text-center mb-5 fw-light fs-5">Create Sprint Result</h5>
+                    <h5 th:if="${request} == 'PUT'" class="text-center mb-5 fw-light fs-5">Edit Sprint Result</h5>
                     <form th:object="${sprintResult}" th:method="${request}">
 
                         <div class="form-floating mb-3">
-                            <input th:value="${sprintResult.resultsDescription}" id="projectResultDescriptionId"
+                            <input th:value="${sprintResult.resultsDescription}" id="sprintResultDescriptionId"
                                    name="resultsDescription"
                                    type="text" min="10"
                                    max="2500"
                                    class="form-control"
                                    placeholder="Description"/>
-                            <label for="projectResultDescriptionId">Description</label>
+                            <label for="sprintResultDescriptionId">Description</label>
                         </div>
 
                         <div class="d-grid my-3">
