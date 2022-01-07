@@ -55,10 +55,12 @@
                 <td style="text-align: center">
                     <a th:href="@{'/users/' + ${sprint.ownerId}}" th:text="'@' + ${map.get(sprint).username}"></a>
                 </td>
-                <td class="align-middle w-25">
-                    <!--                    TODO: Add links-->
-                    <a class="btn btn-primary" href="#" role="button">Edit</a>
-                    <a class="btn btn-danger" href="#" role="button">Delete</a>
+                <td class="align-middle w-25" style="text-align: right">
+                    <form action="#" th:action="@{'/sprints/delete'(sprintId=${sprint.id})}" th:method="delete">
+                        <a class="btn btn-primary" th:href="@{/sprint/edit(sprintId=${sprint.id})}"
+                           role="button">Edit</a>
+                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                    </form>
                 </td>
             </tr>
             </tbody>
