@@ -42,6 +42,15 @@ public class ProjectController {
         Map<Project, User> map = new HashMap<>();
         projectService.findAll().forEach(project -> map.put(project, userService.findById(project.getOwnerId())));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (editor instanceof Administrator) {
+            editorType = "ADMIN";
+        }
+
+        model.addAttribute("editorType", editorType);
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("map", map);
 
@@ -137,6 +146,11 @@ public class ProjectController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
         String editorType = "";
+        String projectStatus = "Not finished";
+
+        if (!projectService.findById(projectId).getProjectResultId().equals(null)) {
+            projectStatus = "finished";
+        }
 
         if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
             editorType = "PO";
@@ -147,6 +161,7 @@ public class ProjectController {
         }
 
         model.addAttribute("editorType", editorType);
+        model.addAttribute("projectStatus", projectStatus);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("backlog", taskBacklog);
         model.addAttribute("map", map);
@@ -204,6 +219,15 @@ public class ProjectController {
         Map<Project, User> map = new HashMap<>();
         projectService.findBySearch(keywords).forEach(project -> map.put(project, userService.findById(project.getOwnerId())));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (editor instanceof Administrator) {
+            editorType = "ADMIN";
+        }
+
+        model.addAttribute("editorType", editorType);
         model.addAttribute("projects", projectService.findBySearch(keywords));
         model.addAttribute("map", map);
 
