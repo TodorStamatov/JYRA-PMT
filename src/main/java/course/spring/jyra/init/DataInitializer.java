@@ -74,14 +74,34 @@ public class DataInitializer implements ApplicationRunner {
             updateOwner = true;
         }
 
+        if (projectService.count() == 0) {
+            defaultProjects = List.of(
+                    Project.builder().title("Project1").description("Project1 desc").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .tags("tag1,tag2").build(),
+                    Project.builder().title("Project2").description("Project2 desc").ownerId(defaultOwner.getId())
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .tags("tag1,tag2").build()
+            );
+
+            defaultProjects = defaultProjects.stream().map(projectService::create).collect(Collectors.toList());
+
+            log.info("Successfully created projects: {}", defaultProjects);
+
+            updateProject = true;
+        }
+
         if (sprintService.count() == 0) {
             defaultSprints = List.of(
                     Sprint.builder().title("Sprint1").ownerId(defaultOwner.getId())
-                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build(),
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .projectId(defaultProjects.get(0).getId()).build(),
                     Sprint.builder().title("Sprint2").ownerId(defaultOwner.getId())
-                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build(),
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .projectId(defaultProjects.get(0).getId()).build(),
                     Sprint.builder().title("Sprint3").ownerId(defaultOwner.getId())
-                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList())).build()
+                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
+                            .projectId(defaultProjects.get(1).getId()).build()
             );
 
             defaultSprints = defaultSprints.stream().map(sprintService::create).collect(Collectors.toList());
@@ -135,26 +155,6 @@ public class DataInitializer implements ApplicationRunner {
 
 
             updateTask = true;
-        }
-
-        if (projectService.count() == 0) {
-            defaultProjects = List.of(
-                    Project.builder().title("Project1").description("Project1 desc").ownerId(defaultOwner.getId())
-                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .tasksBacklogIds(defaultTasks1.stream().map(Task::getId).collect(Collectors.toList()))
-                            .tags("tag1,tag2").build(),
-                    Project.builder().title("Project2").description("Project2 desc").ownerId(defaultOwner.getId())
-                            .developersIds(defaultDevs.stream().map(Developer::getId).collect(Collectors.toList()))
-                            .currentSprintId(defaultSprints.get(2).getId())
-                            .tasksBacklogIds(defaultTasks3.stream().map(Task::getId).collect(Collectors.toList()))
-                            .tags("tag1,tag2").build()
-            );
-
-            defaultProjects = defaultProjects.stream().map(projectService::create).collect(Collectors.toList());
-
-            log.info("Successfully created projects: {}", defaultProjects);
-
-            updateProject = true;
         }
 
         if (taskResultService.count() == 0) {
@@ -254,6 +254,8 @@ public class DataInitializer implements ApplicationRunner {
         if (updateProject) {
             Project project1 = defaultProjects.get(0);
             Project project2 = defaultProjects.get(1);
+            project2.setCurrentSprintId(defaultSprints.get(2).getId());
+            defaultTasks3.forEach(task -> project2.getTasksBacklogIds().add(task.getId()));
             defaultSprintResults.forEach(sprintResult -> project1.getPreviousSprintResultsIds().add(sprintResult.getId()));
             project1.setProjectResultId(defaultProjectResult.getId());
             defaultTasks2.forEach(task -> project1.getTasksBacklogIds().add(task.getId()));
