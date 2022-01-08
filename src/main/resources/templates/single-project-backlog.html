@@ -12,8 +12,17 @@
         </div>
 
         <div class="col-sm-10 d-flex justify-content-center row">
-            <div id="table-of-contents" class="m-5" th:if="${backlog}">
-                <table class="table table-striped table-hover">
+            <div class="m-3" th:unless="${project.projectResultId}">
+                <h3>Backlog</h3>
+                <!--                TODO: Try to make the button on the right-->
+                <a class="btn btn-primary" th:href="@{/tasks/create(projectId=${project.id})}" role="button">Create
+                    task</a>
+                <a class="btn btn-primary" th:href="@{/sprints/create(projectId=${project.id})}" role="button">Create
+                    Sprint</a>
+            </div>
+
+            <div id="table-of-contents" th:if="${backlog}">
+                <table class="table table-striped table-hover m-3">
                     <caption>List of all tasks in the backlog</caption>
                     <thead class="table-dark">
                     <tr style="text-align: center">
@@ -22,6 +31,7 @@
                         <th scope="col">Added by</th>
                         <th scope="col">Estimated effort</th>
                         <th scope="col">Status</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -35,6 +45,12 @@
                         </td>
                         <td th:text="${task.estimatedEffort}">Estimation not found</td>
                         <td th:text="${task.status.getReadable()}">Status not found</td>
+                        <td class="align-middle w-25" style="text-align: right">
+                            <form action="#" th:action="@{'/tasks/delete'(taskId=${task.id})}" th:method="delete">
+                                <a class="btn btn-primary" th:href="@{/tasks/edit(taskId=${task.id})}" role="button">Edit</a>
+                                <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

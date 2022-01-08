@@ -15,6 +15,8 @@ public interface ProjectService {
 
     Project deleteById(String id);
 
+    Project update(Project project, String oldId);
+
     Project update(Project project);
 
     List<Project> findBySearch(String keywords);

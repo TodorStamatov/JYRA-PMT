@@ -66,26 +66,45 @@ public class SprintResultController {
         return "single-sprint-result";
     }
 
-    @PostMapping
-    public String addSprintResult(@ModelAttribute("sprintResult") SprintResult sprintResult) {
-        sprintResultService.create(sprintResult);
-        log.debug("POST: Sprint result: {}", sprintResult);
-        return "redirect:/sprintsresults";
+    @GetMapping("/create")
+    public String getCreateSprintResult(Model model) {
+        if (!model.containsAttribute("sprintResult")) {
+            model.addAttribute("sprintResult", new SprintResult());
+        }
+        model.addAttribute("request", "POST");
+        return "form-sprint-result";
     }
 
-    @DeleteMapping
-    public String deleteProjectResult(@RequestParam("delete") String id) {
-        SprintResult sprintResult = sprintResultService.findById(id);
-        log.debug("DELETE: Sprint result: {}", sprintResult);
-        sprintResultService.deleteById(id);
+    @PostMapping("/create")
+    public String addSprintResult(@ModelAttribute SprintResult sprintResult) {
+        sprintResultService.create(sprintResult);
+        log.debug("POST: Sprint result: {}", sprintResult);
         return "redirect:/sprintresults";
     }
 
-    @PutMapping
-    public String updateSprintResult(@RequestParam("update") String id) {
-        SprintResult sprintResult = sprintResultService.findById(id);
+    @GetMapping("/edit")
+    public String getEditSprintResult(Model model, @RequestParam String sprintResultId) {
+        SprintResult sprintResult = sprintResultService.findById(sprintResultId);
+        if (!model.containsAttribute("sprintResult")) {
+            model.addAttribute("sprintResult", sprintResult);
+        }
+        model.addAttribute("request", "PUT");
+
+        return "form-sprint-result";
+    }
+
+    @PutMapping("/edit")
+    public String updateSprintResult(@RequestParam String sprintResultId, @ModelAttribute SprintResult sprintResult) {
         log.debug("UPDATE: Sprint result: {}", sprintResult);
-        sprintResultService.update(sprintResult);
+        sprintResultService.update(sprintResult, sprintResultId);
+        return "redirect:/sprintresults";
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteProjectResult(@RequestParam String sprintResultId) {
+        SprintResult sprintResult = sprintResultService.findById(sprintResultId);
+        log.debug("DELETE: Sprint result: {}", sprintResult);
+        sprintResultService.deleteById(sprintResultId);
         return "redirect:/sprintresults";
     }
 }

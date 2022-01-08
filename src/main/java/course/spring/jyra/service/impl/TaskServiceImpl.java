@@ -4,14 +4,17 @@ import course.spring.jyra.dao.SprintRepository;
 import course.spring.jyra.dao.TaskRepository;
 import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
-import course.spring.jyra.model.Project;
 import course.spring.jyra.model.Task;
+import course.spring.jyra.model.User;
 import course.spring.jyra.service.TaskService;
+import course.spring.jyra.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,9 +53,30 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task create(Task task) {
         task.setId(null);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new EntityNotFoundException(String.format("User with username=%s could not be found", auth.getName())));
+            task.setAddedById(user.getId());
+        }
+
         task.setCreated(LocalDateTime.now());
         task.setModified(LocalDateTime.now());
         return taskRepository.insert(task);
+    }
+
+    @Override
+    public Task update(Task task, String oldId) {
+        Task oldTask = findById(oldId);
+
+        task.setId(oldTask.getId());
+        task.setAddedById(oldTask.getAddedById());
+        oldTask.getDevelopersAssignedIds().forEach(id -> task.getDevelopersAssignedIds().add(id));
+        task.setTaskResultId(oldTask.getTaskResultId());
+        task.setCreated(oldTask.getCreated());
+        task.setModified(LocalDateTime.now());
+
+        return taskRepository.save(task);
     }
 
     @Override

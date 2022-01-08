@@ -1,9 +1,6 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.Project;
-import course.spring.jyra.model.ProjectResult;
-import course.spring.jyra.model.Sprint;
-import course.spring.jyra.model.SprintResult;
+import course.spring.jyra.model.*;
 import course.spring.jyra.service.ProjectResultService;
 import course.spring.jyra.service.ProjectService;
 import course.spring.jyra.service.SprintResultService;
@@ -64,26 +61,47 @@ public class ProjectResultController {
         return "single-project-result";
     }
 
-    @PostMapping
-    public String addProjectResult(@ModelAttribute("projectResult") ProjectResult projectResult) {
-        projectResultService.create(projectResult);
-        log.debug("POST: Project result: {}", projectResult);
-        return "redirect:/projectsresults";
+    @GetMapping("/create")
+    public String getCreateProjectResult(Model model, @RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+
+        if (!model.containsAttribute("projectResult")) {
+            model.addAttribute("projectResult", new ProjectResult());
+        }
+        model.addAttribute("request", "POST");
+        model.addAttribute("project", project);
+        return "form-project-result";
     }
 
-    @DeleteMapping
-    public String deleteProjectResult(@RequestParam("delete") String id) {
-        ProjectResult projectResult = projectResultService.findById(id);
-        log.debug("DELETE: Project result: {}", projectResult);
-        projectResultService.deleteById(id);
+    @PostMapping("/create")
+    public String addProjectResult(@ModelAttribute ProjectResult projectResult, @RequestParam String projectId) {
+        projectResultService.create(projectResult);
+        log.debug("POST: Project result: {}", projectResult);
         return "redirect:/projectresults";
     }
 
-    @PutMapping
-    public String updateProjectResult(@RequestParam("update") String id) {
-        ProjectResult projectResult = projectResultService.findById(id);
+    @GetMapping("/edit")
+    public String getEditProjectResult(Model model, @RequestParam String projectResultId) {
+        ProjectResult projectResult = projectResultService.findById(projectResultId);
+        if (!model.containsAttribute("projectResult")) {
+            model.addAttribute("projectResult", projectResult);
+        }
+        model.addAttribute("request", "PUT");
+        return "form-project-result";
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteProjectResult(@RequestParam String projectResultId) {
+        ProjectResult projectResult = projectResultService.findById(projectResultId);
+        log.debug("DELETE: Project result: {}", projectResult);
+        projectResultService.deleteById(projectResultId);
+        return "redirect:/projectresults";
+    }
+
+    @PutMapping("/edit")
+    public String updateProjectResult(@RequestParam String projectResultId, @ModelAttribute ProjectResult projectResult) {
         log.debug("UPDATE: Project result: {}", projectResult);
-        projectResultService.update(projectResult);
+        projectResultService.update(projectResult, projectResultId);
         return "redirect:/projectresults";
     }
 }

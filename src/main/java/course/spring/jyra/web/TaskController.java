@@ -1,13 +1,14 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.Project;
-import course.spring.jyra.model.Task;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.*;
+import course.spring.jyra.service.ProjectService;
 import course.spring.jyra.service.SprintService;
 import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,14 @@ public class TaskController {
     private final TaskService taskService;
     private final UserService userService;
     private final SprintService sprintService;
+    private final ProjectService projectService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService, SprintService sprintService) {
+    public TaskController(TaskService taskService, UserService userService, SprintService sprintService, ProjectService projectService) {
         this.taskService = taskService;
         this.userService = userService;
         this.sprintService = sprintService;
+        this.projectService = projectService;
     }
 
     @GetMapping
@@ -42,18 +45,34 @@ public class TaskController {
         return "all-tasks";
     }
 
-    @PostMapping
-    public String addTask(@ModelAttribute("task") Task task) {
+    @GetMapping("/create")
+    public String getCreateTask(Model model, @RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+        if (project.getCurrentSprintId() != null) {
+            model.addAttribute("sprint", sprintService.findById(project.getCurrentSprintId()));
+        }
+
+        if (!model.containsAttribute("task")) {
+            model.addAttribute("task", new Task());
+        }
+
+        model.addAttribute("request", "POST");
+        model.addAttribute("developers", userService.findAll().stream().filter(u -> u.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
+        return "form-task";
+    }
+
+    @PostMapping("/create")
+    public String addTask(@ModelAttribute Task task) {
         taskService.create(task);
         log.debug("POST: Task: {}", task);
         return "redirect:/tasks";
     }
 
-    @DeleteMapping
-    public String deleteProject(@RequestParam("delete") String id) {
-        Task task = taskService.findById(id);
+    @DeleteMapping("/delete")
+    public String deleteProject(@RequestParam String taskId) {
+        Task task = taskService.findById(taskId);
         log.debug("DELETE: Task: {}", task);
-        taskService.deleteById(id);
+        taskService.deleteById(taskId);
         return "redirect:/tasks";
     }
 
@@ -70,11 +89,21 @@ public class TaskController {
         return "single-task";
     }
 
-    @PutMapping
-    public String updateTask(@RequestParam("update") String id) {
-        Task task = taskService.findById(id);
+    @GetMapping("/edit")
+    public String getEditTask(Model model, @RequestParam String taskId) {
+        Task task = taskService.findById(taskId);
+        if (!model.containsAttribute("task")) {
+            model.addAttribute("task", task);
+        }
+        model.addAttribute("request", "PUT");
+        model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
+        return "form-task";
+    }
+
+    @PutMapping("/edit")
+    public String updateTask(@RequestParam String taskId, @ModelAttribute Task task) {
         log.debug("UPDATE: Task: {}", task);
-        taskService.update(task);
+        taskService.update(task, taskId);
         return "redirect:/tasks";
     }
 

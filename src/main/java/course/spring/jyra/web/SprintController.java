@@ -1,9 +1,9 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.Sprint;
-import course.spring.jyra.model.Task;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.*;
+import course.spring.jyra.service.ProjectService;
 import course.spring.jyra.service.SprintService;
+import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/sprints")
@@ -20,11 +21,15 @@ import java.util.Map;
 public class SprintController {
     private final SprintService sprintService;
     private final UserService userService;
+    private final TaskService taskService;
+    private final ProjectService projectService;
 
     @Autowired
-    public SprintController(SprintService sprintService, UserService userService) {
+    public SprintController(SprintService sprintService, UserService userService, TaskService taskService, ProjectService projectService) {
         this.sprintService = sprintService;
         this.userService = userService;
+        this.taskService = taskService;
+        this.projectService = projectService;
     }
 
     @GetMapping
@@ -39,18 +44,34 @@ public class SprintController {
         return "all-sprints";
     }
 
-    @PostMapping
-    public String addSprint(@ModelAttribute("sprint") Sprint sprint) {
+    //    TODO: Finish when SP-63 is done
+    @GetMapping("/create")
+    public String getCreateSprint(Model model, @RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+
+        if (!model.containsAttribute("sprint")) {
+            model.addAttribute("sprint", new Sprint());
+        }
+
+        model.addAttribute("request", "POST");
+        model.addAttribute("project", project);
+        model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
+        model.addAttribute("tasks", project.getTasksBacklogIds().stream().map(taskService::findById).filter(task -> !task.getStatus().equals(TaskStatus.DONE)).collect(Collectors.toList()));
+        return "form-sprint";
+    }
+
+    @PostMapping("/create")
+    public String addSprint(@ModelAttribute Sprint sprint) {
         sprintService.create(sprint);
         log.debug("POST: Sprint: {}", sprint);
         return "redirect:/sprints";
     }
 
-    @DeleteMapping
-    public String deleteProject(@RequestParam("delete") String id) {
-        Sprint sprint = sprintService.findById(id);
+    @DeleteMapping("/delete")
+    public String deleteSprint(@RequestParam String sprintId) {
+        Sprint sprint = sprintService.findById(sprintId);
         log.debug("DELETE: Sprint: {}", sprint);
-        sprintService.deleteById(id);
+        sprintService.deleteById(sprintId);
         return "redirect:/sprints";
     }
 
@@ -62,11 +83,23 @@ public class SprintController {
         return "redirect:/sprints";
     }
 
-    @PutMapping
-    public String updateSprint(@RequestParam("update") String id) {
-        Sprint sprint = sprintService.findById(id);
+    @GetMapping("/edit")
+    public String getEditSprint(Model model, @RequestParam String sprintId) {
+        Sprint sprint = sprintService.findById(sprintId);
+        if (!model.containsAttribute("sprint")) {
+            model.addAttribute("sprint", sprint);
+        }
+        model.addAttribute("request", "PUT");
+        model.addAttribute("owners", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.PRODUCT_OWNER)).collect(Collectors.toList()));
+        model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
+        model.addAttribute("tasks", taskService.findAll().stream().filter(task -> task.getSprintId() == null).collect(Collectors.toList()));
+        return "form-sprint";
+    }
+
+    @PutMapping("/edit")
+    public String updateSprint(@RequestParam String sprintId, @ModelAttribute Sprint sprint) {
         log.debug("UPDATE: Sprint: {}", sprint);
-        sprintService.update(sprint);
+        sprintService.update(sprint, sprintId);
         return "redirect:/sprints";
     }
 

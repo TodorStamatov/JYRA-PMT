@@ -13,10 +13,14 @@
 
         <div class="col-sm-10 d-flex justify-content-center row">
             <div id="sprintInfo" class="mt-5">
-                <div class="row border-bottom mb-2">
+                <div class="border-bottom mb-2">
                     <div class="col-md-12">
                         <h3 th:text="${sprint.title}"></h3>
                     </div>
+
+                    <!--                    TODO: Alling to right-->
+                    <a class="btn btn-primary d-inline-block"
+                       th:href="@{/sprintresults/create(sprintId = ${sprint.id})}" role="button">Complete Sprint</a>
                 </div>
                 <div class="row">
                     <div class="col-md-6">

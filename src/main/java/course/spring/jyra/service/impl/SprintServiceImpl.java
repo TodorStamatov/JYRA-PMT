@@ -1,15 +1,18 @@
 package course.spring.jyra.service.impl;
 
 import course.spring.jyra.dao.SprintRepository;
+import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.Sprint;
-import course.spring.jyra.model.Task;
+import course.spring.jyra.model.User;
 import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,11 +21,13 @@ import java.util.List;
 @Service
 public class SprintServiceImpl implements SprintService {
     private final SprintRepository sprintRepository;
+    private final UserRepository userRepository;
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public SprintServiceImpl(SprintRepository sprintRepository, MongoTemplate mongoTemplate) {
+    public SprintServiceImpl(SprintRepository sprintRepository, UserRepository userRepository, MongoTemplate mongoTemplate) {
         this.sprintRepository = sprintRepository;
+        this.userRepository = userRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -44,6 +49,13 @@ public class SprintServiceImpl implements SprintService {
     @Override
     public Sprint create(Sprint sprint) {
         sprint.setId(null);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            User user = userRepository.findByUsername(auth.getName()).orElseThrow(() -> new EntityNotFoundException(String.format("User with username=%s could not be found", auth.getName())));
+            sprint.setOwnerId(user.getId());
+        }
+
         sprint.setCreated(LocalDateTime.now());
         sprint.setModified(LocalDateTime.now());
         sprint.calculateDuration();
@@ -55,6 +67,22 @@ public class SprintServiceImpl implements SprintService {
         Sprint oldSprint = findById(id);
         sprintRepository.deleteById(id);
         return oldSprint;
+    }
+
+    @Override
+    public Sprint update(Sprint sprint, String oldId) {
+        Sprint oldSprint = findById(oldId);
+
+        sprint.setId(oldSprint.getId());
+        sprint.setStartDate(oldSprint.getStartDate());
+        oldSprint.getDevelopersIds().forEach(id -> sprint.getDevelopersIds().add(id));
+        oldSprint.getTasksIds().forEach(id -> sprint.getTasksIds().add(id));
+        oldSprint.getCompletedTaskResultsIds().forEach(id -> sprint.getCompletedTaskResultsIds().add(id));
+        sprint.setSprintResultId(oldSprint.getSprintResultId());
+        sprint.setCreated(oldSprint.getCreated());
+        sprint.setModified(LocalDateTime.now());
+
+        return sprintRepository.save(sprint);
     }
 
     @Override

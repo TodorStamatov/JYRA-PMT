@@ -64,6 +64,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Project update(Project project, String oldId) {
+        Project oldProject = findById(oldId);
+
+//        Copy fields that are not set in the form
+        project.setId(oldProject.getId());
+        project.setStartDate(oldProject.getStartDate());
+        project.setCurrentSprintId(oldProject.getCurrentSprintId());
+        oldProject.getPreviousSprintResultsIds().forEach(id -> project.getPreviousSprintResultsIds().add(id));
+        oldProject.getTasksBacklogIds().forEach(id -> project.getTasksBacklogIds().add(id));
+        project.setProjectResultId(oldProject.getProjectResultId());
+        project.setCreated(oldProject.getCreated());
+        project.setModified(LocalDateTime.now());
+
+        return projectRepository.save(project);
+    }
+
+    @Override
     public List<Project> findBySearch(String keywords) {
         if (keywords == null || keywords.length() == 0) {
             return projectRepository.findAll();

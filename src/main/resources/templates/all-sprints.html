@@ -10,9 +10,6 @@
         <div class="d-inline-block m-3">
             <h3>Sprints</h3>
         </div>
-
-        <!--        TODO: Add link-->
-        <a class="btn btn-primary d-inline-block m-3" href="#" role="button">Create sprint</a>
     </div>
 
     <div class="row m-3 w-25 h-25">
@@ -58,10 +55,12 @@
                 <td style="text-align: center">
                     <a th:href="@{'/users/' + ${sprint.ownerId}}" th:text="'@' + ${map.get(sprint).username}"></a>
                 </td>
-                <td class="align-middle w-25">
-                    <!--                    TODO: Add links-->
-                    <a class="btn btn-primary" href="#" role="button">Edit</a>
-                    <a class="btn btn-danger" href="#" role="button">Delete</a>
+                <td class="align-middle w-25" style="text-align: right">
+                    <form action="#" th:action="@{'/sprints/delete'(sprintId=${sprint.id})}" th:method="delete">
+                        <a class="btn btn-primary" th:href="@{/sprint/edit(sprintId=${sprint.id})}"
+                           role="button">Edit</a>
+                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                    </form>
                 </td>
             </tr>
             </tbody>

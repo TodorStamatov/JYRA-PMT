@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head.html :: head"></head>
+<body>
+
+<div th:replace="fragments/navbar.html :: navbar"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="border-0 shadow rounded-3 my-5">
+                <div class="p-4 p-sm-5">
+                    <h5 th:if="${request} == 'POST'" class="text-center mb-5 fw-light fs-5">Create Project</h5>
+                    <h5 th:if="${request} == 'PUT'" class="text-center mb-5 fw-light fs-5">Edit Project</h5>
+                    <form th:object="${project}" th:method="${request}">
+                        <div class="form-floating mb-3">
+                            <input th:value="${project.title}" id="projectTitleId" name="title" type="text" min="2"
+                                   max="120"
+                                   class="form-control"
+                                   placeholder="Title"/>
+                            <label for="projectTitleId">Title</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input th:value="${project.description}" id="projectDescriptionId" name="description"
+                                   type="text" min="10"
+                                   max="2500"
+                                   class="form-control"
+                                   placeholder="Description"/>
+                            <label for="projectDescriptionId">Description</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input th:value="${project.tags}" id="projectTagsId" name="tags" type="text"
+                                   class="form-control"
+                                   placeholder="Tags"/>
+                            <label for="projectTagsId">Tags</label>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="ownerId" class="col-sm-2 control-label">Owner</label>
+                            <select th:field="*{ownerId}" id="ownerId" class="js-example-basic-single form-control">
+                                <option th:each="owner : ${owners}"
+                                        th:value="${owner.id}"
+                                        th:text="${owner.username}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="devIds" class="col-sm-2 control-label">Developers</label>
+                            <select class="js-example-basic-multiple form-control" th:field="*{developersIds}"
+                                    id="devIds" name="developersIds" multiple="multiple">
+                                <option th:each="developer : ${developers}"
+                                        th:value="${developer.id}"
+                                        th:text="${developer.username}">Developer
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid my-3">
+                            <input th:if="${request} == 'POST'" type="submit"
+                                   class="btn btn-primary text-uppercase fw-bold"
+                                   value="Create" th:method="POST"/>
+                            <input th:if="${request} == 'PUT'" type="submit"
+                                   class="btn btn-primary text-uppercase fw-bold"
+                                   value="Edit" th:method="PUT"/>
+                        </div>
+                        <hr class="my-4">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="fragments/foot.html :: scripts"></script>
+<script src="/js/form-project.js"></script>
+</body>
+</html>
