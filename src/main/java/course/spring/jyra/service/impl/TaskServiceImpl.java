@@ -253,6 +253,23 @@ public class TaskServiceImpl implements TaskService {
             Sprint sprint = sprintRepository.findById(oldTask.getSprintId()).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found.", oldTask.getSprintId())));
             sprint.getTasksIds().remove(oldTask.getId());
             sprintRepository.save(sprint);
+
+            Board board = boardRepository.findAll().stream().filter(b -> b.getSprintId().equals(oldTask.getSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", oldTask.getSprintId())));
+            switch (oldTask.getStatus()) {
+                case TO_DO:
+                    board.getToDoIds().remove(oldTask.getId());
+                    break;
+                case IN_PROGRESS:
+                    board.getInProgressIds().remove(oldTask.getId());
+                    break;
+                case IN_REVIEW:
+                    board.getInReviewIds().remove(oldTask.getId());
+                    break;
+                case DONE:
+                    board.getDoneIds().remove(oldTask.getId());
+                    break;
+            }
+            boardRepository.save(board);
         }
 
         // delete the project's reference to the task
