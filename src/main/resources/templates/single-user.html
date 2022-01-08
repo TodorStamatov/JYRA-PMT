@@ -28,7 +28,7 @@
                 <hr class="m-2"/>
 
                 <form action="#" th:action="@{'/users/delete'(userId=${user.id})}" th:method="delete"
-                      th:if="${canEdit == 'Yes'}">
+                      th:if="${canEdit == true}">
                     <a class="btn btn-primary" th:href="@{/users/edit(userId=${user.id})}" role="button">Edit</a>
                     <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
                 </form>

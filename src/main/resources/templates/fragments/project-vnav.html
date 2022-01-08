@@ -23,7 +23,7 @@
     <li class="nav-item" th:if="${project.projectResultId}">
         <a class="nav-link" th:href="@{'/projectresults/' + ${project.id} + '/project-result'}">Project Result</a>
     </li>
-    <li class="nav-item" th:unless="${project.projectResultId}" th:if="${editorType == 'PO'}">
+    <li class="nav-item" th:unless="${project.projectResultId}" th:if="${canFinishProject == true}">
         <a class="nav-link" th:href="@{'/projectresults/create'(projectId=${project.id})}">Create Project Result</a>
     </li>
     <li class="nav-item">

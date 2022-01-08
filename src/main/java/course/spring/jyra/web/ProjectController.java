@@ -44,13 +44,13 @@ public class ProjectController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean canCreateProject = false;
 
-        if (editor instanceof Administrator) {
-            editorType = "ADMIN";
+        if (editor instanceof Administrator || editor instanceof ProductOwner) {
+            canCreateProject = true;
         }
 
-        model.addAttribute("editorType", editorType);
+        model.addAttribute("canCreateProject", canCreateProject);
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("map", map);
 
@@ -89,16 +89,16 @@ public class ProjectController {
         Project project = projectService.findById(id);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean canFinishProject = false;
 
         if (project.getOwnerId().equals(editor.getId())) {
-            editorType = "PO";
+            canFinishProject = true;
         }
 
         model.addAttribute("project", project);
         model.addAttribute("owner", userService.findById(project.getOwnerId()));
         model.addAttribute("developers", project.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList()));
-        model.addAttribute("editorType", editorType);
+        model.addAttribute("canFinishProject", canFinishProject);
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project";
     }
@@ -116,13 +116,19 @@ public class ProjectController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean canFinishProject = false;
+        boolean canFinishSprint = false;
 
         if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
-            editorType = "PO";
+            canFinishProject = true;
         }
 
-        model.addAttribute("editorType", editorType);
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            canFinishSprint = true;
+        }
+
+        model.addAttribute("canFinishProject", canFinishProject);
+        model.addAttribute("canFinishSprint", canFinishSprint);
         model.addAttribute("sprint", sprint);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("owner", userService.findById(sprint.getOwnerId()));
@@ -145,23 +151,13 @@ public class ProjectController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
-        String projectStatus = "Not finished";
+        boolean canManageSprintsAndTasks = false;
 
-        if (projectService.findById(projectId).getProjectResultId() != null) {
-            projectStatus = "finished";
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            canManageSprintsAndTasks = true;
         }
 
-        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
-            editorType = "PO";
-        }
-
-        if (projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
-            editorType = "DEV";
-        }
-
-        model.addAttribute("editorType", editorType);
-        model.addAttribute("projectStatus", projectStatus);
+        model.addAttribute("canManageSprintsAndTasks", canManageSprintsAndTasks);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("backlog", taskBacklog);
         model.addAttribute("map", map);
@@ -179,13 +175,13 @@ public class ProjectController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean canFinishProject = false;
 
         if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
-            editorType = "PO";
+            canFinishProject = true;
         }
 
-        model.addAttribute("editorType", editorType);
+        model.addAttribute("canFinishProject", canFinishProject);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("sprintResults", sprintResultsList);
         model.addAttribute("map", map);
@@ -221,13 +217,13 @@ public class ProjectController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean canCreateProject = false;
 
-        if (editor instanceof Administrator) {
-            editorType = "ADMIN";
+        if (editor instanceof Administrator || editor instanceof ProductOwner) {
+            canCreateProject = true;
         }
 
-        model.addAttribute("editorType", editorType);
+        model.addAttribute("canCreateProject", canCreateProject);
         model.addAttribute("projects", projectService.findBySearch(keywords));
         model.addAttribute("map", map);
 

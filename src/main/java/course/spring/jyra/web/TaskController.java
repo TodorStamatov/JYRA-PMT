@@ -82,17 +82,13 @@ public class TaskController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean canCreateResult = false;
 
-        if (taskService.findById(id).getDevelopersAssignedIds().contains(editor.getId())) {
-            editorType = "DEV";
+        if (taskService.findById(id).getDevelopersAssignedIds().contains(editor.getId()) || taskService.findById(id).getAddedById().equals(editor.getId())) {
+            canCreateResult = true;
         }
 
-        if (taskService.findById(id).getAddedById().equals(editor.getId())) {
-            editorType = "Editor";
-        }
-
-        model.addAttribute("editorType", editorType);
+        model.addAttribute("canCreateResult", canCreateResult);
         model.addAttribute("task", task);
         model.addAttribute("developersAssigned", task.getDevelopersAssignedIds().stream().map(userService::findById).collect(Collectors.toList()));
         model.addAttribute("reporter", userService.findById(task.getAddedById()));

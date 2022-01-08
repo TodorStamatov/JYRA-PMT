@@ -20,7 +20,8 @@
 
                     <!--                    TODO: Alling to right-->
                     <a class="btn btn-primary d-inline-block"
-                       th:href="@{/sprintresults/create(sprintId = ${sprint.id})}" role="button">Complete Sprint</a>
+                       th:href="@{/sprintresults/create(sprintId = ${sprint.id})}" role="button"
+                       th:if="${canFinishSprint == true}">Complete Sprint</a>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
