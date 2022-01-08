@@ -1,12 +1,11 @@
 package course.spring.jyra.service.impl;
 
-import course.spring.jyra.dao.ProjectRepository;
-import course.spring.jyra.dao.UserRepository;
+import course.spring.jyra.dao.*;
 import course.spring.jyra.exception.EntityNotFoundException;
-import course.spring.jyra.model.Developer;
+import course.spring.jyra.model.Board;
 import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.Project;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.Sprint;
 import course.spring.jyra.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,12 +21,22 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final SprintRepository sprintRepository;
+    private final SprintResultRepository sprintResultRepository;
+    private final ProjectResultRepository projectResultRepository;
+    private final TaskRepository taskRepository;
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, MongoTemplate mongoTemplate) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, BoardRepository boardRepository, SprintRepository sprintRepository, SprintResultRepository sprintResultRepository, ProjectResultRepository projectResultRepository, TaskRepository taskRepository, MongoTemplate mongoTemplate) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.boardRepository = boardRepository;
+        this.sprintRepository = sprintRepository;
+        this.sprintResultRepository = sprintResultRepository;
+        this.projectResultRepository = projectResultRepository;
+        this.taskRepository = taskRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -59,6 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
         productOwner.getProjectsIds().add(project.getId());
         userRepository.save(productOwner);
 
+        // I don't update board here simply because a newly created project could not have active sprint and respectively board
         return updated;
     }
 
@@ -84,18 +94,23 @@ public class ProjectServiceImpl implements ProjectService {
         project.setCreated(oldProject.getCreated());
         project.setModified(LocalDateTime.now());
 
-        if (!oldProject.getOwnerId().equals(project.getOwnerId())) {
-            Project updated = projectRepository.save(project);
+        Project updated = projectRepository.save(project);
 
+        if (!oldProject.getOwnerId().equals(project.getOwnerId())) {
 //        update cross-references (NOT TESTED)
             ProductOwner productOwner = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", project.getOwnerId())));
             productOwner.getProjectsIds().add(project.getId());
             userRepository.save(productOwner);
-
-            return updated;
-        } else {
-            return projectRepository.save(project);
         }
+
+        // if there is current sprint there should be a board for this spring
+        if (project.getCurrentSprintId() != null) {
+            Board board = boardRepository.findAll().stream().filter(b -> b.getSprintId().equals(project.getCurrentSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", project.getCurrentSprintId())));
+            board.setProjectId(project.getId());
+            boardRepository.save(board);
+        }
+
+        return updated;
     }
 
     @Override

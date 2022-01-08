@@ -14,18 +14,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Builder
 public class Board {
     @Id
     private String id;
 
-    @NotNull
-    @NonNull
     private String projectId;
 
-    @NotNull
-    @NonNull
     private String sprintId;
 
     @Builder.Default

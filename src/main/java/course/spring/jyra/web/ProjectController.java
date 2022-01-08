@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +70,11 @@ public class ProjectController {
     public String deleteProject(@RequestParam String projectId) {
         Project project = projectService.findById(projectId);
         log.debug("DELETE: Project: {}", project);
+
+        // prepare the project for deletion
+        project.getTasksBacklogIds().forEach(taskId -> taskService.deleteById(taskId, projectId));
+        sprintService.deleteById(project.getCurrentSprintId());
+
         projectService.deleteById(projectId);
         return "redirect:/projects";
     }
