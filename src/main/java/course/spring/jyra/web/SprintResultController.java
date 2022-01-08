@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +23,16 @@ public class SprintResultController {
     private final TaskResultService taskResultService;
     private final TaskService taskService;
     private final UserService userService;
+    private final BoardService boardService;
 
     @Autowired
-    public SprintResultController(SprintResultService sprintResultService, SprintService sprintService, TaskResultService taskResultService, TaskService taskService, UserService userService) {
+    public SprintResultController(SprintResultService sprintResultService, SprintService sprintService, TaskResultService taskResultService, TaskService taskService, UserService userService, BoardService boardService) {
         this.sprintResultService = sprintResultService;
         this.sprintService = sprintService;
         this.taskResultService = taskResultService;
         this.taskService = taskService;
         this.userService = userService;
+        this.boardService = boardService;
     }
 
     @GetMapping
@@ -78,6 +81,10 @@ public class SprintResultController {
     @PostMapping("/create")
     public String addSprintResult(@ModelAttribute SprintResult sprintResult) {
         sprintResultService.create(sprintResult);
+
+        Board board = boardService.findAll().stream().filter(b -> b.getSprintId().equals(sprintResult.getSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", sprintResult.getSprintId())));
+        boardService.deleteById(board.getId());
+
         log.debug("POST: Sprint result: {}", sprintResult);
         return "redirect:/sprintresults";
     }
@@ -101,10 +108,15 @@ public class SprintResultController {
     }
 
     @DeleteMapping("/delete")
-    public String deleteProjectResult(@RequestParam String sprintResultId) {
+    public String deleteSprintResult(@RequestParam String sprintResultId) {
         SprintResult sprintResult = sprintResultService.findById(sprintResultId);
         log.debug("DELETE: Sprint result: {}", sprintResult);
+
         sprintResultService.deleteById(sprintResultId);
+
+        Board board = Board.builder().projectId(sprintService.findById(sprintResult.getSprintId()).getProjectId()).sprintId(sprintResult.getSprintId()).build();
+        boardService.create(board);
+
         return "redirect:/sprintresults";
     }
 }

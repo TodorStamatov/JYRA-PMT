@@ -1,11 +1,15 @@
 package course.spring.jyra.service.impl;
 
+import course.spring.jyra.dao.ProjectRepository;
+import course.spring.jyra.dao.SprintRepository;
 import course.spring.jyra.dao.SprintResultRepository;
+import course.spring.jyra.dao.TaskResultRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.model.Project;
+import course.spring.jyra.model.Sprint;
 import course.spring.jyra.model.SprintResult;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.SprintResultService;
-import course.spring.jyra.service.TaskResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +19,16 @@ import java.util.List;
 @Service
 public class SprintResultServiceImpl implements SprintResultService {
     private final SprintResultRepository sprintResultRepository;
-    private final TaskResultService taskResultService;
+    private final SprintRepository sprintRepository;
+    private final ProjectRepository projectRepository;
+    private final TaskResultRepository taskResultRepository;
 
     @Autowired
-    public SprintResultServiceImpl(SprintResultRepository sprintResultRepository, TaskResultService taskResultService) {
+    public SprintResultServiceImpl(SprintResultRepository sprintResultRepository, SprintRepository sprintRepository, ProjectRepository projectRepository, TaskResultRepository taskResultRepository) {
         this.sprintResultRepository = sprintResultRepository;
-        this.taskResultService = taskResultService;
+        this.sprintRepository = sprintRepository;
+        this.projectRepository = projectRepository;
+        this.taskResultRepository = taskResultRepository;
     }
 
     @Override
@@ -39,7 +47,22 @@ public class SprintResultServiceImpl implements SprintResultService {
         sprintResult.setCreated(LocalDateTime.now());
         sprintResult.setModified(LocalDateTime.now());
         sprintResult.setTeamVelocity(calculateTeamVelocity(sprintResult));
-        return sprintResultRepository.insert(sprintResult);
+
+        SprintResult updated = sprintResultRepository.insert(sprintResult);
+
+        // add references to sprint
+        Sprint sprint = sprintRepository.findById(sprintResult.getSprintId()).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found.", sprintResult.getSprintId())));
+        sprint.getCompletedTaskResultsIds().forEach(taskResultId -> sprintResult.getTaskResultsIds().add(taskResultId));
+        sprint.setSprintResultId(updated.getId());
+        sprintRepository.save(sprint);
+
+        // add reference to project
+        Project project = projectRepository.findById(sprint.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", sprint.getProjectId())));
+        project.getPreviousSprintResultsIds().add(updated.getId());
+        project.setCurrentSprintId(null);
+        projectRepository.save(project);
+
+        return updated;
     }
 
     @Override
@@ -69,6 +92,18 @@ public class SprintResultServiceImpl implements SprintResultService {
     public SprintResult deleteById(String id) {
         SprintResult oldSprintResult = findById(id);
         sprintResultRepository.deleteById(id);
+
+        // delete references from sprint
+        Sprint sprint = sprintRepository.findById(oldSprintResult.getSprintId()).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found.", oldSprintResult.getSprintId())));
+        sprint.setSprintResultId(null);
+        sprintRepository.save(sprint);
+
+        // delete reference from project
+        Project project = projectRepository.findById(sprint.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", sprint.getProjectId())));
+        project.getPreviousSprintResultsIds().remove(oldSprintResult.getId());
+        project.setCurrentSprintId(sprint.getId());
+        projectRepository.save(project);
+
         return oldSprintResult;
     }
 
@@ -79,7 +114,7 @@ public class SprintResultServiceImpl implements SprintResultService {
     }
 
     private int calculateTeamVelocity(SprintResult sprintResult) {
-        return sprintResult.getTaskResultsIds().stream().map(taskResultService::findById).mapToInt(TaskResult::getActualEffort).sum();
+        return sprintResult.getTaskResultsIds().stream().map(taskResultId -> taskResultRepository.findById(taskResultId).orElseThrow(() -> new EntityNotFoundException(String.format("Task result with ID=%s not found.", taskResultId)))).mapToInt(TaskResult::getActualEffort).sum();
     }
 
     @Override
