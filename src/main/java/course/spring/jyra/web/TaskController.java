@@ -80,6 +80,19 @@ public class TaskController {
     public String getTaskById(Model model, @PathVariable("taskId") String id) {
         Task task = taskService.findById(id);
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (taskService.findById(id).getDevelopersAssignedIds().contains(editor.getId())) {
+            editorType = "DEV";
+        }
+
+        if (taskService.findById(id).getAddedById().equals(editor.getId())) {
+            editorType = "Editor";
+        }
+
+        model.addAttribute("editorType", editorType);
         model.addAttribute("task", task);
         model.addAttribute("developersAssigned", task.getDevelopersAssignedIds().stream().map(userService::findById).collect(Collectors.toList()));
         model.addAttribute("reporter", userService.findById(task.getAddedById()));

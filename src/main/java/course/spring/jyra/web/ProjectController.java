@@ -148,7 +148,7 @@ public class ProjectController {
         String editorType = "";
         String projectStatus = "Not finished";
 
-        if (!projectService.findById(projectId).getProjectResultId().equals(null)) {
+        if (projectService.findById(projectId).getProjectResultId() != null) {
             projectStatus = "finished";
         }
 
