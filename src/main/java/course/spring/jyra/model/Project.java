@@ -46,7 +46,8 @@ public class Project {
     @NotNull
     private List<String> developersIds = new ArrayList<>();
 
-    private String currentSprintId;
+    @Builder.Default
+    private String currentSprintId = new String();
 
     @Builder.Default
     private List<String> previousSprintResultsIds = new ArrayList<>();
@@ -57,7 +58,8 @@ public class Project {
     @TextIndexed
     private String tags;
 
-    private String projectResultId;
+    @Builder.Default
+    private String projectResultId = new String();
 
     @Builder.Default
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
