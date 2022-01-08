@@ -46,6 +46,10 @@ public class Sprint {
 
     @NonNull
     @NotNull
+    private String projectId;
+
+    @NonNull
+    @NotNull
     private String ownerId;
 
     @Builder.Default
