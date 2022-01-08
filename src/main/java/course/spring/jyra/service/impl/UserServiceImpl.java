@@ -104,33 +104,33 @@ public class UserServiceImpl implements UserService {
         user.setModified(LocalDateTime.now());
 
         if (user.getRoles().contains(Role.ADMIN)) {
-            Administrator administrator = Administrator.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
+            Administrator updated = Administrator.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
                     .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
                     .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
                     .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified()).build();
-            userRepository.save(administrator);
-            administrator.setPassword("");
-            return administrator;
+            userRepository.save(updated);
+            updated.setPassword("");
+            return updated;
         } else if (user.getRoles().contains(Role.PRODUCT_OWNER)) {
             ProductOwner oldOwner = (ProductOwner) findById(oldId);
-            ProductOwner productOwner = ProductOwner.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
+            ProductOwner updated = ProductOwner.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
                     .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
                     .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
                     .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified())
                     .projectsIds(oldOwner.getProjectsIds()).completedProjectResultsIds(oldOwner.getCompletedProjectResultsIds()).build();
-            userRepository.save(productOwner);
-            productOwner.setPassword("");
-            return productOwner;
+            userRepository.save(updated);
+            updated.setPassword("");
+            return updated;
         } else if (user.getRoles().contains(Role.DEVELOPER)) {
             Developer oldDev = (Developer) findById(oldId);
-            Developer developer = Developer.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
+            Developer updated = Developer.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
                     .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
                     .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
                     .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified())
                     .assignedTasksIds(oldDev.getAssignedTasksIds()).completedTaskResultsIds(oldDev.getCompletedTaskResultsIds()).build();
-            userRepository.save(developer);
-            developer.setPassword("");
-            return developer;
+            userRepository.save(updated);
+            updated.setPassword("");
+            return updated;
         } else {
             throw new InvalidClientDataException(String.format("User with ID=%s has no roles set", user.getId()));
         }
