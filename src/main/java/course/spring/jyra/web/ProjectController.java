@@ -117,18 +117,18 @@ public class ProjectController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
         boolean canFinishProject = false;
-        boolean canFinishSprint = false;
+        boolean canEditSprint = false;
 
         if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
             canFinishProject = true;
         }
 
         if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
-            canFinishSprint = true;
+            canEditSprint = true;
         }
 
         model.addAttribute("canFinishProject", canFinishProject);
-        model.addAttribute("canFinishSprint", canFinishSprint);
+        model.addAttribute("canEditSprint", canEditSprint);
         model.addAttribute("sprint", sprint);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("owner", userService.findById(sprint.getOwnerId()));
@@ -176,11 +176,17 @@ public class ProjectController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
         boolean canFinishProject = false;
+        boolean canEditSprintResults = false;
 
         if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
             canFinishProject = true;
         }
 
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            canEditSprintResults = true;
+        }
+
+        model.addAttribute("canEditSprintResults", canEditSprintResults);
         model.addAttribute("canFinishProject", canFinishProject);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("sprintResults", sprintResultsList);

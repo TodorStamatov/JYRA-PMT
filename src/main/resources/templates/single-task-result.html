@@ -7,19 +7,24 @@
 
 <div class="container-fluid mt-5">
     <div style="text-align: center" class="row justify-content-center">
-        <div id="taskresult-task-title" class="col-md-3 border">
+        <div id="taskresult-task-title" class="col-md-2 border">
             <a th:href="@{'/tasks/' + ${taskResult.taskId}}" th:text="${task.title}"></a>
         </div>
-        <div id="taskresult-verifiedby" class="col-md-3 border">
+        <div id="taskresult-verifiedby" class="col-md-2 border">
             <p>Verified by: <a th:href="@{'/users/' + ${taskResult.verifiedById}}"
                                th:text="'@' + ${approver.username}"></a></p>
         </div>
-        <div id="taskresult-effort" class="col-md-3 border">
+        <div id="taskresult-effort" class="col-md-2 border">
             <p th:text="'Actual effort: ' + ${taskResult.actualEffort}"></p>
+        </div>
+        <div class="col-md-2 border" style="text-align: right">
+            <a class="btn btn-primary"
+               th:href="@{/taskresults/edit(taskResultId=${taskResult.id})}" role="button"
+               th:if="${canEditTaskResult == true}">Edit</a>
         </div>
     </div>
     <div id="taskresult-desc" class="row justify-content-center">
-        <div class="col-md-9 border">
+        <div class="col-md-8 border">
             <h5>Description</h5>
             <p th:text="${taskResult.resultsDescription}"></p>
         </div>

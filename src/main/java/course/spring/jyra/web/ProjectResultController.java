@@ -1,12 +1,11 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.*;
-import course.spring.jyra.service.ProjectResultService;
-import course.spring.jyra.service.ProjectService;
-import course.spring.jyra.service.SprintResultService;
-import course.spring.jyra.service.SprintService;
+import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +23,15 @@ public class ProjectResultController {
     private final ProjectService projectService;
     private final SprintResultService sprintResultService;
     private final SprintService sprintService;
+    private final UserService userService;
 
     @Autowired
-    public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService, ProjectService projectService1, SprintResultService sprintResultService, SprintService sprintService) {
+    public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService, ProjectService projectService1, SprintResultService sprintResultService, SprintService sprintService, UserService userService) {
         this.projectResultService = projectResultService;
         this.projectService = projectService1;
         this.sprintResultService = sprintResultService;
         this.sprintService = sprintService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -52,6 +53,15 @@ public class ProjectResultController {
         Map<SprintResult, Sprint> map = new HashMap<>();
         sprintResultsList.forEach(sprintResult -> map.put(sprintResult, sprintService.findById(sprintResult.getSprintId())));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canEditProjectResult = false;
+
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
+            canEditProjectResult = true;
+        }
+
+        model.addAttribute("canEditProjectResult", canEditProjectResult);
         model.addAttribute("projectResult", projectResult);
         model.addAttribute("project", projectService.findById(projectResult.getProjectId()));
         model.addAttribute("sprintResults", sprintResultsList);

@@ -19,6 +19,7 @@
                     <tr style="text-align: center">
                         <th scope="col">Sprint</th>
                         <th scope="col">Team velocity</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -28,6 +29,14 @@
                                th:text="${map.get(sprintResult).title}"></a>
                         </td>
                         <td th:text="${sprintResult.teamVelocity}">Team velocity not found
+                        </td>
+                        <td class="align-middle w-25" style="text-align: right">
+                            <form action="#" th:action="@{'/sprintresults/delete'(sprintResultId=${sprintResult.id})}"
+                                  th:method="delete" th:if="${canEditSprintResults == true}">
+                                <a class="btn btn-primary"
+                                   th:href="@{/sprintresults/edit(sprintResultId=${sprintResult.id})}" role="button">Edit</a>
+                                <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                            </form>
                         </td>
                     </tr>
                     </tbody>
