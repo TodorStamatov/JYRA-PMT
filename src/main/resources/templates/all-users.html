@@ -46,10 +46,11 @@
                 <td th:text="${user.email}">Email not found</td>
                 <td th:text="${user.printRoles()}">Roles not found</td>
                 <td th:text="${user.status.getReadable()}">Status not found</td>
-                <td class="align-middle w-25">
-                    <!--                    TODO: Add links-->
-                    <a class="btn btn-primary" href="#" role="button">Edit</a>
-                    <a class="btn btn-danger" href="#" role="button">Delete</a>
+                <td class="align-middle w-25" style="text-align: right" th:if="${userType == 'ADMIN'}">
+                    <form action="#" th:action="@{'/users/delete'(userId=${user.id})}" th:method="delete">
+                        <a class="btn btn-primary" th:href="@{/users/edit(userId=${user.id})}" role="button">Edit</a>
+                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                    </form>
                 </td>
             </tr>
             </tbody>
