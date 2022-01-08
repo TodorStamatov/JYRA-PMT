@@ -1,8 +1,11 @@
 package course.spring.jyra.service.impl;
 
 import course.spring.jyra.dao.ProjectRepository;
+import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.Project;
+import course.spring.jyra.model.User;
 import course.spring.jyra.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,11 +20,13 @@ import java.util.List;
 @Service
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository, MongoTemplate mongoTemplate) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, MongoTemplate mongoTemplate) {
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -45,7 +50,15 @@ public class ProjectServiceImpl implements ProjectService {
         project.setId(null);
         project.setCreated(LocalDateTime.now());
         project.setModified(LocalDateTime.now());
-        return projectRepository.insert(project);
+
+        Project updated = projectRepository.insert(project);
+
+//        update cross-references
+        ProductOwner productOwner = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", project.getOwnerId())));
+        productOwner.getProjectsIds().add(project.getId());
+        userRepository.save(productOwner);
+
+        return updated;
     }
 
     @Override
@@ -77,7 +90,18 @@ public class ProjectServiceImpl implements ProjectService {
         project.setCreated(oldProject.getCreated());
         project.setModified(LocalDateTime.now());
 
-        return projectRepository.save(project);
+        if (!oldProject.getOwnerId().equals(project.getOwnerId())) {
+            Project updated = projectRepository.save(project);
+
+//        update cross-references (NOT TESTED)
+            ProductOwner productOwner = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", project.getOwnerId())));
+            productOwner.getProjectsIds().add(project.getId());
+            userRepository.save(productOwner);
+
+            return updated;
+        } else {
+            return projectRepository.save(project);
+        }
     }
 
     @Override
