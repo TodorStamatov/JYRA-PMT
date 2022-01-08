@@ -11,11 +11,6 @@ spring:
       port: 27017
       database: jyra-db
       auto-index-creation: true
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
-
 management:
   endpoints:
     web:

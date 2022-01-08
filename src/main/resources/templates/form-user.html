@@ -42,9 +42,8 @@
                             <label for="passwordId">Password</label>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <select th:field="*{roles}" id="userType" class="form-control"
-                                    th:if="${editorType == 'ADMIN'}">
+                        <div class="form-floating mb-3" th:if="${editorType == 'ADMIN'}">
+                            <select th:field="*{roles}" id="userType" class="form-control">
                                 <option th:each="role : ${T(course.spring.jyra.model.Role).values()}"
                                         th:value="${role}"
                                         th:text="${role.readable}"
@@ -54,9 +53,8 @@
                             <label for="userType">User type</label>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <select th:field="*{status}" id="userStatus" class="form-control"
-                                    th:if="${editorType == 'ADMIN'}">
+                        <div class="form-floating mb-3" th:if="${editorType == 'ADMIN'}">
+                            <select th:field="*{status}" id="userStatus" class="form-control">
                                 <option th:each="status : ${T(course.spring.jyra.model.UserStatus).values()}"
                                         th:value="${status}"
                                         th:text="${status.readable}"

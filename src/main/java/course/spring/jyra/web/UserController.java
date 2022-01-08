@@ -112,7 +112,6 @@ public class UserController {
             canEdit = "Yes";
         }
 
-
         model.addAttribute("canEdit", canEdit);
 
         log.debug("GET: User with Id=%s : {}", id, userService.findById(id));

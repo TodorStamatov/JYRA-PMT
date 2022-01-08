@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = findByUsername(auth.getName());
-        if (!(editor instanceof Administrator)) {
+        if (!(editor instanceof Administrator) && !user.getPassword().equals(oldUser.getPassword())) {
             user.setStatus(UserStatus.ACTIVE);
         }
         user.setImageUrl(oldUser.getImageUrl());
@@ -108,7 +108,9 @@ public class UserServiceImpl implements UserService {
                     .email(user.getEmail()).username(user.getUsername()).password(user.getPassword())
                     .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
                     .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified()).build();
-            return userRepository.save(administrator);
+            userRepository.save(administrator);
+            administrator.setPassword("");
+            return administrator;
         } else if (user.getRoles().contains(Role.PRODUCT_OWNER)) {
             ProductOwner oldOwner = (ProductOwner) findById(oldId);
             ProductOwner productOwner = ProductOwner.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
@@ -116,7 +118,9 @@ public class UserServiceImpl implements UserService {
                     .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
                     .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified())
                     .projectsIds(oldOwner.getProjectsIds()).completedProjectResultsIds(oldOwner.getCompletedProjectResultsIds()).build();
-            return userRepository.save(productOwner);
+            userRepository.save(productOwner);
+            productOwner.setPassword("");
+            return productOwner;
         } else if (user.getRoles().contains(Role.DEVELOPER)) {
             Developer oldDev = (Developer) findById(oldId);
             Developer developer = Developer.builder().id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName())
@@ -124,7 +128,9 @@ public class UserServiceImpl implements UserService {
                     .roles(user.getRoles()).contacts(user.getContacts()).status(user.getStatus())
                     .imageUrl(user.getImageUrl()).active(true).created(user.getCreated()).modified(user.getModified())
                     .assignedTasksIds(oldDev.getAssignedTasksIds()).completedTaskResultsIds(oldDev.getCompletedTaskResultsIds()).build();
-            return userRepository.save(developer);
+            userRepository.save(developer);
+            developer.setPassword("");
+            return developer;
         } else {
             throw new InvalidClientDataException(String.format("User with ID=%s has no roles set", user.getId()));
         }
