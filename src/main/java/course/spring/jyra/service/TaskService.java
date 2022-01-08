@@ -13,11 +13,15 @@ public interface TaskService {
 
     Task create(Task task);
 
-    Task update(Task task, String oldId);
+    Task create(Task task, String projectId);
+
+    Task update(Task task, String oldId, String projectId);
 
     Task update(Task task);
 
     Task deleteById(String id);
+
+    Task deleteById(String id, String projectId);
 
     List<Task> findBySearch(String keywords);
 

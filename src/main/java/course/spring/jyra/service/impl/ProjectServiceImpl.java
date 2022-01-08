@@ -3,6 +3,7 @@ package course.spring.jyra.service.impl;
 import course.spring.jyra.dao.ProjectRepository;
 import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.model.Developer;
 import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.Project;
 import course.spring.jyra.model.User;
@@ -62,13 +63,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project deleteById(String id) {
-        Project oldProject = findById(id);
-        projectRepository.deleteById(id);
-        return oldProject;
-    }
-
-    @Override
     public Project update(Project project) {
         Project oldProject = findById(project.getId());
         project.setCreated(oldProject.getCreated());
@@ -113,6 +107,18 @@ public class ProjectServiceImpl implements ProjectService {
         TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(words);
         Query query = TextQuery.queryText(criteria);
         return mongoTemplate.find(query, Project.class);
+    }
+
+    @Override
+    public Project deleteById(String id) {
+        Project oldProject = findById(id);
+        projectRepository.deleteById(id);
+
+        ProductOwner po = (ProductOwner) userRepository.findById(oldProject.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found.", oldProject.getOwnerId())));
+        po.getProjectsIds().remove(oldProject.getId());
+        userRepository.save(po);
+
+        return oldProject;
     }
 
     @Override

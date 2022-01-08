@@ -62,17 +62,17 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String addTask(@ModelAttribute Task task) {
-        taskService.create(task);
+    public String addTask(@ModelAttribute Task task, @RequestParam String projectId) {
+        taskService.create(task, projectId);
         log.debug("POST: Task: {}", task);
         return "redirect:/tasks";
     }
 
     @DeleteMapping("/delete")
-    public String deleteProject(@RequestParam String taskId) {
+    public String deleteProject(@RequestParam String taskId, @RequestParam String projectId) {
         Task task = taskService.findById(taskId);
         log.debug("DELETE: Task: {}", task);
-        taskService.deleteById(taskId);
+        taskService.deleteById(taskId, projectId);
         return "redirect:/tasks";
     }
 
@@ -90,20 +90,26 @@ public class TaskController {
     }
 
     @GetMapping("/edit")
-    public String getEditTask(Model model, @RequestParam String taskId) {
+    public String getEditTask(Model model, @RequestParam String taskId, @RequestParam String projectId) {
         Task task = taskService.findById(taskId);
+        Project project = projectService.findById(projectId);
         if (!model.containsAttribute("task")) {
             model.addAttribute("task", task);
         }
+
+        if (project.getCurrentSprintId() != null) {
+            model.addAttribute("sprint", sprintService.findById(project.getCurrentSprintId()));
+        }
+
         model.addAttribute("request", "PUT");
         model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
         return "form-task";
     }
 
     @PutMapping("/edit")
-    public String updateTask(@RequestParam String taskId, @ModelAttribute Task task) {
+    public String updateTask(@RequestParam String taskId, @RequestParam String projectId, @ModelAttribute Task task) {
         log.debug("UPDATE: Task: {}", task);
-        taskService.update(task, taskId);
+        taskService.update(task, taskId, projectId);
         return "redirect:/tasks";
     }
 
