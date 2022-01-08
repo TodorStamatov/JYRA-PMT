@@ -35,7 +35,7 @@
                             <label for="email">Email</label>
                         </div>
 
-                        <div class="form-floating mb-3">
+                        <div class="form-floating mb-3" th:if="${canChangePassword == 'Yes'}">
                             <input th:value="${user.password}" id="passwordId" name="password" type="password"
                                    class="form-control"
                                    placeholder="Password"/>

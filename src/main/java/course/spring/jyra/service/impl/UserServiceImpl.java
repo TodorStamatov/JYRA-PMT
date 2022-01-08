@@ -83,13 +83,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user, String oldId) {
-        User oldUser = findById(oldId);
+        User oldUser = userRepository.findById(oldId).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID='%s' not found.", oldId)));
 
         user.setId(oldUser.getId());
         user.setUsername(oldUser.getUsername());
 
         if (user.getPassword() == null || user.getPassword().length() == 0) {
             user.setPassword(oldUser.getPassword());
+
         } else {
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));

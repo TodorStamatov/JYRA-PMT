@@ -4,6 +4,8 @@ import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -76,11 +78,18 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public String getProjectById(Model model, @PathVariable("projectId") String id) {
         Project project = projectService.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (editor instanceof ProductOwner) {
+            editorType = "PO";
+        }
 
         model.addAttribute("project", project);
         model.addAttribute("owner", userService.findById(project.getOwnerId()));
         model.addAttribute("developers", project.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList()));
-
+        model.addAttribute("editorType", editorType);
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project";
     }
@@ -96,6 +105,15 @@ public class ProjectController {
         List<Task> done = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.DONE)).collect(Collectors.toList());
         List<User> devs = sprint.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList());
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (editor instanceof ProductOwner) {
+            editorType = "PO";
+        }
+
+        model.addAttribute("editorType", editorType);
         model.addAttribute("sprint", sprint);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("owner", userService.findById(sprint.getOwnerId()));
@@ -116,6 +134,16 @@ public class ProjectController {
         Map<Task, User> map = new HashMap<>();
         taskBacklog.forEach(task -> map.put(task, userService.findById(task.getAddedById())));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (editor instanceof ProductOwner) {
+            editorType = "PO";
+        }
+
+        model.addAttribute("editorType", editorType);
+
         model.addAttribute("project", projectService.findById(id));
         model.addAttribute("backlog", taskBacklog);
         model.addAttribute("map", map);
@@ -130,6 +158,16 @@ public class ProjectController {
         projectService.findById(id).getPreviousSprintResultsIds().forEach(sprintId -> sprintResultsList.add(sprintResultService.findById(sprintId)));
         Map<SprintResult, Sprint> map = new HashMap<>();
         sprintResultsList.forEach(sprintResult -> map.put(sprintResult, sprintService.findById(sprintResult.getSprintId())));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        String editorType = "";
+
+        if (editor instanceof ProductOwner) {
+            editorType = "PO";
+        }
+
+        model.addAttribute("editorType", editorType);
 
         model.addAttribute("project", projectService.findById(id));
         model.addAttribute("sprintResults", sprintResultsList);

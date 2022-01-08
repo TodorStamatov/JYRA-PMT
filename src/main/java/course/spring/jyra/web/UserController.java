@@ -123,12 +123,17 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
         String editorType = "";
+        String canChangePassword = "";
         if (editor instanceof Administrator) {
             editorType = "ADMIN";
+        }
+        if (editor.getId().equals(userId)) {
+            canChangePassword = "Yes";
         }
         User user = userService.findById(userId);
         model.addAttribute("user", user);
         model.addAttribute("editorType", editorType);
+        model.addAttribute("canChangePassword", canChangePassword);
         return "form-user";
     }
 
