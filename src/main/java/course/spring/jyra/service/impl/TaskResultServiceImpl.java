@@ -1,8 +1,11 @@
 package course.spring.jyra.service.impl;
 
+import course.spring.jyra.dao.SprintRepository;
+import course.spring.jyra.dao.TaskRepository;
 import course.spring.jyra.dao.TaskResultRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
-import course.spring.jyra.model.SprintResult;
+import course.spring.jyra.model.Sprint;
+import course.spring.jyra.model.Task;
 import course.spring.jyra.model.TaskResult;
 import course.spring.jyra.service.TaskResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +17,14 @@ import java.util.List;
 @Service
 public class TaskResultServiceImpl implements TaskResultService {
     private final TaskResultRepository taskResultRepository;
+    private final TaskRepository taskRepository;
+    private final SprintRepository sprintRepository;
 
     @Autowired
-    public TaskResultServiceImpl(TaskResultRepository taskResultRepository) {
+    public TaskResultServiceImpl(TaskResultRepository taskResultRepository, TaskRepository taskRepository, SprintRepository sprintRepository) {
         this.taskResultRepository = taskResultRepository;
+        this.taskRepository = taskRepository;
+        this.sprintRepository = sprintRepository;
     }
 
     @Override
@@ -35,7 +42,21 @@ public class TaskResultServiceImpl implements TaskResultService {
         taskResult.setId(null);
         taskResult.setCreated(LocalDateTime.now());
         taskResult.setModified(LocalDateTime.now());
-        return taskResultRepository.insert(taskResult);
+        TaskResult updated = taskResultRepository.insert(taskResult);
+
+        // update task references
+        Task task = taskRepository.findById(taskResult.getTaskId()).orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found.", taskResult.getTaskId())));
+        task.setTaskResultId(updated.getId());
+        taskRepository.save(task);
+
+        // if the task belongs to a sprint, update the sprint's reference to task results
+        if (task.getSprintId() != null) {
+            Sprint sprint = sprintRepository.findById(task.getSprintId()).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found.", task.getSprintId())));
+            sprint.getCompletedTaskResultsIds().add(updated.getId());
+            sprintRepository.save(sprint);
+        }
+
+        return updated;
     }
 
     @Override
@@ -62,6 +83,19 @@ public class TaskResultServiceImpl implements TaskResultService {
     public TaskResult deleteById(String id) {
         TaskResult oldTaskResult = findById(id);
         taskResultRepository.deleteById(id);
+
+        // update task references
+        Task task = taskRepository.findById(oldTaskResult.getTaskId()).orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found.", oldTaskResult.getTaskId())));
+        task.setTaskResultId(null);
+        taskRepository.save(task);
+
+        // if the task belongs to a sprint, update the sprint's reference to task results
+        if (task.getSprintId() != null) {
+            Sprint sprint = sprintRepository.findById(task.getSprintId()).orElseThrow(() -> new EntityNotFoundException(String.format("Sprint with ID=%s not found.", task.getSprintId())));
+            sprint.getCompletedTaskResultsIds().remove(oldTaskResult.getId());
+            sprintRepository.save(sprint);
+        }
+
         return oldTaskResult;
     }
 

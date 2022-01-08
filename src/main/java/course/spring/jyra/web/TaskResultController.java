@@ -1,9 +1,6 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.ProjectResult;
-import course.spring.jyra.model.Task;
-import course.spring.jyra.model.TaskResult;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.*;
 import course.spring.jyra.service.TaskResultService;
 import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
@@ -73,6 +70,12 @@ public class TaskResultController {
     @PostMapping("/create")
     public String addTaskResult(@ModelAttribute TaskResult taskResult) {
         taskResultService.create(taskResult);
+
+        // update task status through service in order to apply changes to board
+        Task task = taskService.findById(taskResult.getTaskId());
+        task.setStatus(TaskStatus.DONE);
+        taskService.update(task);
+
         log.debug("POST: Task result: {}", taskResult);
         return "redirect:/taskresults";
     }
@@ -91,6 +94,12 @@ public class TaskResultController {
     @DeleteMapping("/delete")
     public String deleteTaskResult(@RequestParam String taskResultId) {
         TaskResult taskResult = taskResultService.findById(taskResultId);
+
+        // update task status through service in order to apply changes to board
+        Task task = taskService.findById(taskResult.getTaskId());
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        taskService.update(task);
+
         log.debug("DELETE: Task result: {}", taskResult);
         taskResultService.deleteById(taskResultId);
         return "redirect:/taskresults";
