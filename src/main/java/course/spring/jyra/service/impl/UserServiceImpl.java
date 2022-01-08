@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -138,7 +139,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        User oldUser = findById(user.getId());
+//        userRepository is used here directly because if our public method is used, the users' passwords are set to null and this breaks the whole DB.
+        User oldUser = userRepository.findById(user.getId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", user.getId())));
 
         // prevent username changing
         if (user.getUsername() != null && !user.getUsername().equals(oldUser.getUsername())) {
