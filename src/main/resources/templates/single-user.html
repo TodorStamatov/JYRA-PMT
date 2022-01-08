@@ -27,8 +27,11 @@
 
                 <hr class="m-2"/>
 
-                <!--                TODO: Uncomment if necessary-->
-                <!--                <a class="btn btn-primary" href="#" role="button">Manage profile</a>-->
+                <form action="#" th:action="@{'/users/delete'(userId=${user.id})}" th:method="delete"
+                      th:if="${canEdit == 'Yes'}">
+                    <a class="btn btn-primary" th:href="@{/users/edit(userId=${user.id})}" role="button">Edit</a>
+                    <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+                </form>
             </div>
         </div>
         <div class="col-sm-8 d-flex justify-content-center">
