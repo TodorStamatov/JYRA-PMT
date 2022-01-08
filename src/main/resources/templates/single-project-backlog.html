@@ -15,10 +15,11 @@
             <div class="m-3" th:unless="${project.projectResultId}">
                 <h3>Backlog</h3>
                 <!--                TODO: Try to make the button on the right-->
-                <a class="btn btn-primary" th:href="@{/tasks/create(projectId=${project.id})}" role="button">Create
-                    task</a>
-                <a class="btn btn-primary" th:href="@{/sprints/create(projectId=${project.id})}" role="button">Create
-                    Sprint</a>
+                <a class="btn btn-primary" th:href="@{/tasks/create(projectId=${project.id})}" role="button"
+                   th:if="${editorType != ''}">Create task</a>
+                <!--                if editorType != '' it is PO or Dev-->
+                <a class="btn btn-primary" th:href="@{/sprints/create(projectId=${project.id})}" role="button"
+                   th:if="${editorType != ''}">Create Sprint</a>
             </div>
 
             <div id="table-of-contents" th:if="${backlog}">

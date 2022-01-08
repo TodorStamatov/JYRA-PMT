@@ -82,7 +82,7 @@ public class ProjectController {
         User editor = userService.findByUsername(auth.getName());
         String editorType = "";
 
-        if (editor instanceof ProductOwner) {
+        if (project.getOwnerId().equals(editor.getId())) {
             editorType = "PO";
         }
 
@@ -109,7 +109,7 @@ public class ProjectController {
         User editor = userService.findByUsername(auth.getName());
         String editorType = "";
 
-        if (editor instanceof ProductOwner) {
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
             editorType = "PO";
         }
 
@@ -127,9 +127,9 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/backlog")
-    public String getProjectBacklog(Model model, @PathVariable("projectId") String id) {
+    public String getProjectBacklog(Model model, @PathVariable String projectId) {
         List<Task> taskBacklog = new ArrayList<>();
-        projectService.findById(id).getTasksBacklogIds().forEach(taskId -> taskBacklog.add(taskService.findById(taskId)));
+        projectService.findById(projectId).getTasksBacklogIds().forEach(taskId -> taskBacklog.add(taskService.findById(taskId)));
 
         Map<Task, User> map = new HashMap<>();
         taskBacklog.forEach(task -> map.put(task, userService.findById(task.getAddedById())));
@@ -138,24 +138,27 @@ public class ProjectController {
         User editor = userService.findByUsername(auth.getName());
         String editorType = "";
 
-        if (editor instanceof ProductOwner) {
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
             editorType = "PO";
         }
 
-        model.addAttribute("editorType", editorType);
+        if (projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            editorType = "DEV";
+        }
 
-        model.addAttribute("project", projectService.findById(id));
+        model.addAttribute("editorType", editorType);
+        model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("backlog", taskBacklog);
         model.addAttribute("map", map);
 
-        log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
+        log.debug("GET: Project with Id=%s : {}", projectId, projectService.findById(projectId));
         return "single-project-backlog";
     }
 
     @GetMapping("/{projectId}/sprint-results")
-    public String getPrevSprintResults(Model model, @PathVariable("projectId") String id) {
+    public String getPrevSprintResults(Model model, @PathVariable String projectId) {
         List<SprintResult> sprintResultsList = new ArrayList<>();
-        projectService.findById(id).getPreviousSprintResultsIds().forEach(sprintId -> sprintResultsList.add(sprintResultService.findById(sprintId)));
+        projectService.findById(projectId).getPreviousSprintResultsIds().forEach(sprintId -> sprintResultsList.add(sprintResultService.findById(sprintId)));
         Map<SprintResult, Sprint> map = new HashMap<>();
         sprintResultsList.forEach(sprintResult -> map.put(sprintResult, sprintService.findById(sprintResult.getSprintId())));
 
@@ -163,17 +166,16 @@ public class ProjectController {
         User editor = userService.findByUsername(auth.getName());
         String editorType = "";
 
-        if (editor instanceof ProductOwner) {
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
             editorType = "PO";
         }
 
         model.addAttribute("editorType", editorType);
-
-        model.addAttribute("project", projectService.findById(id));
+        model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("sprintResults", sprintResultsList);
         model.addAttribute("map", map);
 
-        log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
+        log.debug("GET: Project with Id=%s : {}", projectId, projectService.findById(projectId));
         return "single-project-sprint-results";
     }
 
