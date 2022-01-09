@@ -1,14 +1,9 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.*;
-import course.spring.jyra.service.ProjectService;
-import course.spring.jyra.service.SprintService;
-import course.spring.jyra.service.TaskService;
-import course.spring.jyra.service.UserService;
+import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +20,15 @@ public class TaskController {
     private final UserService userService;
     private final SprintService sprintService;
     private final ProjectService projectService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService, SprintService sprintService, ProjectService projectService) {
+    public TaskController(TaskService taskService, UserService userService, SprintService sprintService, ProjectService projectService, HtmlService htmlService) {
         this.taskService = taskService;
         this.userService = userService;
         this.sprintService = sprintService;
         this.projectService = projectService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -84,6 +81,7 @@ public class TaskController {
         model.addAttribute("developersAssigned", task.getDevelopersAssignedIds().stream().map(userService::findById).collect(Collectors.toList()));
         model.addAttribute("reporter", userService.findById(task.getAddedById()));
         model.addAttribute("sprint", sprintService.findById(task.getSprintId()));
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Task with Id=%s : {}", id, taskService.findById(id));
         return "single-task";

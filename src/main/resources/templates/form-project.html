@@ -22,11 +22,13 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input th:value="${project.description}" id="projectDescriptionId" name="description"
-                                   type="text" min="10"
-                                   max="2500"
-                                   class="form-control"
-                                   placeholder="Description"/>
+                            <textarea th:value="${project.description}" id="projectDescriptionId" name="description"
+                                      type="text" min="10"
+                                      max="2500"
+                                      class="form-control"
+                                      placeholder="Description"
+                                      rows="5"
+                                      style="height:100%;"></textarea>
                             <label for="projectDescriptionId">Description</label>
                         </div>
 
