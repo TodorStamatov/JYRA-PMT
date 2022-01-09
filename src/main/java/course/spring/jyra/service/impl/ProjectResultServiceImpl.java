@@ -4,6 +4,7 @@ import course.spring.jyra.dao.ProjectRepository;
 import course.spring.jyra.dao.ProjectResultRepository;
 import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.exception.ExistingEntityException;
 import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.Project;
 import course.spring.jyra.model.ProjectResult;
@@ -50,6 +51,10 @@ public class ProjectResultServiceImpl implements ProjectResultService {
         }
 
         Project project = projectRepository.findById(projectResult.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", (projectResult.getProjectId()))));
+
+        if (project.getCurrentSprintId() != null) {
+            throw new ExistingEntityException("Project result cannot be created because not all sprints in the project are completed.");
+        }
 
         projectResult.setId(null);
         project.getPreviousSprintResultsIds().forEach(sprintResultId -> projectResult.getSprintResultListIds().add(sprintResultId));
