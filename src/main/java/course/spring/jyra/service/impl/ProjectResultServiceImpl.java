@@ -2,7 +2,9 @@ package course.spring.jyra.service.impl;
 
 import course.spring.jyra.dao.ProjectRepository;
 import course.spring.jyra.dao.ProjectResultRepository;
+import course.spring.jyra.dao.UserRepository;
 import course.spring.jyra.exception.EntityNotFoundException;
+import course.spring.jyra.model.ProductOwner;
 import course.spring.jyra.model.Project;
 import course.spring.jyra.model.ProjectResult;
 import course.spring.jyra.service.ProjectResultService;
@@ -19,11 +21,13 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ProjectResultServiceImpl implements ProjectResultService {
     private final ProjectResultRepository projectResultRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProjectResultServiceImpl(ProjectResultRepository projectResultRepository, ProjectRepository projectRepository) {
+    public ProjectResultServiceImpl(ProjectResultRepository projectResultRepository, ProjectRepository projectRepository, UserRepository userRepository) {
         this.projectResultRepository = projectResultRepository;
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -52,7 +56,17 @@ public class ProjectResultServiceImpl implements ProjectResultService {
         projectResult.setCreated(LocalDateTime.now());
         projectResult.setModified(LocalDateTime.now());
         calculateDuration(projectResult, project);
-        return projectResultRepository.insert(projectResult);
+
+        ProjectResult updated = projectResultRepository.insert(projectResult);
+
+        project.setProjectResultId(updated.getId());
+        projectRepository.save(project);
+
+        ProductOwner po = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found.", (project.getOwnerId()))));
+        po.getCompletedProjectResultsIds().add(updated.getId());
+        userRepository.save(po);
+
+        return updated;
     }
 
     @Override
@@ -79,6 +93,15 @@ public class ProjectResultServiceImpl implements ProjectResultService {
     public ProjectResult deleteById(String id) {
         ProjectResult oldProjectResult = findById(id);
         projectResultRepository.deleteById(id);
+
+        Project project = projectRepository.findById(oldProjectResult.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", (oldProjectResult.getProjectId()))));
+        project.setProjectResultId(null);
+        projectRepository.save(project);
+
+        ProductOwner po = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found.", (project.getOwnerId()))));
+        po.getCompletedProjectResultsIds().remove(oldProjectResult.getId());
+        userRepository.save(po);
+
         return oldProjectResult;
     }
 
