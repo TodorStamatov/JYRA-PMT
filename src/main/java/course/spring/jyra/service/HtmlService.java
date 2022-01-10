@@ -1,5 +1,5 @@
 package course.spring.jyra.service;
 
 public interface HtmlService {
-    String markdownToHtml(String html);
+    String markdownToHtml(String markdown);
 }
