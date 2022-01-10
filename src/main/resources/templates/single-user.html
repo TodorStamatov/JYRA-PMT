@@ -113,7 +113,9 @@
                             <td>
                                 <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.title}"></a>
                             </td>
-                            <td th:text="${project.description}">Description not found</td>
+                            <td>
+                                <div th:utext="${htmlService.markdownToHtml(project.description)}"></div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

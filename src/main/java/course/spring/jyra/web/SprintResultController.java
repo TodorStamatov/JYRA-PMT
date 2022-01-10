@@ -24,6 +24,7 @@ public class SprintResultController {
     private final TaskService taskService;
     private final UserService userService;
     private final BoardService boardService;
+    private final HtmlService htmlService;
 
     @Autowired
     public SprintResultController(SprintResultService sprintResultService, SprintService sprintService, TaskResultService taskResultService, TaskService taskService, UserService userService, BoardService boardService) {
@@ -33,6 +34,7 @@ public class SprintResultController {
         this.taskService = taskService;
         this.userService = userService;
         this.boardService = boardService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -64,6 +66,7 @@ public class SprintResultController {
         model.addAttribute("taskResults", taskResultsList);
         model.addAttribute("taskMap", taskMap);
         model.addAttribute("userMap", userMap);
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Sprint result: {}", sprintResultService.findBySprintId(sprintId));
         return "single-sprint-result";

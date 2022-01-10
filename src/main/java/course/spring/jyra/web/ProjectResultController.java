@@ -1,10 +1,7 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.*;
-import course.spring.jyra.service.ProjectResultService;
-import course.spring.jyra.service.ProjectService;
-import course.spring.jyra.service.SprintResultService;
-import course.spring.jyra.service.SprintService;
+import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,13 +21,15 @@ public class ProjectResultController {
     private final ProjectService projectService;
     private final SprintResultService sprintResultService;
     private final SprintService sprintService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService, ProjectService projectService1, SprintResultService sprintResultService, SprintService sprintService) {
+    public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService, ProjectService projectService1, SprintResultService sprintResultService, SprintService sprintService, HtmlService htmlService) {
         this.projectResultService = projectResultService;
         this.projectService = projectService1;
         this.sprintResultService = sprintResultService;
         this.sprintService = sprintService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -56,6 +55,7 @@ public class ProjectResultController {
         model.addAttribute("project", projectService.findById(projectResult.getProjectId()));
         model.addAttribute("sprintResults", sprintResultsList);
         model.addAttribute("map", map);
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Result of Project with ID=%s: {}", projectId, projectResultService.findByProject(projectId));
         return "single-project-result";

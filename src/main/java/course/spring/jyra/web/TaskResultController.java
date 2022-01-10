@@ -20,12 +20,14 @@ public class TaskResultController {
     private final TaskResultService taskResultService;
     private final TaskService taskService;
     private final UserService userService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public TaskResultController(TaskResultService taskResultService, TaskService taskService, UserService userService) {
+    public TaskResultController(TaskResultService taskResultService, TaskService taskService, UserService userService, HtmlService htmlService) {
         this.taskResultService = taskResultService;
         this.taskService = taskService;
         this.userService = userService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -52,6 +54,7 @@ public class TaskResultController {
         model.addAttribute("taskResult", taskResult);
         model.addAttribute("approver", userService.findById(taskResult.getVerifiedById()));
         model.addAttribute("task", taskService.findById(taskResult.getTaskId()));
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Result of task with Id:%s {}", id, taskResultService.findAll());
         return "single-task-result";
