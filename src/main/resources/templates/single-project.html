@@ -28,7 +28,7 @@
 
             <div class="row" style="text-align: center">
                 <h3>Description:</h3>
-                <p th:text="${project.description}"></p>
+                <div th:utext="${htmlService.markdownToHtml(project.description)}"></div>
                 <h4>Start date:</h4>
                 <p th:text="${T(course.spring.jyra.utils.DateConverter).convertDate(project.startDate)}"></p>
             </div>

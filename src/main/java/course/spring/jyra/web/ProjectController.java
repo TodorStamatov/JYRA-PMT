@@ -24,15 +24,17 @@ public class ProjectController {
     private final UserService userService;
     private final SprintService sprintService;
     private final BoardService boardService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, TaskService taskService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService) {
+    public ProjectController(ProjectService projectService, TaskService taskService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService, HtmlService htmlService) {
         this.projectService = projectService;
         this.taskService = taskService;
         this.sprintResultService = sprintResultService;
         this.userService = userService;
         this.sprintService = sprintService;
         this.boardService = boardService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -42,6 +44,7 @@ public class ProjectController {
 
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("map", map);
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Projects: {}", projectService.findAll());
         return "all-projects";
@@ -80,6 +83,7 @@ public class ProjectController {
         model.addAttribute("project", project);
         model.addAttribute("owner", userService.findById(project.getOwnerId()));
         model.addAttribute("developers", project.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList()));
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
         return "single-project";
