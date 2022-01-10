@@ -27,7 +27,7 @@ public class SprintResultController {
     private final HtmlService htmlService;
 
     @Autowired
-    public SprintResultController(SprintResultService sprintResultService, SprintService sprintService, TaskResultService taskResultService, TaskService taskService, UserService userService, BoardService boardService) {
+    public SprintResultController(SprintResultService sprintResultService, SprintService sprintService, TaskResultService taskResultService, TaskService taskService, UserService userService, BoardService boardService, HtmlService htmlService) {
         this.sprintResultService = sprintResultService;
         this.sprintService = sprintService;
         this.taskResultService = taskResultService;

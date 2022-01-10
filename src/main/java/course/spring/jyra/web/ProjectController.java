@@ -30,7 +30,7 @@ public class ProjectController {
     private final HtmlService htmlService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, ProjectResultService projectResultService, TaskService taskService, TaskResultService taskResultService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService) {
+    public ProjectController(ProjectService projectService, ProjectResultService projectResultService, TaskService taskService, TaskResultService taskResultService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService, HtmlService htmlService) {
         this.projectService = projectService;
         this.projectResultService = projectResultService;
         this.taskService = taskService;

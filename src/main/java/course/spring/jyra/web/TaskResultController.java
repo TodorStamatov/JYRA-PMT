@@ -1,6 +1,7 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.*;
+import course.spring.jyra.service.HtmlService;
 import course.spring.jyra.service.TaskResultService;
 import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
