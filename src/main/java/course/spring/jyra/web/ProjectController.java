@@ -1,5 +1,6 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProjectController {
     private final ProjectService projectService;
+    private final ProjectResultService projectResultService;
     private final TaskService taskService;
+    private final TaskResultService taskResultService;
     private final SprintResultService sprintResultService;
     private final UserService userService;
     private final SprintService sprintService;
@@ -27,9 +30,11 @@ public class ProjectController {
     private final HtmlService htmlService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, TaskService taskService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService, HtmlService htmlService) {
+    public ProjectController(ProjectService projectService, ProjectResultService projectResultService, TaskService taskService, TaskResultService taskResultService, SprintResultService sprintResultService, UserService userService, SprintService sprintService, BoardService boardService, HtmlService htmlService) {
         this.projectService = projectService;
+        this.projectResultService = projectResultService;
         this.taskService = taskService;
+        this.taskResultService = taskResultService;
         this.sprintResultService = sprintResultService;
         this.userService = userService;
         this.sprintService = sprintService;
@@ -65,14 +70,6 @@ public class ProjectController {
     public String addProject(@ModelAttribute Project project) {
         projectService.create(project);
         log.debug("POST: Project: {}", project);
-        return "redirect:/projects";
-    }
-
-    @DeleteMapping("/delete")
-    public String deleteProject(@RequestParam String projectId) {
-        Project project = projectService.findById(projectId);
-        log.debug("DELETE: Project: {}", project);
-        projectService.deleteById(projectId);
         return "redirect:/projects";
     }
 
@@ -173,5 +170,38 @@ public class ProjectController {
 
         log.debug("GET: Projects by search: {}", projectService.findBySearch(keywords));
         return "all-projects";
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteProject(@RequestParam String projectId) {
+        Project project = projectService.findById(projectId);
+        log.debug("DELETE: Project: {}", project);
+
+        // prepare the project for deletion
+        if (project.getProjectResultId() != null) {
+            projectResultService.deleteById(project.getProjectResultId());
+        }
+
+        if (project.getCurrentSprintId() != null) {
+            sprintService.deleteById(project.getCurrentSprintId());
+            Board board = boardService.findAll().stream().filter(b -> b.getSprintId().equals(project.getCurrentSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", project.getCurrentSprintId())));
+            boardService.deleteById(board.getId());
+        }
+
+        for (String sprintResultId : project.getPreviousSprintResultsIds()) {
+            String sprintId = sprintResultService.findById(sprintResultId).getSprintId();
+            sprintResultService.deleteById(sprintResultId);
+            sprintService.deleteById(sprintId);
+        }
+
+        for (String taskId : project.getTasksBacklogIds()) {
+            if (taskService.findById(taskId).getTaskResultId() != null) {
+                taskResultService.deleteById(taskService.findById(taskId).getTaskResultId());
+            }
+            taskService.deleteById(taskId);
+        }
+
+        projectService.deleteById(projectId);
+        return "redirect:/projects";
     }
 }

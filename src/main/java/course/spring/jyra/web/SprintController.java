@@ -1,10 +1,8 @@
 package course.spring.jyra.web;
 
+import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.model.*;
-import course.spring.jyra.service.ProjectService;
-import course.spring.jyra.service.SprintService;
-import course.spring.jyra.service.TaskService;
-import course.spring.jyra.service.UserService;
+import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,13 +21,15 @@ public class SprintController {
     private final UserService userService;
     private final TaskService taskService;
     private final ProjectService projectService;
+    private final BoardService boardService;
 
     @Autowired
-    public SprintController(SprintService sprintService, UserService userService, TaskService taskService, ProjectService projectService) {
+    public SprintController(SprintService sprintService, UserService userService, TaskService taskService, ProjectService projectService, BoardService boardService) {
         this.sprintService = sprintService;
         this.userService = userService;
         this.taskService = taskService;
         this.projectService = projectService;
+        this.boardService = boardService;
     }
 
     @GetMapping
@@ -62,6 +62,8 @@ public class SprintController {
 
     @PostMapping("/create")
     public String addSprint(@ModelAttribute Sprint sprint) {
+        Board board = Board.builder().projectId(sprint.getProjectId()).build();
+        boardService.create(board);
         sprintService.create(sprint);
         log.debug("POST: Sprint: {}", sprint);
         return "redirect:/sprints";
@@ -70,6 +72,10 @@ public class SprintController {
     @DeleteMapping("/delete")
     public String deleteSprint(@RequestParam String sprintId) {
         Sprint sprint = sprintService.findById(sprintId);
+
+        Board board = boardService.findAll().stream().filter(b -> b.getProjectId().equals(sprint.getProjectId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for project with ID=%s not found.", sprint.getProjectId())));
+        boardService.deleteById(board.getId());
+
         log.debug("DELETE: Sprint: {}", sprint);
         sprintService.deleteById(sprintId);
         return "redirect:/sprints";

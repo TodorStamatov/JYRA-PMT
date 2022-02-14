@@ -1,6 +1,5 @@
 package course.spring.jyra.model;
 
-import course.spring.jyra.service.ProjectService;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
