@@ -33,7 +33,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
                 <th scope="col">Owner</th>
-                <th scope="col"></th>
+<!--                <th scope="col"></th>-->
             </tr>
             </thead>
             <tbody>
@@ -47,12 +47,13 @@
                 <td>
                     <a th:href="@{'/users/' + ${project.ownerId}}" th:text="'@' + ${map.get(project).username}"></a>
                 </td>
-                <td class="align-middle w-25" style="text-align: right">
-                    <form action="#" th:action="@{'/projects/delete'(projectId=${project.id})}" th:method="delete">
-                        <a class="btn btn-primary" th:href="@{/projects/edit(projectId=${project.id})}" role="button">Edit</a>
-                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
-                    </form>
-                </td>
+                <!--                TODO: These should be moved to the settings page of each project-->
+                <!--                <td class="align-middle w-25" style="text-align: right">-->
+                <!--                    <form action="#" th:action="@{'/projects/delete'(projectId=${project.id})}" th:method="delete">-->
+                <!--                        <a class="btn btn-primary" th:href="@{/projects/edit(projectId=${project.id})}" role="button">Edit</a>-->
+                <!--                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>-->
+                <!--                    </form>-->
+                <!--                </td>-->
             </tr>
             </tbody>
         </table>
