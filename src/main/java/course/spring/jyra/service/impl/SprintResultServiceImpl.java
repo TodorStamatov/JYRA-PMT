@@ -101,7 +101,6 @@ public class SprintResultServiceImpl implements SprintResultService {
         // delete reference from project
         Project project = projectRepository.findById(sprint.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", sprint.getProjectId())));
         project.getPreviousSprintResultsIds().remove(oldSprintResult.getId());
-        project.setCurrentSprintId(sprint.getId());
         projectRepository.save(project);
 
         return oldSprintResult;

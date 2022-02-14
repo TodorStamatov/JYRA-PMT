@@ -65,7 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 //        update cross-references
         ProductOwner productOwner = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", project.getOwnerId())));
-        productOwner.getProjectsIds().add(project.getId());
+        productOwner.getProjectsIds().add(updated.getId());
         userRepository.save(productOwner);
 
         // I don't update board here simply because a newly created project could not have active sprint and respectively board
@@ -99,14 +99,14 @@ public class ProjectServiceImpl implements ProjectService {
         if (!oldProject.getOwnerId().equals(project.getOwnerId())) {
 //        update cross-references (NOT TESTED)
             ProductOwner productOwner = (ProductOwner) userRepository.findById(project.getOwnerId()).orElseThrow(() -> new EntityNotFoundException(String.format("User with ID=%s not found", project.getOwnerId())));
-            productOwner.getProjectsIds().add(project.getId());
+            productOwner.getProjectsIds().add(updated.getId());
             userRepository.save(productOwner);
         }
 
         // if there is current sprint there should be a board for this spring
         if (project.getCurrentSprintId() != null) {
             Board board = boardRepository.findAll().stream().filter(b -> b.getSprintId().equals(project.getCurrentSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", project.getCurrentSprintId())));
-            board.setProjectId(project.getId());
+            board.setProjectId(updated.getId());
             boardRepository.save(board);
         }
 
