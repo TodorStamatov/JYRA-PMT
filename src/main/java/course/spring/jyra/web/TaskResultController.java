@@ -7,6 +7,8 @@ import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +54,16 @@ public class TaskResultController {
     public String getTaskResultByTaskId(Model model, @PathVariable("taskId") String id) {
         TaskResult taskResult = taskResultService.findByTaskId(id);
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canEditTaskResult = false;
+
+        if (taskService.findById(id).getDevelopersAssignedIds().contains(editor.getId()) ||
+                taskService.findById(id).getAddedById().equals(editor.getId())) {
+            canEditTaskResult = true;
+        }
+
+        model.addAttribute("canEditTaskResult", canEditTaskResult);
         model.addAttribute("taskResult", taskResult);
         model.addAttribute("approver", userService.findById(taskResult.getVerifiedById()));
         model.addAttribute("task", taskService.findById(taskResult.getTaskId()));

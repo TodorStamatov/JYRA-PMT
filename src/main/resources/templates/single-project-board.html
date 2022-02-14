@@ -19,8 +19,15 @@
                     </div>
 
                     <!--                    TODO: Alling to right-->
-                    <a class="btn btn-primary d-inline-block"
-                       th:href="@{/sprintresults/create(sprintId = ${sprint.id})}" role="button">Complete Sprint</a>
+                    <form action="#" th:action="@{'/sprints/delete'(sprintId=${sprint.id})}" th:method="delete">
+                        <a class="btn btn-primary d-inline-block"
+                           th:href="@{/sprintresults/create(sprintId = ${sprint.id})}" role="button"
+                           th:if="${canEditSprint == true}">Complete Sprint</a>
+                        <a class="btn btn-primary" th:href="@{/sprint/edit(sprintId=${sprint.id})}"
+                           role="button" th:if="${canEditSprint == true}">Edit</a>
+                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"
+                               th:if="${canEditSprint == true}"/>
+                    </form>
                 </div>
                 <div class="row">
                     <div class="col-md-6">

@@ -11,7 +11,8 @@
             <h3>Projects</h3>
         </div>
 
-        <a class="btn btn-primary d-inline-block m-3" th:href="@{/projects/create}" role="button">Create project</a>
+        <a class="btn btn-primary d-inline-block m-3" th:href="@{/projects/create}" role="button"
+           th:if="${canCreateProject == true}">Create project</a>
     </div>
 
     <div class="row m-3 w-25 h-25">

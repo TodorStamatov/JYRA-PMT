@@ -7,24 +7,29 @@
 
 <div class="container-fluid mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-3 border">
+        <div class="col-md-2 border">
             <a th:href="@{'/projects/' + ${projectResult.projectId}}" th:text="${project.title}"></a>
         </div>
-        <div class="col-md-3 border">
+        <div class="col-md-2 border">
             <p th:text="'End date: ' + ${T(course.spring.jyra.utils.DateConverter).convertDate(projectResult.endDate)}"></p>
         </div>
-        <div class="col-md-3 border">
+        <div class="col-md-2 border">
             <p th:text="'Duration: ' + ${projectResult.duration}"></p>
+        </div>
+        <div class="col-md-2 border" style="text-align: right">
+            <a class="btn btn-primary"
+               th:href="@{/projectresults/edit(projectResultId=${projectResult.id})}" role="button"
+               th:if="${canEditProjectResult == true}">Edit</a>
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-9 border">
+        <div class="col-md-8 border">
             <h5>Description</h5>
             <div th:utext="${htmlService.markdownToHtml(projectResult.resultsDescription)}"></div>
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-9 border">
+        <div class="col-md-8 border">
             <table class="table table-striped table-hover">
                 <caption>List of sprint results in the current project</caption>
                 <thead class="table-dark">

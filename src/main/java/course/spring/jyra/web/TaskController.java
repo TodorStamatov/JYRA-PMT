@@ -4,6 +4,8 @@ import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +79,15 @@ public class TaskController {
     public String getTaskById(Model model, @PathVariable("taskId") String id) {
         Task task = taskService.findById(id);
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canCreateResult = false;
+
+        if (taskService.findById(id).getDevelopersAssignedIds().contains(editor.getId()) || taskService.findById(id).getAddedById().equals(editor.getId())) {
+            canCreateResult = true;
+        }
+
+        model.addAttribute("canCreateResult", canCreateResult);
         model.addAttribute("task", task);
         model.addAttribute("developersAssigned", task.getDevelopersAssignedIds().stream().map(userService::findById).collect(Collectors.toList()));
         model.addAttribute("reporter", userService.findById(task.getAddedById()));

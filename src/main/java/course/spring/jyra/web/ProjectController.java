@@ -5,6 +5,8 @@ import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,15 @@ public class ProjectController {
         Map<Project, User> map = new HashMap<>();
         projectService.findAll().forEach(project -> map.put(project, userService.findById(project.getOwnerId())));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canCreateProject = false;
+
+        if (editor instanceof Administrator || editor instanceof ProductOwner) {
+            canCreateProject = true;
+        }
+
+        model.addAttribute("canCreateProject", canCreateProject);
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("map", map);
         model.addAttribute("htmlService", htmlService);
@@ -76,10 +87,18 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public String getProjectById(Model model, @PathVariable("projectId") String id) {
         Project project = projectService.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canFinishProject = false;
+
+        if (project.getOwnerId().equals(editor.getId())) {
+            canFinishProject = true;
+        }
 
         model.addAttribute("project", project);
         model.addAttribute("owner", userService.findById(project.getOwnerId()));
         model.addAttribute("developers", project.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList()));
+        model.addAttribute("canFinishProject", canFinishProject);
         model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
@@ -97,6 +116,21 @@ public class ProjectController {
         List<Task> done = sprint.getTasksIds().stream().map(taskService::findById).filter(task -> task.getStatus().equals(TaskStatus.DONE)).collect(Collectors.toList());
         List<User> devs = sprint.getDevelopersIds().stream().map(userService::findById).collect(Collectors.toList());
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canFinishProject = false;
+        boolean canEditSprint = false;
+
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
+            canFinishProject = true;
+        }
+
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            canEditSprint = true;
+        }
+
+        model.addAttribute("canFinishProject", canFinishProject);
+        model.addAttribute("canEditSprint", canEditSprint);
         model.addAttribute("sprint", sprint);
         model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("owner", userService.findById(sprint.getOwnerId()));
@@ -110,33 +144,57 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/backlog")
-    public String getProjectBacklog(Model model, @PathVariable("projectId") String id) {
+    public String getProjectBacklog(Model model, @PathVariable String projectId) {
         List<Task> taskBacklog = new ArrayList<>();
-        projectService.findById(id).getTasksBacklogIds().forEach(taskId -> taskBacklog.add(taskService.findById(taskId)));
+        projectService.findById(projectId).getTasksBacklogIds().forEach(taskId -> taskBacklog.add(taskService.findById(taskId)));
 
         Map<Task, User> map = new HashMap<>();
         taskBacklog.forEach(task -> map.put(task, userService.findById(task.getAddedById())));
 
-        model.addAttribute("project", projectService.findById(id));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canManageSprintsAndTasks = false;
+
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            canManageSprintsAndTasks = true;
+        }
+
+        model.addAttribute("canManageSprintsAndTasks", canManageSprintsAndTasks);
+        model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("backlog", taskBacklog);
         model.addAttribute("map", map);
 
-        log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
+        log.debug("GET: Project with Id=%s : {}", projectId, projectService.findById(projectId));
         return "single-project-backlog";
     }
 
     @GetMapping("/{projectId}/sprint-results")
-    public String getPrevSprintResults(Model model, @PathVariable("projectId") String id) {
+    public String getPrevSprintResults(Model model, @PathVariable String projectId) {
         List<SprintResult> sprintResultsList = new ArrayList<>();
-        projectService.findById(id).getPreviousSprintResultsIds().forEach(sprintId -> sprintResultsList.add(sprintResultService.findById(sprintId)));
+        projectService.findById(projectId).getPreviousSprintResultsIds().forEach(sprintId -> sprintResultsList.add(sprintResultService.findById(sprintId)));
         Map<SprintResult, Sprint> map = new HashMap<>();
         sprintResultsList.forEach(sprintResult -> map.put(sprintResult, sprintService.findById(sprintResult.getSprintId())));
 
-        model.addAttribute("project", projectService.findById(id));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canFinishProject = false;
+        boolean canEditSprintResults = false;
+
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId())) {
+            canFinishProject = true;
+        }
+
+        if (projectService.findById(projectId).getOwnerId().equals(editor.getId()) || projectService.findById(projectId).getDevelopersIds().contains(editor.getId())) {
+            canEditSprintResults = true;
+        }
+
+        model.addAttribute("canEditSprintResults", canEditSprintResults);
+        model.addAttribute("canFinishProject", canFinishProject);
+        model.addAttribute("project", projectService.findById(projectId));
         model.addAttribute("sprintResults", sprintResultsList);
         model.addAttribute("map", map);
 
-        log.debug("GET: Project with Id=%s : {}", id, projectService.findById(id));
+        log.debug("GET: Project with Id=%s : {}", projectId, projectService.findById(projectId));
         return "single-project-sprint-results";
     }
 
@@ -165,6 +223,15 @@ public class ProjectController {
         Map<Project, User> map = new HashMap<>();
         projectService.findBySearch(keywords).forEach(project -> map.put(project, userService.findById(project.getOwnerId())));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User editor = userService.findByUsername(auth.getName());
+        boolean canCreateProject = false;
+
+        if (editor instanceof Administrator || editor instanceof ProductOwner) {
+            canCreateProject = true;
+        }
+
+        model.addAttribute("canCreateProject", canCreateProject);
         model.addAttribute("projects", projectService.findBySearch(keywords));
         model.addAttribute("map", map);
 

@@ -41,13 +41,13 @@ public class UserController {
     public String getUsers(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUsername(auth.getName());
-        String userType = "";
+        boolean isAdmin = false;
         if (user instanceof Administrator) {
-            userType = "ADMIN";
+            isAdmin = true;
             Administrator admin = (Administrator) user;
             model.addAttribute("user", admin);
         }
-        model.addAttribute("userType", userType);
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("users", userService.findAll());
         log.debug("GET: Users: {}", userService.findAll());
         return "all-users";
@@ -66,7 +66,7 @@ public class UserController {
         User user = userService.findById(id);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String canEdit = "";
+        boolean canEdit = false;
         String userType = "";
         if (user instanceof Developer) {
             userType = "DEV";
@@ -110,7 +110,7 @@ public class UserController {
         model.addAttribute("userType", userType);
 
         if (editor.getId().equals(user.getId()) || editor instanceof Administrator) {
-            canEdit = "Yes";
+            canEdit = true;
         }
 
         model.addAttribute("canEdit", canEdit);
@@ -124,13 +124,18 @@ public class UserController {
     public String getEditUser(Model model, @RequestParam String userId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User editor = userService.findByUsername(auth.getName());
-        String editorType = "";
+        boolean isAdmin = false;
+        boolean isProfileOwner = false;
         if (editor instanceof Administrator) {
-            editorType = "ADMIN";
+            isAdmin = true;
+        }
+        if (editor.getId().equals(userId)) {
+            isProfileOwner = true;
         }
         User user = userService.findById(userId);
         model.addAttribute("user", user);
-        model.addAttribute("editorType", editorType);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isProfileOwner", isProfileOwner);
         return "form-user";
     }
 
