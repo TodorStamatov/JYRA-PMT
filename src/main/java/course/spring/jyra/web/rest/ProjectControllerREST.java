@@ -2,9 +2,10 @@ package course.spring.jyra.web.rest;
 
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
+import course.spring.jyra.model.Board;
 import course.spring.jyra.model.ErrorResponse;
 import course.spring.jyra.model.Project;
-import course.spring.jyra.service.ProjectService;
+import course.spring.jyra.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,22 @@ import java.util.List;
 @RequestMapping("/api/projects")
 public class ProjectControllerREST {
     private final ProjectService projectService;
+    private final ProjectResultService projectResultService;
+    private final SprintService sprintService;
+    private final BoardService boardService;
+    private final TaskService taskService;
+    private final TaskResultService taskResultService;
+    private final SprintResultService sprintResultService;
 
     @Autowired
-    public ProjectControllerREST(ProjectService projectService) {
+    public ProjectControllerREST(ProjectService projectService, ProjectResultService projectResultService, SprintService sprintService, BoardService boardService, TaskService taskService, TaskResultService taskResultService, SprintResultService sprintResultService) {
         this.projectService = projectService;
+        this.projectResultService = projectResultService;
+        this.sprintService = sprintService;
+        this.boardService = boardService;
+        this.taskService = taskService;
+        this.taskResultService = taskResultService;
+        this.sprintResultService = sprintResultService;
     }
 
     @GetMapping
@@ -50,6 +63,32 @@ public class ProjectControllerREST {
 
     @DeleteMapping("/{projectId}")
     public Project deleteProject(@PathVariable String projectId) {
+        Project project = projectService.findById(projectId);
+
+        // prepare the project for deletion
+        if (project.getProjectResultId() != null) {
+            projectResultService.deleteById(project.getProjectResultId());
+        }
+
+        if (project.getCurrentSprintId() != null) {
+            sprintService.deleteById(project.getCurrentSprintId());
+            Board board = boardService.findAll().stream().filter(b -> b.getSprintId().equals(project.getCurrentSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", project.getCurrentSprintId())));
+            boardService.deleteById(board.getId());
+        }
+
+        for (String sprintResultId : project.getPreviousSprintResultsIds()) {
+            String sprintId = sprintResultService.findById(sprintResultId).getSprintId();
+            sprintResultService.deleteById(sprintResultId);
+            sprintService.deleteById(sprintId);
+        }
+
+        for (String taskId : project.getTasksBacklogIds()) {
+            if (taskService.findById(taskId).getTaskResultId() != null) {
+                taskResultService.deleteById(taskService.findById(taskId).getTaskResultId());
+            }
+            taskService.deleteById(taskId);
+        }
+
         return projectService.deleteById(projectId);
     }
 
