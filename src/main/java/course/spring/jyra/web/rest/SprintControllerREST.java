@@ -3,9 +3,10 @@ package course.spring.jyra.web.rest;
 
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
+import course.spring.jyra.model.Board;
 import course.spring.jyra.model.ErrorResponse;
-import course.spring.jyra.model.Project;
 import course.spring.jyra.model.Sprint;
+import course.spring.jyra.service.BoardService;
 import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,12 @@ import java.util.List;
 @RequestMapping("/api/sprints")
 public class SprintControllerREST {
     private final SprintService sprintService;
+    private final BoardService boardService;
 
     @Autowired
-    public SprintControllerREST(SprintService sprintService) {
+    public SprintControllerREST(SprintService sprintService, BoardService boardService) {
         this.sprintService = sprintService;
+        this.boardService = boardService;
     }
 
     @GetMapping
@@ -37,6 +40,8 @@ public class SprintControllerREST {
 
     @PostMapping
     public ResponseEntity<Sprint> addSprint(@RequestBody Sprint sprint) {
+        Board board = Board.builder().projectId(sprint.getProjectId()).build();
+        boardService.create(board);
         Sprint created = sprintService.create(sprint);
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
@@ -52,6 +57,11 @@ public class SprintControllerREST {
 
     @DeleteMapping("/{sprintId}")
     public Sprint deleteSprint(@PathVariable String sprintId) {
+        Sprint sprint = sprintService.findById(sprintId);
+
+        Board board = boardService.findAll().stream().filter(b -> b.getProjectId().equals(sprint.getProjectId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for project with ID=%s not found.", sprint.getProjectId())));
+        boardService.deleteById(board.getId());
+
         return sprintService.deleteById(sprintId);
     }
 

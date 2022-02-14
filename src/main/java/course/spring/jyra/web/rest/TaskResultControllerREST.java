@@ -4,7 +4,9 @@ package course.spring.jyra.web.rest;
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
 import course.spring.jyra.model.ErrorResponse;
+import course.spring.jyra.model.Task;
 import course.spring.jyra.model.TaskResult;
+import course.spring.jyra.model.TaskStatus;
 import course.spring.jyra.service.TaskResultService;
 import course.spring.jyra.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,11 @@ public class TaskResultControllerREST {
         if (!taskId.equals(taskResult.getTaskId()))
             throw new InvalidClientDataException(String.format("Task ID %s from URL doesn't match ID %s in Request body", taskId, taskResult.getTaskId()));
         TaskResult created = taskResultService.create(taskResult);
+
+        Task task = taskService.findById(taskResult.getTaskId());
+        task.setStatus(TaskStatus.DONE);
+        taskService.update(task);
+
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
                         .pathSegment("{taskId}").buildAndExpand(created.getTaskId()).toUri()).body(created);
@@ -57,6 +64,11 @@ public class TaskResultControllerREST {
     @DeleteMapping("/{taskId}/task-result")
     public TaskResult deleteTaskResult(@PathVariable String taskId) {
         String deletedId = taskService.findById(taskId).getTaskResultId();
+
+        Task task = taskService.findById(taskId);
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        taskService.update(task);
+
         return taskResultService.deleteById(deletedId);
     }
 
