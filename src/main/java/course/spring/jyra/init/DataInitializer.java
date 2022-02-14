@@ -60,7 +60,8 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
+        /*
+        TODO: FIX INIT
         if (userService.count() == 0) {
             defaultAdmins = defaultAdmins.stream().map(userService::create).collect(Collectors.toList());
             defaultDevs = defaultDevs.stream().map(userService::create).map(user -> (Developer) user).collect(Collectors.toList());
@@ -289,5 +290,6 @@ public class DataInitializer implements ApplicationRunner {
             productOwner.getCompletedProjectResultsIds().add(defaultProjectResult.getId());
             userService.update(productOwner);
         }
+         */
     }
 }
