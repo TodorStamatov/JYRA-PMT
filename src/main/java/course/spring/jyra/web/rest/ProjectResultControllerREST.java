@@ -32,7 +32,7 @@ public class ProjectResultControllerREST {
     }
 
     @GetMapping("/{projectId}/project-result")
-    public ProjectResult getResultsByProjectId(@PathVariable String projectId) {
+    public ProjectResult getResultByProjectId(@PathVariable String projectId) {
         return projectResultService.findByProject(projectId);
     }
 
@@ -47,7 +47,7 @@ public class ProjectResultControllerREST {
     }
 
     @PutMapping("/{projectId}/project-result")
-    public ProjectResult updateProject(@PathVariable String projectId, @RequestBody ProjectResult projectResult) {
+    public ProjectResult updateProjectResult(@PathVariable String projectId, @RequestBody ProjectResult projectResult) {
         if (!projectId.equals(projectResult.getProjectId()))
             throw new InvalidClientDataException(String.format("Project ID %s from URL doesn't match ID %s in Request body", projectId, projectResult.getProjectId()));
         return projectResultService.update(projectResult);

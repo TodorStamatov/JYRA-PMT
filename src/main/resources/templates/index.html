@@ -24,6 +24,11 @@
             <a th:href="@{'/users/61db43c535b2c9536ec598dd'}" th:text="'Bogdan Kosev'"></a>
             <a th:href="@{'/users/61db43c535b2c9536ec598de'}" th:text="'Todor Stamatov'"></a>
         </div>
+        <hr/>
+        <div th:if="${loggedIn == false}">
+            <a class="btn btn-primary d-inline-block m-3" th:href="@{/login}" role="button">Login</a>
+            <a class="btn btn-primary d-inline-block m-3" th:href="@{/register}" role="button">Register</a>
+        </div>
     </div>
 
 </div>

@@ -9,6 +9,8 @@ import course.spring.jyra.model.Role;
 import course.spring.jyra.model.User;
 import course.spring.jyra.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +41,14 @@ public class AuthenticationController {
     }
 
     @GetMapping("/index")
-    public String getIndex() {
+    public String getIndex(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        boolean loggedIn = false;
+        if (name != "anonymousUser") {
+            loggedIn = true;
+        }
+        model.addAttribute("loggedIn", loggedIn);
         return "index";
     }
 
