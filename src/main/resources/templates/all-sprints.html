@@ -32,7 +32,7 @@
                 <th scope="col">End date</th>
                 <th scope="col">Duration</th>
                 <th scope="col">Owner</th>
-                <th scope="col"></th>
+<!--                <th scope="col"></th>-->
             </tr>
             </thead>
             <tbody>
@@ -55,13 +55,13 @@
                 <td style="text-align: center">
                     <a th:href="@{'/users/' + ${sprint.ownerId}}" th:text="'@' + ${map.get(sprint).username}"></a>
                 </td>
-                <td class="align-middle w-25" style="text-align: right">
-                    <form action="#" th:action="@{'/sprints/delete'(sprintId=${sprint.id})}" th:method="delete">
-                        <a class="btn btn-primary" th:href="@{/sprints/edit(sprintId=${sprint.id})}"
-                           role="button">Edit</a>
-                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
-                    </form>
-                </td>
+                <!--                <td class="align-middle w-25" style="text-align: right">-->
+                <!--                    <form action="#" th:action="@{'/sprints/delete'(sprintId=${sprint.id})}" th:method="delete">-->
+                <!--                        <a class="btn btn-primary" th:href="@{/sprints/edit(sprintId=${sprint.id})}"-->
+                <!--                           role="button">Edit</a>-->
+                <!--                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>-->
+                <!--                    </form>-->
+                <!--                </td>-->
             </tr>
             </tbody>
         </table>

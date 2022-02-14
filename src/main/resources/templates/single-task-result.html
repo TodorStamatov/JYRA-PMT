@@ -18,9 +18,13 @@
             <p th:text="'Actual effort: ' + ${taskResult.actualEffort}"></p>
         </div>
         <div class="col-md-2 border" style="text-align: right">
-            <a class="btn btn-primary"
-               th:href="@{/taskresults/edit(taskResultId=${taskResult.id})}" role="button"
-               th:if="${canEditTaskResult == true}">Edit</a>
+            <form action="#" th:if="${canEditTaskResult == true}"
+                  th:action="@{'/taskresults/delete'(taskResultId=${taskResult.id})}"
+                  th:method="delete">
+                <a class="btn btn-primary"
+                   th:href="@{/taskresults/edit(taskResultId=${taskResult.id})}" role="button">Edit</a>
+                <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
+            </form>
         </div>
     </div>
     <div id="taskresult-desc" class="row justify-content-center">

@@ -31,7 +31,7 @@
             <thead class="table-dark">
             <tr style="text-align: center">
                 <th scope="col">Title</th>
-                <th scope="col">Description</th>
+<!--                <th scope="col">Description</th>-->
                 <th scope="col">Owner</th>
 <!--                <th scope="col"></th>-->
             </tr>
@@ -41,9 +41,9 @@
                 <td>
                     <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.title}"></a>
                 </td>
-                <td>
-                    <div th:utext="${htmlService.markdownToHtml(project.description)}"></div>
-                </td>
+                <!--                <td>-->
+                <!--                    <div th:utext="${htmlService.markdownToHtml(project.description)}"></div>-->
+                <!--                </td>-->
                 <td>
                     <a th:href="@{'/users/' + ${project.ownerId}}" th:text="'@' + ${map.get(project).username}"></a>
                 </td>

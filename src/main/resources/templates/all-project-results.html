@@ -21,7 +21,7 @@
                 <th scope="col">Project</th>
                 <th scope="col">End date</th>
                 <th scope="col">Duration</th>
-                <th scope="col"></th>
+<!--                <th scope="col"></th>-->
             </tr>
             </thead>
             <tbody>
@@ -36,14 +36,14 @@
                     not found
                 </td>
                 <td th:text="${projectResult.duration}">Duration not found</td>
-                <td class="align-middle w-25" style="text-align: right">
-                    <form action="#" th:action="@{'/projectresults/delete'(projectResultId=${projectResult.id})}"
-                          th:method="delete">
-                        <a class="btn btn-primary"
-                           th:href="@{/projectresults/edit(projectResultId=${projectResult.id})}" role="button">Edit</a>
-                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
-                    </form>
-                </td>
+                <!--                <td class="align-middle w-25" style="text-align: right">-->
+                <!--                    <form action="#" th:action="@{'/projectresults/delete'(projectResultId=${projectResult.id})}"-->
+                <!--                          th:method="delete">-->
+                <!--                        <a class="btn btn-primary"-->
+                <!--                           th:href="@{/projectresults/edit(projectResultId=${projectResult.id})}" role="button">Edit</a>-->
+                <!--                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>-->
+                <!--                    </form>-->
+                <!--                </td>-->
             </tr>
             </tbody>
         </table>

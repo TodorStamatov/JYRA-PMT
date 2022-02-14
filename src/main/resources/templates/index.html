@@ -5,7 +5,28 @@
 
 <div th:replace="fragments/navbar.html :: navbar"></div>
 
-<h1>Sample Index Page</h1>
+<div class="border border-light p-3 mb-4">
+
+    <div class="grid text-center my-5">
+        <div class="row">
+            <h2>About us</h2>
+        </div>
+        <div class="row">
+            <p>Nowadays as we see a rapid growth in software development,
+                the organizations should be provided with flexible software to manage their teams and projects.
+                The Jyra Project Management Tool provides the ability for users to define and manage new Projects,
+                Sprints and Tasks,
+                as well as to report their progress.</p>
+        </div>
+        <hr/>
+        <div class="row">
+            <h6>Developed by:</h6>
+            <a th:href="@{'/users/61db43c535b2c9536ec598dd'}" th:text="'Bogdan Kosev'"></a>
+            <a th:href="@{'/users/61db43c535b2c9536ec598de'}" th:text="'Todor Stamatov'"></a>
+        </div>
+    </div>
+
+</div>
 
 <script th:replace="fragments/foot.html :: scripts"></script>
 </body>

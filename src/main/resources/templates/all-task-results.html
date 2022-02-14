@@ -21,7 +21,7 @@
                 <th scope="col">Task</th>
                 <th scope="col">Verified by</th>
                 <th scope="col">Actual effort</th>
-                <th scope="col"></th>
+<!--                <th scope="col"></th>-->
             </tr>
             </thead>
             <tbody>
@@ -34,14 +34,14 @@
                        th:text="'@' + ${userMap.get(taskResult).username}"></a>
                 </td>
                 <td th:text="${taskResult.actualEffort}">Actual effort not found</td>
-                <td class="align-middle w-25" style="text-align: right">
-                    <form action="#" th:action="@{'/taskresults/delete'(taskResultId=${taskResult.id})}"
-                          th:method="delete">
-                        <a class="btn btn-primary"
-                           th:href="@{/taskresults/edit(taskResultId=${taskResult.id})}" role="button">Edit</a>
-                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
-                    </form>
-                </td>
+                <!--                <td class="align-middle w-25" style="text-align: right">-->
+                <!--                    <form action="#" th:action="@{'/taskresults/delete'(taskResultId=${taskResult.id})}"-->
+                <!--                          th:method="delete">-->
+                <!--                        <a class="btn btn-primary"-->
+                <!--                           th:href="@{/taskresults/edit(taskResultId=${taskResult.id})}" role="button">Edit</a>-->
+                <!--                        <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>-->
+                <!--                    </form>-->
+                <!--                </td>-->
             </tr>
             </tbody>
         </table>
