@@ -1,10 +1,8 @@
 package course.spring.jyra.service.impl;
 
-import course.spring.jyra.dao.SprintRepository;
-import course.spring.jyra.dao.UserRepository;
+import course.spring.jyra.dao.*;
 import course.spring.jyra.exception.EntityNotFoundException;
-import course.spring.jyra.model.Sprint;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.*;
 import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,12 +20,18 @@ import java.util.List;
 public class SprintServiceImpl implements SprintService {
     private final SprintRepository sprintRepository;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
+    private final TaskRepository taskRepository;
+    private final BoardRepository boardRepository;
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public SprintServiceImpl(SprintRepository sprintRepository, UserRepository userRepository, MongoTemplate mongoTemplate) {
+    public SprintServiceImpl(SprintRepository sprintRepository, UserRepository userRepository, ProjectRepository projectRepository, TaskRepository taskRepository, BoardRepository boardRepository, MongoTemplate mongoTemplate) {
         this.sprintRepository = sprintRepository;
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
+        this.boardRepository = boardRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -59,14 +63,26 @@ public class SprintServiceImpl implements SprintService {
         sprint.setCreated(LocalDateTime.now());
         sprint.setModified(LocalDateTime.now());
         sprint.calculateDuration();
-        return sprintRepository.insert(sprint);
-    }
+        Sprint updated = sprintRepository.insert(sprint);
 
-    @Override
-    public Sprint deleteById(String id) {
-        Sprint oldSprint = findById(id);
-        sprintRepository.deleteById(id);
-        return oldSprint;
+        // add reference to project
+        Project project = projectRepository.findById(sprint.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", sprint.getProjectId())));
+        project.setCurrentSprintId(updated.getId());
+        projectRepository.save(project);
+
+        // add references to tasks
+        for (String taskId : sprint.getTasksIds()) {
+            Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found.", taskId)));
+            task.setSprintId(updated.getId());
+            taskRepository.save(task);
+        }
+
+        // add reference to board
+        Board board = boardRepository.findAll().stream().filter(b -> b.getProjectId().equals(updated.getProjectId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for project with ID=%s not found.", updated.getProjectId())));
+        board.setSprintId(updated.getId());
+        boardRepository.save(board);
+
+        return updated;
     }
 
     @Override
@@ -75,12 +91,21 @@ public class SprintServiceImpl implements SprintService {
 
         sprint.setId(oldSprint.getId());
         sprint.setStartDate(oldSprint.getStartDate());
-        oldSprint.getDevelopersIds().forEach(id -> sprint.getDevelopersIds().add(id));
-        oldSprint.getTasksIds().forEach(id -> sprint.getTasksIds().add(id));
-        oldSprint.getCompletedTaskResultsIds().forEach(id -> sprint.getCompletedTaskResultsIds().add(id));
         sprint.setSprintResultId(oldSprint.getSprintResultId());
         sprint.setCreated(oldSprint.getCreated());
         sprint.setModified(LocalDateTime.now());
+
+        for (String taskId : sprint.getTasksIds()) {
+            // add references to tasks' field sprintId
+            Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found.", taskId)));
+            task.setSprintId(sprint.getId());
+            taskRepository.save(task);
+
+            // add references to task result for the updated tasks if present
+            if (task.getTaskResultId() != null) {
+                sprint.getCompletedTaskResultsIds().add(task.getTaskResultId());
+            }
+        }
 
         return sprintRepository.save(sprint);
     }
@@ -91,6 +116,25 @@ public class SprintServiceImpl implements SprintService {
         sprint.setCreated(oldSprint.getCreated());
         sprint.setModified(LocalDateTime.now());
         return sprintRepository.save(sprint);
+    }
+
+    @Override
+    public Sprint deleteById(String id) {
+        Sprint oldSprint = findById(id);
+        sprintRepository.deleteById(id);
+
+        // remove reference from project
+        Project project = projectRepository.findById(oldSprint.getProjectId()).orElseThrow(() -> new EntityNotFoundException(String.format("Project with ID=%s not found.", oldSprint.getProjectId())));
+        project.setCurrentSprintId(null);
+        projectRepository.save(project);
+
+        // remove sprintId field from all tasks
+        for (String taskId : oldSprint.getTasksIds()) {
+            Task task = taskRepository.findById(taskId).orElseThrow(() -> new EntityNotFoundException(String.format("Task with ID=%s not found.", taskId)));
+            task.setSprintId(null);
+            taskRepository.save(task);
+        }
+        return oldSprint;
     }
 
     @Override

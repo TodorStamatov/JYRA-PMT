@@ -1,14 +1,9 @@
 package course.spring.jyra.web;
 
 import course.spring.jyra.model.*;
-import course.spring.jyra.service.ProjectService;
-import course.spring.jyra.service.SprintService;
-import course.spring.jyra.service.TaskService;
-import course.spring.jyra.service.UserService;
+import course.spring.jyra.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +20,15 @@ public class TaskController {
     private final UserService userService;
     private final SprintService sprintService;
     private final ProjectService projectService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService, SprintService sprintService, ProjectService projectService) {
+    public TaskController(TaskService taskService, UserService userService, SprintService sprintService, ProjectService projectService, HtmlService htmlService) {
         this.taskService = taskService;
         this.userService = userService;
         this.sprintService = sprintService;
         this.projectService = projectService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -62,17 +59,17 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String addTask(@ModelAttribute Task task) {
-        taskService.create(task);
+    public String addTask(@ModelAttribute Task task, @RequestParam String projectId) {
+        taskService.create(task, projectId);
         log.debug("POST: Task: {}", task);
         return "redirect:/tasks";
     }
 
     @DeleteMapping("/delete")
-    public String deleteProject(@RequestParam String taskId) {
+    public String deleteProject(@RequestParam String taskId, @RequestParam String projectId) {
         Task task = taskService.findById(taskId);
         log.debug("DELETE: Task: {}", task);
-        taskService.deleteById(taskId);
+        taskService.deleteById(taskId, projectId);
         return "redirect:/tasks";
     }
 
@@ -93,26 +90,33 @@ public class TaskController {
         model.addAttribute("developersAssigned", task.getDevelopersAssignedIds().stream().map(userService::findById).collect(Collectors.toList()));
         model.addAttribute("reporter", userService.findById(task.getAddedById()));
         model.addAttribute("sprint", sprintService.findById(task.getSprintId()));
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Task with Id=%s : {}", id, taskService.findById(id));
         return "single-task";
     }
 
     @GetMapping("/edit")
-    public String getEditTask(Model model, @RequestParam String taskId) {
+    public String getEditTask(Model model, @RequestParam String taskId, @RequestParam String projectId) {
         Task task = taskService.findById(taskId);
+        Project project = projectService.findById(projectId);
         if (!model.containsAttribute("task")) {
             model.addAttribute("task", task);
         }
+
+        if (project.getCurrentSprintId() != null) {
+            model.addAttribute("sprint", sprintService.findById(project.getCurrentSprintId()));
+        }
+
         model.addAttribute("request", "PUT");
         model.addAttribute("developers", userService.findAll().stream().filter(user -> user.getRoles().contains(Role.DEVELOPER)).collect(Collectors.toList()));
         return "form-task";
     }
 
     @PutMapping("/edit")
-    public String updateTask(@RequestParam String taskId, @ModelAttribute Task task) {
+    public String updateTask(@RequestParam String taskId, @RequestParam String projectId, @ModelAttribute Task task) {
         log.debug("UPDATE: Task: {}", task);
-        taskService.update(task, taskId);
+        taskService.update(task, taskId, projectId);
         return "redirect:/tasks";
     }
 

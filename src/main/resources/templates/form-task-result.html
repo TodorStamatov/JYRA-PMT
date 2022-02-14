@@ -15,12 +15,14 @@
                     <form th:object="${taskResult}" th:method="${request}">
 
                         <div class="form-floating mb-3">
-                            <input th:value="${taskResult.resultsDescription}" id="taskResultsDescriptionId"
-                                   name="resultsDescription"
-                                   type="text" min="10"
-                                   max="2500"
-                                   class="form-control"
-                                   placeholder="Description"/>
+                            <textarea th:value="${taskResult.resultsDescription}" id="taskResultsDescriptionId"
+                                      name="resultsDescription"
+                                      type="text" min="10"
+                                      max="2500"
+                                      class="form-control"
+                                      placeholder="Description"
+                                      rows="5"
+                                      style="height:100%;"></textarea>
                             <label for="taskResultsDescriptionId">Description</label>
                         </div>
 

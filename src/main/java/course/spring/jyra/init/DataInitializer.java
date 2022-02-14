@@ -209,7 +209,7 @@ public class DataInitializer implements ApplicationRunner {
             defaultBoards = List.of(
                     Board.builder().projectId(defaultProjects.get(0).getId()).sprintId(defaultSprints.get(0).getId())
                             .doneIds(defaultTasks1.stream().map(Task::getId).collect(Collectors.toList())).build(),
-                    Board.builder().projectId(defaultProjects.get(1).getId()).sprintId(defaultSprints.get(1).getId())
+                    Board.builder().projectId(defaultProjects.get(1).getId()).sprintId(defaultSprints.get(2).getId())
                             .toDoIds(defaultTasks2.stream().map(Task::getId).collect(Collectors.toList())).build()
             );
             defaultBoards = defaultBoards.stream().map(boardService::create).collect(Collectors.toList());

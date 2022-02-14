@@ -3,7 +3,6 @@ package course.spring.jyra.web;
 import course.spring.jyra.exception.InvalidEntityException;
 import course.spring.jyra.model.*;
 import course.spring.jyra.service.*;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,14 +25,16 @@ public class UserController {
     private final TaskResultService taskResultService;
     private final ProjectService projectService;
     private final ProjectResultService projectResultService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public UserController(UserService userService, TaskService taskService, TaskResultService taskResultService, ProjectService projectService, ProjectResultService projectResultService) {
+    public UserController(UserService userService, TaskService taskService, TaskResultService taskResultService, ProjectService projectService, ProjectResultService projectResultService, HtmlService htmlService) {
         this.userService = userService;
         this.taskService = taskService;
         this.taskResultService = taskResultService;
         this.projectService = projectService;
         this.projectResultService = projectResultService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -113,6 +114,7 @@ public class UserController {
         }
 
         model.addAttribute("canEdit", canEdit);
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: User with Id=%s : {}", id, userService.findById(id));
         return "single-user";

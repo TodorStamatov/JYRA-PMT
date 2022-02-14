@@ -46,9 +46,10 @@
                         <td th:text="${task.estimatedEffort}">Estimation not found</td>
                         <td th:text="${task.status.getReadable()}">Status not found</td>
                         <td class="align-middle w-25" style="text-align: right">
-                            <form action="#" th:action="@{'/tasks/delete'(taskId=${task.id})}" th:method="delete"
-                                  th:unless="${project.projectResultId}" th:if="${canManageSprintsAndTasks == true}">
-                                <a class="btn btn-primary" th:href="@{/tasks/edit(taskId=${task.id})}" role="button">Edit</a>
+                            <form action="#" th:action="@{'/tasks/delete'(taskId=${task.id}, projectId=${project.id})}"
+                                  th:method="delete" th:unless="${project.projectResultId}" th:if="${canManageSprintsAndTasks == true}">
+                                <a class="btn btn-primary"
+                                   th:href="@{/tasks/edit(taskId=${task.id}, projectId=${project.id})}" role="button">Edit</a>
                                 <input type="submit" class="btn btn-danger" value="Delete" th:method="DELETE"/>
                             </form>
                         </td>

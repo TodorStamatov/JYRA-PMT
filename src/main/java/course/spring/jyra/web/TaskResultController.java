@@ -1,9 +1,7 @@
 package course.spring.jyra.web;
 
-import course.spring.jyra.model.ProjectResult;
-import course.spring.jyra.model.Task;
-import course.spring.jyra.model.TaskResult;
-import course.spring.jyra.model.User;
+import course.spring.jyra.model.*;
+import course.spring.jyra.service.HtmlService;
 import course.spring.jyra.service.TaskResultService;
 import course.spring.jyra.service.TaskService;
 import course.spring.jyra.service.UserService;
@@ -25,12 +23,14 @@ public class TaskResultController {
     private final TaskResultService taskResultService;
     private final TaskService taskService;
     private final UserService userService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public TaskResultController(TaskResultService taskResultService, TaskService taskService, UserService userService) {
+    public TaskResultController(TaskResultService taskResultService, TaskService taskService, UserService userService, HtmlService htmlService) {
         this.taskResultService = taskResultService;
         this.taskService = taskService;
         this.userService = userService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -67,6 +67,7 @@ public class TaskResultController {
         model.addAttribute("taskResult", taskResult);
         model.addAttribute("approver", userService.findById(taskResult.getVerifiedById()));
         model.addAttribute("task", taskService.findById(taskResult.getTaskId()));
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Result of task with Id:%s {}", id, taskResultService.findAll());
         return "single-task-result";
@@ -85,6 +86,12 @@ public class TaskResultController {
     @PostMapping("/create")
     public String addTaskResult(@ModelAttribute TaskResult taskResult) {
         taskResultService.create(taskResult);
+
+        // update task status through service in order to apply changes to board
+        Task task = taskService.findById(taskResult.getTaskId());
+        task.setStatus(TaskStatus.DONE);
+        taskService.update(task);
+
         log.debug("POST: Task result: {}", taskResult);
         return "redirect:/taskresults";
     }
@@ -103,6 +110,12 @@ public class TaskResultController {
     @DeleteMapping("/delete")
     public String deleteTaskResult(@RequestParam String taskResultId) {
         TaskResult taskResult = taskResultService.findById(taskResultId);
+
+        // update task status through service in order to apply changes to board
+        Task task = taskService.findById(taskResult.getTaskId());
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        taskService.update(task);
+
         log.debug("DELETE: Task result: {}", taskResult);
         taskResultService.deleteById(taskResultId);
         return "redirect:/taskresults";

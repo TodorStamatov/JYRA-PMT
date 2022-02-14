@@ -17,7 +17,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10 border">
             <h5>Description</h5>
-            <p th:text="${sprintResult.resultsDescription}"></p>
+            <div th:utext="${htmlService.markdownToHtml(sprintResult.resultsDescription)}"></div>
         </div>
     </div>
     <div class="row justify-content-center">

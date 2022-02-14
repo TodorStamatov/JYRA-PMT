@@ -24,14 +24,16 @@ public class ProjectResultController {
     private final SprintResultService sprintResultService;
     private final SprintService sprintService;
     private final UserService userService;
+    private final HtmlService htmlService;
 
     @Autowired
-    public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService, ProjectService projectService1, SprintResultService sprintResultService, SprintService sprintService, UserService userService) {
+    public ProjectResultController(ProjectResultService projectResultService, ProjectService projectService, ProjectService projectService1, SprintResultService sprintResultService, SprintService sprintService, UserService userService, HtmlService htmlService) {
         this.projectResultService = projectResultService;
         this.projectService = projectService1;
         this.sprintResultService = sprintResultService;
         this.sprintService = sprintService;
         this.userService = userService;
+        this.htmlService = htmlService;
     }
 
     @GetMapping
@@ -66,6 +68,7 @@ public class ProjectResultController {
         model.addAttribute("project", projectService.findById(projectResult.getProjectId()));
         model.addAttribute("sprintResults", sprintResultsList);
         model.addAttribute("map", map);
+        model.addAttribute("htmlService", htmlService);
 
         log.debug("GET: Result of Project with ID=%s: {}", projectId, projectResultService.findByProject(projectId));
         return "single-project-result";
