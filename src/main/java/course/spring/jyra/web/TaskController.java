@@ -68,7 +68,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/delete")
-    public String deleteProject(@RequestParam String taskId, @RequestParam String projectId) {
+    public String deleteTask(@RequestParam String taskId, @RequestParam String projectId) {
         Task task = taskService.findById(taskId);
         log.debug("DELETE: Task: {}", task);
         taskService.deleteById(taskId, projectId);

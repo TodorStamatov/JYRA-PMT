@@ -2,8 +2,10 @@ package course.spring.jyra.web.rest;
 
 import course.spring.jyra.exception.EntityNotFoundException;
 import course.spring.jyra.exception.InvalidClientDataException;
+import course.spring.jyra.model.Board;
 import course.spring.jyra.model.ErrorResponse;
 import course.spring.jyra.model.SprintResult;
+import course.spring.jyra.service.BoardService;
 import course.spring.jyra.service.SprintResultService;
 import course.spring.jyra.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,13 @@ import java.util.List;
 public class SprintResultControllerREST {
     private final SprintResultService sprintResultService;
     private final SprintService sprintService;
+    private final BoardService boardService;
 
     @Autowired
-    public SprintResultControllerREST(SprintResultService sprintResultService, SprintService sprintService) {
+    public SprintResultControllerREST(SprintResultService sprintResultService, SprintService sprintService, BoardService boardService) {
         this.sprintResultService = sprintResultService;
         this.sprintService = sprintService;
+        this.boardService = boardService;
     }
 
     @GetMapping("/sprint-results")
@@ -41,13 +45,15 @@ public class SprintResultControllerREST {
         if (!sprintId.equals(sprintResult.getSprintId()))
             throw new InvalidClientDataException(String.format("sprint ID %s from URL doesn't match ID %s in Request body", sprintId, sprintResult.getSprintId()));
         SprintResult created = sprintResultService.create(sprintResult);
+        Board board = boardService.findAll().stream().filter(b -> b.getSprintId().equals(sprintResult.getSprintId())).findFirst().orElseThrow(() -> new EntityNotFoundException(String.format("Board for sprint with ID=%s not found.", sprintResult.getSprintId())));
+        boardService.deleteById(board.getId());
         return ResponseEntity.created(
                 ServletUriComponentsBuilder.fromCurrentRequest()
                         .pathSegment("{projectId}").buildAndExpand(created.getSprintId()).toUri()).body(created);
     }
 
     @PutMapping("/{sprintId}/sprint-result")
-    public SprintResult updateSprint(@PathVariable String sprintId, @RequestBody SprintResult sprintResult) {
+    public SprintResult updateSprintResult(@PathVariable String sprintId, @RequestBody SprintResult sprintResult) {
         if (!sprintId.equals(sprintResult.getSprintId()))
             throw new InvalidClientDataException(String.format("sprint ID %s from URL doesn't match ID %s in Request body", sprintId, sprintResult.getSprintId()));
         return sprintResultService.update(sprintResult);
@@ -56,6 +62,12 @@ public class SprintResultControllerREST {
     @DeleteMapping("/{sprintId}/sprint-result")
     public SprintResult deleteSprintResult(@PathVariable String sprintId) {
         String deletedId = sprintService.findById(sprintId).getSprintResultId();
+
+        SprintResult sprintResult = sprintResultService.findBySprintId(sprintId);
+
+        Board board = Board.builder().projectId(sprintService.findById(sprintResult.getSprintId()).getProjectId()).sprintId(sprintResult.getSprintId()).build();
+        boardService.create(board);
+
         return sprintResultService.deleteById(deletedId);
     }
 
